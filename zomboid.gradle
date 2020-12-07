@@ -1,11 +1,31 @@
 import java.nio.file.Files
 import java.nio.file.Paths
 
-final def gameDir = project.ext.has('gameDir') ? Paths.get(project.ext.get('gameDir') as String)
-        : Paths.get(project.ext.get('steamDir') as String, 'steamapps/common/ProjectZomboid')
+Properties properties = new Properties()
+def propertiesFile = project.rootProject.file('local.properties')
+if (propertiesFile.exists()) {
+    properties.load(propertiesFile.newDataInputStream())
+}
+project.ext.ideaHome = properties.getProperty('idea.home')
+project.ext.gameDir = Paths.get(properties.getProperty('game.dir', ''))
+
+task setGameDir {
+    onlyIf {
+        project.ext.gameDir == null
+    }
+    doLast {
+        if (providers.environmentVariable('GAME_DIR').present) {
+            project.ext.gameDir = Paths.get(providers.environmentVariable('GAME_DIR').get())
+        }
+        else if (System.hasProperty('game.dir')) {
+            project.ext.gameDir = Paths.get(System.getProperty('game.dir'))
+        }
+        else throw new RuntimeException("Game directory path not specified")
+    }
+}
 
 dependencies {
-    implementation fileTree(dir: gameDir.toAbsolutePath(), include: ['*.jar'])
+    implementation fileTree(dir: gameDir, include: ['*.jar'])
     compile files("lib/zomboid-$game_version" + '.jar')
 }
 
@@ -14,11 +34,10 @@ task zomboidJar(type: Jar) {
     setArchivesBaseName("zomboid-$game_version")
     destinationDir(file("lib"))
     includeEmptyDirs = false
-
-    from gameDir
+    from project.ext.gameDir
 
     HashSet<String> excludePaths = new HashSet<>()
-    Files.walk(gameDir as java.nio.file.Path).filter({
+    Files.walk(project.ext.gameDir as java.nio.file.Path).filter({
         Files.isRegularFile(it) && !it.getFileName().toString().endsWith('class') &&
                 it.getFileName().toString() != "stdlib.lbc"
     }).forEach({ excludePaths.add(gameDir.relativize(it).toString()) })
