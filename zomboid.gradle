@@ -32,6 +32,7 @@ dependencies {
 task zomboidJar(type: Jar) {
     description('Assembles a jar archive containing game classes.')
     setArchivesBaseName("zomboid-$game_version")
+
     destinationDir(file("lib"))
     includeEmptyDirs = false
     from project.ext.gameDir
@@ -52,9 +53,11 @@ task zomboidJar(type: Jar) {
  * This can be changed by defining specific file to decompile with project property 'src'.
  * example: gradle decompileZomboid -Psrc="<path>"
  */
-task decompileZomboid(type: JavaExec) {
+task decompileZomboid(type: Exec) {
     description('Decompile Project Zomboid classes.')
-    classpath = files('/lib/java-decompiler.jar')
+
+    def classpath = "$ideaHome/plugins/java-decompiler/lib/java-decompiler.jar"
+    def mainClass = 'org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler'
 
     def sourceDir = gameDir.resolve(project.ext.has('src') ?
             project.ext.get('src') : 'zombie').toString()
@@ -65,6 +68,6 @@ task decompileZomboid(type: JavaExec) {
     destinationDir.mkdirs()
 
     // default parameters used by IDEA compiler
-    setArgs(['-hdc=0', '-dgs=1', '-rsy=1', '-rbr=1', '-lit=1', '-nls=1', '-mpm=60',
-             sourceDir, destinationDir.path])
+    setCommandLine(['java', '-classpath', classpath, mainClass, '-hdc=0', '-dgs=1', '-rsy=1',
+                    '-rbr=1', '-lit=1', '-nls=1', '-mpm=60', sourceDir, destinationDir.path])
 }
