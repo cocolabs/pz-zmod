@@ -1,0 +1,8 @@
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+
+    // https://docs.gradle.org/current/userguide/idea_plugin.html
+    id 'idea'
+}
+
