@@ -4,13 +4,13 @@ plugins {
     // Apply the java plugin to add support for Java
     id 'java'
 
-final def gameDir = project.ext.has('gameDir') ? Paths.get(project.ext.get('gameDir') as String)
-        : Paths.get(project.ext.get('steamDir') as String, 'steamapps/common/ProjectZomboid')
-
-
     // https://docs.gradle.org/current/userguide/idea_plugin.html
     id 'idea'
 }
+
+final def gameDir = project.ext.has('gameDir') ? Paths.get(project.ext.get('gameDir') as String)
+        : Paths.get(project.ext.get('steamDir') as String, 'steamapps/common/ProjectZomboid')
+
 
 /**
  * Decompile game classes with FernFlower using default IDEA settings.
