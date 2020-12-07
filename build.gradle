@@ -16,8 +16,12 @@ task decompileZomboid(type: JavaExec) {
     classpath = files('/lib/java-decompiler.jar')
 
     def steamDir = project.findProperty('steam.dir')
+    def destDir = file('src/main/java')
+
+    // decompiler will throw an error if destination dir doesn't exist
+    destDir.mkdirs()
 
     // default parameters used by IDEA compiler
     setArgs(['-hdc=0', '-dgs=1', '-rsy=1', '-rbr=1', '-lit=1', '-nls=1', '-mpm=60',
-             Paths.get(steamDir + "steamapps/common/ProjectZomboid/zombie").toString(), 'src/main/java'])
+             Paths.get(steamDir + "steamapps/common/ProjectZomboid/zombie").toString(), destDir.path])
 }
