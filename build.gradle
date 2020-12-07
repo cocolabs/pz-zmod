@@ -1,5 +1,3 @@
-import java.nio.file.Paths
-
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
@@ -7,50 +5,11 @@ plugins {
     // https://docs.gradle.org/current/userguide/idea_plugin.html
     id 'idea'
 }
+apply from: 'zomboid.gradle'
 
-final def gameDir = project.ext.has('gameDir') ? Paths.get(project.ext.get('gameDir') as String)
-        : Paths.get(project.ext.get('steamDir') as String, 'steamapps/common/ProjectZomboid')
-
-dependencies {
-    implementation fileTree(dir: gameDir.toAbsolutePath(), include: ['*.jar'])
 }
 
-task zomboidJar(type: Jar) {
-    description('Assembles a jar archive containing game classes.')
-    setArchivesBaseName("zomboid-$game_version")
-    includeEmptyDirs = false
-
-    from gameDir
-
-    HashSet<String> excludePaths = new HashSet<>()
-    Files.walk(gameDir as java.nio.file.Path).filter({
-        Files.isRegularFile(it) && !it.getFileName().toString().endsWith('class')
-    }
-    ).forEach({ excludePaths.add(gameDir.relativize(it).toString()) })
-
-    setExcludes(excludePaths)
 }
 
-/**
- * Decompile game classes with FernFlower using default IDEA settings.
- * Default task behaviour is to decompile all class files found in game root directory.
- *
- * This can be changed by defining specific file to decompile with project property 'src'.
- * example: gradle decompileZomboid -Psrc="<path>"
- */
-task decompileZomboid(type: JavaExec) {
-    description('Decompile Project Zomboid classes.')
-    classpath = files('/lib/java-decompiler.jar')
 
-    def sourceDir = gameDir.resolve(project.ext.has('src') ?
-            project.ext.get('src') : 'zombie').toString()
-
-    def destinationDir = file('src/main/java')
-
-    // decompiler will throw an error if destination dir doesn't exist
-    destinationDir.mkdirs()
-
-        // default parameters used by IDEA compiler
-        setArgs(['-hdc=0', '-dgs=1', '-rsy=1', '-rbr=1', '-lit=1', '-nls=1', '-mpm=60',
-                 sourceDir, destinationDir.path])
 }
