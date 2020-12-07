@@ -24,6 +24,10 @@ dependencies {
     compile files("lib/zdoc-lua-$game_version" + '.jar')
 }
 
+jar {
+    from sourceSets.main.allSource
+}
+
 task zdocJar(type: Jar) {
     description('Assembles a jar containing compiled lua classes.')
     archiveFileName = "zdoc-lua-${game_version}.jar"
