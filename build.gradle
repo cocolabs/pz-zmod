@@ -7,6 +7,10 @@ plugins {
 }
 apply from: 'zomboid.gradle'
 
+sourceSets {
+    main { java.srcDir('src/main/lua') }
+}
+
 repositories {
     jcenter()
     maven { url 'https://jitpack.io' }
