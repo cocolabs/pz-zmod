@@ -11,6 +11,9 @@ plugins {
 final def gameDir = project.ext.has('gameDir') ? Paths.get(project.ext.get('gameDir') as String)
         : Paths.get(project.ext.get('steamDir') as String, 'steamapps/common/ProjectZomboid')
 
+dependencies {
+    implementation fileTree(dir: gameDir.toAbsolutePath(), include: ['*.jar'])
+}
 
 /**
  * Decompile game classes with FernFlower using default IDEA settings.
