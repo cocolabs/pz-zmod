@@ -14,7 +14,13 @@ repositories {
 
 dependencies {
     implementation 'com.github.yooksi:pz-zdoc:master-SNAPSHOT'
+    compile files("lib/zdoc-lua-$game_version" + '.jar')
 }
 
+task zdocJar(type: Jar) {
+    description('Assembles a jar containing compiled lua classes.')
+    archiveFileName = "zdoc-lua-${game_version}.jar"
+    destinationDir(file("lib"))
 
+    from "$buildDir/generated/sources/zdoc/"
 }
