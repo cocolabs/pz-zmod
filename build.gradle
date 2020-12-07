@@ -24,3 +24,7 @@ task zdocJar(type: Jar) {
 
     from "$buildDir/generated/sources/zdoc/"
 }
+
+tasks.register('createZDocOutputDir') {
+    file('build/generated/sources/zdoc').mkdirs()
+}
