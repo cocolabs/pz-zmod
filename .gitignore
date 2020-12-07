@@ -1,6 +1,12 @@
 # Decompiled files
 src/main/java
 
+# Library files
+lib/
+
+# User data
+local.properties
+
 ### IntelliJ ###
 
 # Project file-based format
