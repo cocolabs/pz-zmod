@@ -7,8 +7,13 @@ plugins {
 }
 apply from: 'zomboid.gradle'
 
+repositories {
+    jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
+dependencies {
+    implementation 'com.github.yooksi:pz-zdoc:master-SNAPSHOT'
 }
 
 
