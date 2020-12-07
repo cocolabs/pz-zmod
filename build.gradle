@@ -15,6 +15,22 @@ dependencies {
     implementation fileTree(dir: gameDir.toAbsolutePath(), include: ['*.jar'])
 }
 
+task zomboidJar(type: Jar) {
+    description('Assembles a jar archive containing game classes.')
+    setArchivesBaseName("zomboid-$game_version")
+    includeEmptyDirs = false
+
+    from gameDir
+
+    HashSet<String> excludePaths = new HashSet<>()
+    Files.walk(gameDir as java.nio.file.Path).filter({
+        Files.isRegularFile(it) && !it.getFileName().toString().endsWith('class')
+    }
+    ).forEach({ excludePaths.add(gameDir.relativize(it).toString()) })
+
+    setExcludes(excludePaths)
+}
+
 /**
  * Decompile game classes with FernFlower using default IDEA settings.
  * Default task behaviour is to decompile all class files found in game root directory.
