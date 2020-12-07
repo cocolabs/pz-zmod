@@ -7,6 +7,9 @@ plugins {
 }
 apply from: 'zomboid.gradle'
 
+group 'my.mod'
+version '1.0'
+
 sourceSets {
     main { java.srcDir('src/main/lua') }
 }
