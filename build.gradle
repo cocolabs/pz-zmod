@@ -1,3 +1,5 @@
+import java.nio.file.Paths
+
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
@@ -6,3 +8,16 @@ plugins {
     id 'idea'
 }
 
+/**
+ * Decompile game classes using FernFlower.
+ * https://stackoverflow.com/questions/28389006/how-to-decompile-to-java-files-intellij-idea"
+ */
+task decompileZomboid(type: JavaExec) {
+    classpath = files('/lib/java-decompiler.jar')
+
+    def steamDir = project.findProperty('steam.dir')
+
+    // default parameters used by IDEA compiler
+    setArgs(['-hdc=0', '-dgs=1', '-rsy=1', '-rbr=1', '-lit=1', '-nls=1', '-mpm=60',
+             Paths.get(steamDir + "steamapps/common/ProjectZomboid/zombie").toString(), 'src/main/java'])
+}
