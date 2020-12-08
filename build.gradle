@@ -12,6 +12,10 @@ plugins {
 group 'com.pz'
 version '1.0'
 
+repositories {
+    jcenter()
+}
+
 apply from: 'zomboid.gradle'
 apply from: 'mod.gradle'
 
@@ -20,16 +24,6 @@ sourceSets {
         java.srcDirs = ['media/lua', 'media/scripts']
         resources.srcDirs = ['media/sound', 'media/textures']
     }
-}
-
-repositories {
-    jcenter()
-    maven { url 'https://jitpack.io' }
-}
-
-dependencies {
-    implementation 'com.github.yooksi:pz-zdoc:master-SNAPSHOT'
-    compile files("lib/zdoc-lua-$game_version" + '.jar')
 }
 
 def getPathsRelativeToModule(moduleName, srcDirSet) {
@@ -84,16 +78,4 @@ processMediaResources {
 
 jar {
     from sourceSets.media.output
-}
-
-task zdocJar(type: Jar) {
-    description('Assembles a jar containing compiled lua classes.')
-    archiveFileName = "zdoc-lua-${game_version}.jar"
-    destinationDir(file("lib"))
-
-    from "$buildDir/generated/sources/zdoc/"
-}
-
-tasks.register('createZDocOutputDir') {
-    file('build/generated/sources/zdoc').mkdirs()
 }
