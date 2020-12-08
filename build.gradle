@@ -1,3 +1,7 @@
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
+
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
@@ -25,6 +29,35 @@ repositories {
 dependencies {
     implementation 'com.github.yooksi:pz-zdoc:master-SNAPSHOT'
     compile files("lib/zdoc-lua-$game_version" + '.jar')
+}
+
+def getPathsRelativeToModule(moduleName, srcDirSet) {
+
+    def module = rootDir.toPath().resolve(moduleName)
+    def map = new HashMap<String, String>()
+
+    def srcDirs = srcDirSet.srcDirs.stream().filter({ f -> f.exists() }).collect()
+    for (File srcDir : (srcDirs as List<File>))
+    {
+        def pathStream = Files.walk(srcDir.toPath()).filter({ Files.isRegularFile(it) })
+        for (Path path : (pathStream.collect() as List<Path>))
+        {
+            def srcDirPath = srcDir.toPath()
+            def relativePath = srcDirPath.relativize(path)
+            def srcDirName = module.relativize(srcDirPath)
+            map.put(relativePath.toString(), srcDirName.toString())
+        }
+    }
+    return map
+}
+
+static def getRelativeCopyPath(fcd, relativePathMap) {
+
+    def path = relativePathMap.get(Paths.get(fcd.path).toString())
+    if (path != null) {
+        return fcd.relativePath.prepend(path)
+    }
+    else throw new Exception("Unable to relativize copy path: $fcd.path")
 }
 
 jar {
