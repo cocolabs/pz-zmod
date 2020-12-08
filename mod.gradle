@@ -11,6 +11,7 @@ buildscript {
 }
 
 task writeModInfo {
+    description('Create and write to mod.info file.')
 
     List<String> info = Arrays.asList([
         "name=$mod_name",

@@ -39,6 +39,7 @@ dependencies {
 
 task zomboidJar(type: Jar) {
     description('Assembles a jar archive containing game classes.')
+    setGroup('build')
 
     archiveFileName = "zomboid-${game_version}.jar"
     destinationDir(file("lib"))
@@ -82,6 +83,7 @@ task decompileZomboid(type: Exec) {
 }
 
 task zdocJar(type: Jar) {
+    setGroup('build')
     description('Assembles a jar containing compiled lua classes.')
     archiveFileName = "zdoc-lua-${game_version}.jar"
     destinationDir(file("lib"))
