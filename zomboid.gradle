@@ -7,7 +7,7 @@ def propertiesFile = project.rootProject.file('local.properties')
 if (propertiesFile.exists()) {
     properties.load(propertiesFile.newDataInputStream())
 }
-project.ext.ideaHome = properties.getProperty('idea.home')
+project.ext.ideaHome = properties.getProperty('idea.home', '')
 project.ext.gameDir = Paths.get(properties.getProperty('game.dir', ''))
 
 if (project.ext.gameDir == null)
@@ -39,6 +39,7 @@ dependencies {
 }
 
 task zomboidJar(type: Jar) {
+    onlyIf { !project.ext.gameDir.empty }
     description('Assembles a jar archive containing game classes.')
     setGroup('build')
 
@@ -65,6 +66,7 @@ task zomboidJar(type: Jar) {
  * example: gradle decompileZomboid -Psrc="<path>"
  */
 task decompileZomboid(type: Exec) {
+    onlyIf { !project.ext.ideaHome.empty }
     description('Decompile Project Zomboid classes.')
 
     def classpath = "$ideaHome/plugins/java-decompiler/lib/java-decompiler.jar"
