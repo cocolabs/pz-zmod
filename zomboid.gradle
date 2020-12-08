@@ -91,3 +91,33 @@ task zdocJar(type: Jar) {
     from "$buildDir/generated/sources/zdoc/"
 }
 
+task annotateZomboidLua(type: JavaExec) {
+    setGroup('documentation')
+    description('Annotate game Lua files with EmmyLua annotations.')
+
+    main = "io.yooksi.pz.zdoc.Main"
+    classpath configurations.zomboid
+
+    jvmArgs("-Dld.logger=dev")
+    args('lua', '-i', "$gameDir/media/lua", '-o', 'build/generated/sources/zdoc/')
+}
+annotateZomboidLua.doFirst {
+    file('build/generated/sources/zdoc').mkdirs()
+}
+annotateZomboidLua.doLast {
+    file('pz-zdoc.log').delete()
+}
+
+task compileZomboidLua(type: JavaExec) {
+    description('Parse game api doc and compile to lua.')
+
+    main = "io.yooksi.pz.zdoc.Main"
+    classpath configurations.zomboid
+
+    jvmArgs("-Dld.logger=dev")
+    args('java', '--api-docs', 'zombie/Lua/LuaManager.GlobalObject.html', '-o',
+            'build/generated/sources/zdoc/shared/Library', '-e', 'Recipe,Vector2')
+}
+compileZomboidLua.doFirst {
+    file('build/generated/sources/zdoc').mkdirs()
+}
