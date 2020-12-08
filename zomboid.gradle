@@ -31,7 +31,7 @@ dependencies {
 
 task zomboidJar(type: Jar) {
     description('Assembles a jar archive containing game classes.')
-    archiveFileName = "zomboid-$game_version"
+    archiveFileName = "zomboid-${game_version}.jar"
 
     destinationDir(file("lib"))
     includeEmptyDirs = false
