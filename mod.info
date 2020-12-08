@@ -1,0 +1,7 @@
+name=Zomboid Mod
+poster=poster.png
+description=This is a zomboid mod template
+id=pz-zmod
+url=https://github.com/yooksi/pz-zmod
+modversion=1.0
+pzversion=41.47
