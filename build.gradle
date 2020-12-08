@@ -60,6 +60,17 @@ static def getRelativeCopyPath(fcd, relativePathMap) {
     else throw new Exception("Unable to relativize copy path: $fcd.path")
 }
 
+task mediaClasses(type: Copy, overwrite: true) {
+    includeEmptyDirs = false
+    from(sourceSets.media.java.srcDirs) {
+        def mSources = getPathsRelativeToModule('media', sourceSets.media.java)
+        eachFile {
+            def fcd = it as FileCopyDetails
+            fcd.setRelativePath(getRelativeCopyPath(fcd, mSources))
+        }
+    }
+    into "$buildDir/classes/java/media"
+}
 jar {
     from sourceSets.media.allSource
 }
