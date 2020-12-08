@@ -11,7 +11,10 @@ group 'my.mod'
 version '1.0'
 
 sourceSets {
-    main { java.srcDir('src/main/lua') }
+    media {
+        java.srcDirs('media/lua', 'media/scripts')
+        resources.srcDirs('media/sound', 'media/textures')
+    }
 }
 
 repositories {
@@ -25,7 +28,7 @@ dependencies {
 }
 
 jar {
-    from sourceSets.main.allSource
+    from sourceSets.media.allSource
 }
 
 task zdocJar(type: Jar) {
