@@ -71,6 +71,16 @@ task mediaClasses(type: Copy, overwrite: true) {
     }
     into "$buildDir/classes/java/media"
 }
+
+processMediaResources {
+    includeEmptyDirs = false
+    def mResources = getPathsRelativeToModule('media', sourceSets.media.resources)
+    eachFile {
+        def fcd = it as FileCopyDetails
+        fcd.setRelativePath(getRelativeCopyPath(fcd, mResources))
+    }
+}
+
 jar {
     from sourceSets.media.allSource
 }
