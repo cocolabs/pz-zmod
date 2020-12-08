@@ -82,7 +82,7 @@ processMediaResources {
 }
 
 jar {
-    from sourceSets.media.allSource
+    from sourceSets.media.output
 }
 
 task zdocJar(type: Jar) {
