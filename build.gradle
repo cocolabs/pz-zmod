@@ -31,17 +31,22 @@ def getPathsRelativeToModule(moduleName, srcDirSet) {
     def module = rootDir.toPath().resolve(moduleName)
     def map = new HashMap<String, String>()
 
-    def srcDirs = srcDirSet.srcDirs.stream().filter({ f -> f.exists() }).collect()
+    def srcDirs = srcDirSet.srcDirs.stream().withCloseable {
+        it.filter({ f -> f.exists() }).collect()
+    }
     for (File srcDir : (srcDirs as List<File>))
     {
-        def pathStream = Files.walk(srcDir.toPath()).filter({ Files.isRegularFile(it) })
-        for (Path path : (pathStream.collect() as List<Path>))
-        {
-            def srcDirPath = srcDir.toPath()
-            def relativePath = srcDirPath.relativize(path)
-            def srcDirName = module.relativize(srcDirPath)
-            map.put(relativePath.toString(), srcDirName.toString())
-        }
+        Files.walk(srcDir.toPath()).withCloseable
+                {
+                    def paths = it.filter({ Files.isRegularFile(it as java.nio.file.Path) }).collect()
+                    for (java.nio.file.Path path : (paths as List<java.nio.file.Path>))
+                    {
+                        def srcDirPath = srcDir.toPath()
+                        def relativePath = srcDirPath.relativize(path)
+                        def srcDirName = module.relativize(srcDirPath)
+                        map.put(relativePath.toString(), srcDirName.toString())
+                    }
+                }
     }
     return map
 }

@@ -1,5 +1,6 @@
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.nio.file.Path
 
 Properties properties = new Properties()
 def propertiesFile = project.rootProject.file('local.properties')
@@ -48,11 +49,11 @@ task zomboidJar(type: Jar) {
     from project.ext.gameDir
 
     HashSet<String> excludePaths = new HashSet<>()
-    Files.walk(project.ext.gameDir as java.nio.file.Path).filter({
-        Files.isRegularFile(it) && !it.getFileName().toString().endsWith('class') &&
-                it.getFileName().toString() != "stdlib.lbc"
-    }).forEach({ excludePaths.add(gameDir.relativize(it).toString()) })
-
+    Files.walk(project.ext.gameDir as Path).withCloseable
+    {
+        it.filter({Files.isRegularFile(it) && !it.fileName.toString().endsWith('class') && it.fileName.toString() != "stdlib.lbc"
+        }).collect().forEach({ excludePaths.add(gameDir.relativize(it as Path).toString()) })
+    }
     setExcludes(excludePaths)
 }
 
