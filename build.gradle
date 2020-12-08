@@ -12,8 +12,8 @@ version '1.0'
 
 sourceSets {
     media {
-        java.srcDirs('media/lua', 'media/scripts')
-        resources.srcDirs('media/sound', 'media/textures')
+        java.srcDirs = ['media/lua', 'media/scripts']
+        resources.srcDirs = ['media/sound', 'media/textures']
     }
 }
 
