@@ -9,10 +9,11 @@ plugins {
     // https://docs.gradle.org/current/userguide/idea_plugin.html
     id 'idea'
 }
-apply from: 'zomboid.gradle'
-
-group 'my.mod'
+group 'com.pz'
 version '1.0'
+
+apply from: 'zomboid.gradle'
+apply from: 'mod.gradle'
 
 sourceSets {
     media {

@@ -1,0 +1,26 @@
+import java.nio.charset.Charset
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        // https://mvnrepository.com/artifact/commons-io/commons-io
+        classpath group: 'commons-io', name: 'commons-io', version: '2.8.0'
+    }
+}
+
+task writeModInfo {
+
+    List<String> info = Arrays.asList([
+        "name=$mod_name",
+        "poster=poster.png",
+        "description=$mod_desc",
+        "id=$rootProject.name",
+        "url=$mod_url",
+        "modversion=" + rootProject.getVersion(),
+        "pzversion=$game_version",
+    ] as String[])
+    def charset = Charset.defaultCharset().name()
+    org.apache.commons.io.FileUtils.writeLines(file('mod.info'), charset, info, false)
+}
