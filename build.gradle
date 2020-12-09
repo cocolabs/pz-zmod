@@ -22,10 +22,6 @@ sourceSets {
         java.srcDirs = ['media/lua', 'media/scripts']
         resources.srcDirs = ['media/sound', 'media/textures']
     }
-    game {
-        java.srcDirs = ['src/game/java']
-        resources.srcDirs = ['src/game/resources']
-    }
 }
 
 apply from: 'zomboid.gradle'
