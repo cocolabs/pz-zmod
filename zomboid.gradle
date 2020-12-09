@@ -72,17 +72,18 @@ task decompileZomboid(type: Exec) {
     def classpath = "$ideaHome/plugins/java-decompiler/lib/java-decompiler.jar"
     def mainClass = 'org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler'
 
-    def sourceDir = gameDir.resolve(project.ext.has('src') ?
-            project.ext.get('src') : 'zombie').toString()
-
-    def destinationDir = file('src/main/java')
-
-    // decompiler will throw an error if destination dir doesn't exist
-    destinationDir.mkdirs()
-
     // default parameters used by IDEA compiler
-    setCommandLine(['java', '-classpath', classpath, mainClass, '-hdc=0', '-dgs=1', '-rsy=1',
-                    '-rbr=1', '-lit=1', '-nls=1', '-mpm=60', sourceDir, destinationDir.path])
+    def params = ['-hdc=0', '-dgs=1', '-rsy=1', '-rbr=1', '-lit=1', '-nls=1', '-mpm=60']
+
+    // directories containing class files
+    def sourceDirs = ['astar', 'com', 'de', 'fmod', 'javax', 'org', 'se', 'zombie']
+    for (int i = 0; i < sourceDirs.size(); i++) {
+        sourceDirs[i] = gameDir.resolve(sourceDirs[i]).toString()
+    }
+    gameDir.resolve(project.ext.has('src') ? project.ext.src : 'zombie').toString()
+    def destDir = file('src/main/java')
+
+    setCommandLine(['java', '-classpath', classpath, mainClass] + params + sourceDirs + destDir)
 }
 
 task zdocJar(type: Jar) {
