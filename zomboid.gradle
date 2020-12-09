@@ -86,7 +86,7 @@ task decompileZomboid(type: Exec) {
     setCommandLine(['java', '-classpath', classpath, mainClass] + params + sourceDirs + destDir)
 }
 
-task zdocJar(type: Jar) {
+task zomboidLuaJar(type: Jar) {
     setGroup('build')
     description('Assembles a jar containing compiled lua classes.')
     archiveFileName = "zdoc-lua-${game_version}.jar"
