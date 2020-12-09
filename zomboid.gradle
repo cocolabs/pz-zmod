@@ -69,6 +69,7 @@ task zomboidJar(type: Jar) {
     }
     setExcludes(excludePaths)
 }
+jar.dependsOn(zomboidJar)
 
 /**
  * Decompile game classes with FernFlower using default IDEA settings.
@@ -120,7 +121,8 @@ task zomboidSourcesJar(type: Jar) {
     archiveFileName = "zomboid-${game_version}-sources.jar"
     from "$buildDir/generated/sources/zomboid"
 }
-zomboidSourcesJar.dependsOn decompileZomboid
+zomboidSourcesJar.dependsOn(decompileZomboid)
+jar.dependsOn(zomboidSourcesJar)
 
 task zomboidLuaJar(type: Jar) {
     setGroup('build')
@@ -130,6 +132,7 @@ task zomboidLuaJar(type: Jar) {
     destinationDir(file("lib"))
     from "$buildDir/generated/sources/zdoc/"
 }
+jar.dependsOn(zomboidLuaJar)
 
 task annotateZomboidLua(type: JavaExec) {
     setGroup('documentation')
