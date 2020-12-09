@@ -1,7 +1,16 @@
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.Path
+import org.apache.commons.io.FileUtils
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath group: 'commons-io', name: 'commons-io', version: '2.8.0'
+    }
+}
 Properties properties = new Properties()
 def propertiesFile = project.rootProject.file('local.properties')
 if (propertiesFile.exists()) {
@@ -75,15 +84,28 @@ task decompileZomboid(type: Exec) {
     // default parameters used by IDEA compiler
     def params = ['-hdc=0', '-dgs=1', '-rsy=1', '-rbr=1', '-lit=1', '-nls=1', '-mpm=60']
 
+    def srcDir = file("$buildDir/tmp/zomboid")
+    if (!srcDir.exists() && !srcDir.mkdirs()) {
+        throw new IOException("Unable to create decompile tmp dir")
+    }
     // directories containing class files
-    def sourceDirs = ['astar', 'com', 'de', 'fmod', 'javax', 'org', 'se', 'zombie']
-    for (int i = 0; i < sourceDirs.size(); i++) {
-        sourceDirs[i] = gameDir.resolve(sourceDirs[i]).toString()
+    String[] sourceDirs = ['astar', 'com', 'de', 'fmod', 'javax', 'org', 'se', 'zombie']
+    for (int i = 0; i < sourceDirs.size(); i++)
+    {
+        def sDir = sourceDirs[i]
+        def copyDest = srcDir.toPath().resolve(sDir).toFile()
+        def copySrc = gameDir.resolve(sDir).toFile()
+
+        logger.info("copying class package \'${copySrc.name}\'")
+        FileUtils.copyDirectory(copySrc, copyDest)
     }
     gameDir.resolve(project.ext.has('src') ? project.ext.src : 'zombie').toString()
-    def destDir = sourceSets.game.java.srcDirs[0].path
+    def destDir = file("$buildDir/generated/sources/zomboid")
 
-    setCommandLine(['java', '-classpath', classpath, mainClass] + params + sourceDirs + destDir)
+    // decompiler will throw error if destination dir doesn't exist
+    destDir.mkdirs()
+
+    setCommandLine(['java', '-classpath', classpath, mainClass] + params + srcDir.path + destDir.path)
 }
 
 task zomboidLuaJar(type: Jar) {
