@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="zsources" pattern="lib:astar..*&amp;&amp;file:*.java||lib:com..*&amp;&amp;file:*.java||lib:de..*&amp;&amp;file:*.java||lib:fmod..*&amp;&amp;file:*.java||lib:javax..*&amp;&amp;file:*.java||lib:org..*&amp;&amp;file:*.java||lib:se..*&amp;&amp;file:*.java||lib:zombie..*&amp;&amp;file:*.java" />
+</component>

@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="zclasses" pattern="lib:astar..*&amp;&amp;file:*.class||lib:com..*&amp;&amp;file:*.class||lib:de..*&amp;&amp;file:*.class||lib:fmod..*&amp;&amp;file:*.class||lib:javax..*&amp;&amp;file:*.class||lib:org..*&amp;&amp;file:*.class||lib:se..*&amp;&amp;file:*.class||lib:zombie..*&amp;&amp;file:*.class" />
+</component>
