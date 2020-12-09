@@ -81,7 +81,7 @@ task decompileZomboid(type: Exec) {
         sourceDirs[i] = gameDir.resolve(sourceDirs[i]).toString()
     }
     gameDir.resolve(project.ext.has('src') ? project.ext.src : 'zombie').toString()
-    def destDir = file('src/main/java')
+    def destDir = sourceSets.game.java.srcDirs[0].path
 
     setCommandLine(['java', '-classpath', classpath, mainClass] + params + sourceDirs + destDir)
 }
