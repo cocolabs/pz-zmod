@@ -111,12 +111,21 @@ task decompileZomboid(type: Exec) {
     setCommandLine(['java', '-classpath', classpath, mainClass] + params + srcDir.path + destDir.path)
 }
 
+task zomboidSourcesJar(type: Jar) {
+    description('Assembles a jar containing decompiled game sources.')
+    setGroup('build')
+
+    archiveFileName = "zomboid-${game_version}-sources.jar"
+    from "$buildDir/generated/sources/zomboid"
+}
+zomboidSourcesJar.dependsOn decompileZomboid
+
 task zomboidLuaJar(type: Jar) {
     setGroup('build')
     description('Assembles a jar containing compiled lua classes.')
+
     archiveFileName = "zdoc-lua-${game_version}.jar"
     destinationDir(file("lib"))
-
     from "$buildDir/generated/sources/zdoc/"
 }
 
