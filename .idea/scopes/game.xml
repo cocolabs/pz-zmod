@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="game" pattern="src[pz-zmod.game]:*..*" />
+</component>

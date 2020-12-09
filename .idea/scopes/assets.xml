@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="assets" pattern="file[pz-zmod.media]:sound//*||file[pz-zmod.media]:textures//*" />
+</component>
