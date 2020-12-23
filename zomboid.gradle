@@ -129,7 +129,7 @@ task zomboidLuaJar(type: Jar) {
     description('Assembles a jar containing compiled lua classes.')
 
     archiveFileName = "zdoc-lua-${game_version}.jar"
-    destinationDir(file("lib"))
+    destinationDir(file("$buildDir/libs"))
     from "$buildDir/generated/sources/zdoc/"
 }
 jar.dependsOn(zomboidLuaJar)
