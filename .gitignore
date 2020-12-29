@@ -14,6 +14,7 @@ local.properties
 *.class
 
 # Package Files #
+*.jar
 *.zip
 *.rar
 
