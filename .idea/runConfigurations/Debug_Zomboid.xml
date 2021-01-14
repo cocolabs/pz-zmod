@@ -6,7 +6,6 @@
     <option name="WORKING_DIRECTORY" value="$STEAM_DIR$/steamapps/common/ProjectZomboid" />
     <method v="2">
       <option name="Gradle.BeforeRunTask" enabled="true" tasks="zomboidJar" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
-      <option name="Gradle.BeforeRunTask" enabled="true" tasks="writeModInfo" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
     </method>
   </configuration>
 </component>
