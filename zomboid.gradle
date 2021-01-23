@@ -1,7 +1,6 @@
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.Path
-import org.apache.commons.io.FileUtils
 
 buildscript {
     repositories {
@@ -103,7 +102,7 @@ task decompileZomboid(type: Exec) {
         def copySrc = gameDir.resolve(sDir).toFile()
 
         logger.info("copying class package \'${copySrc.name}\'")
-        FileUtils.copyDirectory(copySrc, copyDest)
+        org.apache.commons.io.FileUtils.copyDirectory(copySrc, copyDest)
     }
     gameDir.resolve(project.ext.has('src') ? project.ext.src : 'zombie').toString()
     def destDir = file("$buildDir/generated/sources/zomboid")
