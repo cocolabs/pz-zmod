@@ -79,9 +79,8 @@ jar.dependsOn(zomboidJar)
  * example: gradle decompileZomboid -Psrc="<path>"
  */
 task decompileZomboid(type: Exec) {
-    def destDir = file("$buildDir/generated/sources/zomboid")
     onlyIf {
-        !project.ext.ideaHome.empty && !destDir.exists()
+        !project.ext.ideaHome.empty
     }
     description('Decompile Project Zomboid classes.')
 
@@ -107,6 +106,7 @@ task decompileZomboid(type: Exec) {
         FileUtils.copyDirectory(copySrc, copyDest)
     }
     gameDir.resolve(project.ext.has('src') ? project.ext.src : 'zombie').toString()
+    def destDir = file("$buildDir/generated/sources/zomboid")
 
     // decompiler will throw error if destination dir doesn't exist
     destDir.mkdirs()
