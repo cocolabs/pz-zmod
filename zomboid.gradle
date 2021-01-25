@@ -45,7 +45,7 @@ dependencies {
     runtimeOnly files("$buildDir/libs/zomboid-$game_version" + '.jar')
     compile files("$buildDir/libs/zomboid-$game_version-sources" + '.jar')
 
-    compile files("$buildDir/libs/zdoc-lua-$game_version" + '.zip')
+    compile files("$buildDir/libs/pz-zdoc-lua-$game_version" + '.jar')
 }
 
 task zomboidJar(type: Jar) {
