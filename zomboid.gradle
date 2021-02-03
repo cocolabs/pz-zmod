@@ -143,8 +143,6 @@ task annotateZomboidLua(type: JavaExec) {
     jvmArgs("-Dld.logger=dev")
     args('lua', '-i', "$gameDir/media/lua", '-o', 'build/generated/sources/zdoc/')
 }
-annotateZomboidLua.doLast {
-    file('pz-zdoc.log').delete()
 }
 
 task compileZomboidLua(type: JavaExec) {
