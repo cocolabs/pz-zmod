@@ -143,9 +143,6 @@ task annotateZomboidLua(type: JavaExec) {
     jvmArgs("-Dld.logger=dev")
     args('lua', '-i', "$gameDir/media/lua", '-o', 'build/generated/sources/zdoc/')
 }
-annotateZomboidLua.doFirst {
-    file('build/generated/sources/zdoc').mkdirs()
-}
 annotateZomboidLua.doLast {
     file('pz-zdoc.log').delete()
 }
@@ -159,7 +156,4 @@ task compileZomboidLua(type: JavaExec) {
     jvmArgs("-Dld.logger=dev")
     args('java', '--api-docs', 'zombie/Lua/LuaManager.GlobalObject.html', '-o',
             'build/generated/sources/zdoc/shared/Library', '-e', 'Recipe,Vector2')
-}
-compileZomboidLua.doFirst {
-    file('build/generated/sources/zdoc').mkdirs()
 }
