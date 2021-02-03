@@ -1,6 +1,9 @@
 # User data
 local.properties
 
+# Libraries
+/lib/
+
 ### IntelliJ ###
 
 # Project file-based format
