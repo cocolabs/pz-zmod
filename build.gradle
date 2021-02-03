@@ -24,6 +24,11 @@ sourceSets {
     }
 }
 
+wrapper {
+    gradleVersion = '6.7.1'
+    distributionType = Wrapper.DistributionType.ALL
+}
+
 apply from: 'zomboid.gradle'
 apply from: 'mod.gradle'
 
