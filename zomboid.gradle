@@ -128,8 +128,12 @@ def zomboidSourcesJar = tasks.register("zomboidSourcesJar", Jar.class) {
 
     it.archiveFileName = "zomboid-${game_version}-sources.jar"
     it.from "$buildDir/generated/sources/zomboid"
+
+    it.doLast {
+        def archiveFile = it.archiveFile.get().asFile as File
+        FileUtils.copyFile(archiveFile, Paths.get(projectDir.path, 'lib', archiveFile.name).toFile())
+    }
 }
-zomboidSourcesJar.get().dependsOn(decompileZomboid)
 jar.dependsOn(zomboidSourcesJar.get())
 
 def zomboidLuaJar = tasks.register("zomboidLuaJar", Jar.class) {
@@ -139,6 +143,11 @@ def zomboidLuaJar = tasks.register("zomboidLuaJar", Jar.class) {
     it.archiveFileName = "zdoc-lua-${game_version}.jar"
     it.destinationDir(file("$buildDir/libs"))
     it.from "$buildDir/generated/sources/zdoc/"
+
+    it.doLast {
+        def archiveFile = it.archiveFile.get().asFile as File
+        FileUtils.copyFile(archiveFile, Paths.get(projectDir.path, 'lib', archiveFile.name).toFile())
+    }
 }
 jar.dependsOn(zomboidLuaJar.get())
 
