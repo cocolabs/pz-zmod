@@ -1,12 +1,5 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        // https://mvnrepository.com/artifact/commons-io/commons-io
-        classpath group: 'commons-io', name: 'commons-io', version: '2.8.0'
-    }
-}
+import java.nio.file.Paths
+
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
@@ -29,7 +22,28 @@ wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
 
+Properties properties = new Properties()
+def propertiesFile = project.rootProject.file('local.properties')
+if (propertiesFile.exists()) {
+    properties.load(propertiesFile.newDataInputStream())
+}
+project.ext.ideaHome = properties.getProperty('idea.home', '')
+project.ext.gameDir = Paths.get(properties.getProperty('game.dir', ''))
+
+if (project.ext.gameDir == null)
+{
+    if (providers.environmentVariable('GAME_DIR').present) {
+        project.ext.gameDir = Paths.get(providers.environmentVariable('GAME_DIR').get())
+    }
+    else if (System.hasProperty('game.dir')) {
+        project.ext.gameDir = Paths.get(System.getProperty('game.dir'))
+    }
+    else throw new RuntimeException("Game directory path not specified")
+}
+
+apply from: 'utils.gradle'
 apply from: 'zomboid.gradle'
+apply from: 'zdoc.gradle'
 apply from: 'mod.gradle'
 
 jar {

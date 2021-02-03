@@ -1,56 +1,18 @@
 import java.nio.file.Files
-import java.nio.file.Paths
 import java.nio.file.Path
-import org.apache.commons.io.FileUtils
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath group: 'commons-io', name: 'commons-io', version: '2.8.0'
-    }
-}
-Properties properties = new Properties()
-def propertiesFile = project.rootProject.file('local.properties')
-if (propertiesFile.exists()) {
-    properties.load(propertiesFile.newDataInputStream())
-}
-project.ext.ideaHome = properties.getProperty('idea.home', '')
-project.ext.gameDir = Paths.get(properties.getProperty('game.dir', ''))
-
-if (project.ext.gameDir == null)
-{
-    if (providers.environmentVariable('GAME_DIR').present) {
-        project.ext.gameDir = Paths.get(providers.environmentVariable('GAME_DIR').get())
-    }
-    else if (System.hasProperty('game.dir')) {
-        project.ext.gameDir = Paths.get(System.getProperty('game.dir'))
-    }
-    else throw new RuntimeException("Game directory path not specified")
-}
-
-repositories {
-    maven { url 'https://jitpack.io' }
-}
 configurations {
     zomboid.extendsFrom runtimeOnly
 }
 dependencies {
-    // https://github.com/yooksi/pz-zdoc
-    zomboid 'com.github.yooksi:pz-zdoc:master-SNAPSHOT'
-
     // Project Zomboid libraries
-    runtimeOnly fileTree(dir: gameDir, include: ['*.jar'])
+    zomboid fileTree(dir: gameDir, include: ['*.jar'])
 
     // Project Zomboid classes
-    runtimeOnly files("lib/zomboid-$game_version" + '.jar')
+    zomboid files("lib/zomboid-$game_version" + '.jar')
 
     // Project Zomboid sources
     compile files("lib/zomboid-$game_version-sources" + '.jar')
-
-    // ZomboidDoc compiled Lua library
-    compile files("lib/pz-zdoc-lua-$game_version" + '.jar')
 }
 
 def zomboidJar = tasks.register("zomboidJar", Jar.class) {
@@ -73,8 +35,8 @@ def zomboidJar = tasks.register("zomboidJar", Jar.class) {
     }
     it.setExcludes(excludePaths)
     it.doLast {
-        def archiveFile = it.archiveFile.get().asFile as File
-        FileUtils.copyFile(archiveFile, Paths.get(projectDir.path, 'lib', archiveFile.name).toFile())
+        //noinspection GroovyAssignabilityCheck
+        copyJarOutputToLib(it)
     }
 }
 jar.dependsOn(zomboidJar)
@@ -86,7 +48,7 @@ jar.dependsOn(zomboidJar)
  * This can be changed by defining specific file to decompile with project property 'src'.
  * example: gradle decompileZomboid -Psrc="<path>"
  */
-def decompileZomboid = tasks.register("decompileZomboid", Exec.class) {
+tasks.register("decompileZomboid", Exec.class) {
     it.onlyIf {
         !project.ext.ideaHome.empty
     }
@@ -111,7 +73,8 @@ def decompileZomboid = tasks.register("decompileZomboid", Exec.class) {
         def copySrc = gameDir.resolve(sDir).toFile()
 
         logger.info("copying class package \'${copySrc.name}\'")
-        org.apache.commons.io.FileUtils.copyDirectory(copySrc, copyDest)
+        //noinspection GroovyAssignabilityCheck
+        copyDirectory(copySrc, copyDest)
     }
     gameDir.resolve(project.ext.has('src') ? project.ext.src : 'zombie').toString()
     def destDir = file("$buildDir/generated/sources/zomboid")
@@ -128,47 +91,9 @@ def zomboidSourcesJar = tasks.register("zomboidSourcesJar", Jar.class) {
 
     it.archiveFileName = "zomboid-${game_version}-sources.jar"
     it.from "$buildDir/generated/sources/zomboid"
-
     it.doLast {
-        def archiveFile = it.archiveFile.get().asFile as File
-        FileUtils.copyFile(archiveFile, Paths.get(projectDir.path, 'lib', archiveFile.name).toFile())
+        //noinspection GroovyAssignabilityCheck
+        copyJarOutputToLib(it)
     }
 }
 jar.dependsOn(zomboidSourcesJar.get())
-
-def zomboidLuaJar = tasks.register("zomboidLuaJar", Jar.class) {
-    it.setGroup('build')
-    it.description('Assembles a jar containing compiled lua classes.')
-
-    it.archiveFileName = "pz-zdoc-lua-${game_version}.jar"
-    it.destinationDir(file("$buildDir/libs"))
-    it.from "$buildDir/generated/sources/zdoc/"
-
-    it.doLast {
-        def archiveFile = it.archiveFile.get().asFile as File
-        FileUtils.copyFile(archiveFile, Paths.get(projectDir.path, 'lib', archiveFile.name).toFile())
-    }
-}
-jar.dependsOn(zomboidLuaJar.get())
-
-def annotateZomboidLua = tasks.register("annotateZomboidLua", JavaExec.class) {
-    it.setGroup('documentation')
-    it.description('Annotate game Lua files with EmmyLua annotations.')
-
-    it.main = "io.yooksi.pz.zdoc.Main"
-    it.classpath configurations.zomboid
-
-    it.jvmArgs("-Dld.logger=dev")
-    it.args('lua', '-i', "$gameDir/media/lua", '-o', 'build/generated/sources/zdoc/')
-}
-
-def compileZomboidLua = tasks.register("compileZomboidLua", JavaExec.class) {
-    it.description('Parse game api doc and compile to lua.')
-
-    it.main = "io.yooksi.pz.zdoc.Main"
-    it.classpath configurations.zomboid
-
-    it.jvmArgs("-Dld.logger=dev")
-    it.args('java', '--api-docs', 'zombie/Lua/LuaManager.GlobalObject.html', '-o',
-            'build/generated/sources/zdoc/shared/Library', '-e', 'Recipe,Vector2')
-}
