@@ -1,13 +1,15 @@
 repositories {
     maven { url 'https://jitpack.io' }
 }
-
+configurations {
+    zomboidDoc
+}
 dependencies {
     // https://github.com/yooksi/pz-zdoc
-    zomboid 'com.github.yooksi:pz-zdoc:master-SNAPSHOT'
+    zomboidDoc 'com.github.yooksi:pz-zdoc:master-SNAPSHOT
 
     // ZomboidDoc compiled Lua library
-    compile files("lib/pz-zdoc-lua-$game_version" + '.jar')
+    compileOnly files("lib/pz-zdoc-lua-$game_version" + '.jar')
 }
 
 def zomboidLuaJar = tasks.register("zomboidLuaJar", Jar.class) {
@@ -29,7 +31,7 @@ tasks.register("annotateZomboidLua", JavaExec.class) {
     it.description('Annotate game Lua files with EmmyLua annotations.')
 
     it.main = "io.yooksi.pz.zdoc.Main"
-    it.classpath configurations.zomboid
+    it.classpath = configurations.zomboidImplementation + configurations.zomboidDoc
 
     it.jvmArgs("-Dld.logger=dev")
     it.args('lua', '-i', "$gameDir/media/lua", '-o', 'build/generated/sources/zdoc/')
@@ -39,7 +41,7 @@ tasks.register("compileZomboidLua", JavaExec.class) {
     it.description('Parse game api doc and compile to lua.')
 
     it.main = "io.yooksi.pz.zdoc.Main"
-    it.classpath configurations.zomboid
+    it.classpath = configurations.zomboidImplementation + configurations.zomboidDoc
 
     it.jvmArgs("-Dld.logger=dev")
     it.args('java', '--api-docs', 'zombie/Lua/LuaManager.GlobalObject.html', '-o',

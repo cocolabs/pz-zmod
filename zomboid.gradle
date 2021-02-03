@@ -2,17 +2,14 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 configurations {
-    zomboid.extendsFrom runtimeOnly
+    implementation.extendsFrom zomboidImplementation
 }
 dependencies {
     // Project Zomboid libraries
-    zomboid fileTree(dir: gameDir, include: ['*.jar'])
+    zomboidImplementation fileTree(dir: gameDir, include: ['*.jar'])
 
     // Project Zomboid classes
-    zomboid files("lib/zomboid-$game_version" + '.jar')
-
-    // Project Zomboid sources
-    compile files("lib/zomboid-$game_version-sources" + '.jar')
+    zomboidImplementation files("lib/zomboid-$game_version" + '.jar')
 }
 
 def zomboidJar = tasks.register("zomboidJar", Jar.class) {
