@@ -61,24 +61,24 @@ processMediaResources {
 
 task writeModInfo {
     description('Create and write to mod.info file.')
-
-    File file = file('mod.info')
-    List<String> info = Arrays.asList([
-        "name=$mod_name",
-        "poster=poster.png",
-        "description=$mod_desc",
-        "id=$rootProject.name",
-        "url=$mod_url",
-        "modversion=" + rootProject.version,
-        "pzversion=$game_version",
-    ] as String[])
-    if (file.exists() && !file.delete()) {
-        throw new IOException("Unable to delete mod.info file")
-    }
-    else if (!file.createNewFile()) {
-        throw new IOException("Unable to create mod.info file")
-    }
-    file.withWriter('utf-8') { writer ->
-        info.forEach({l -> writer.writeLine(l)})
+    doLast {
+        File file = file('mod.info')
+        List<String> info = Arrays.asList([
+                "name=$mod_name",
+                "poster=poster.png",
+                "description=$mod_desc",
+                "id=$rootProject.name",
+                "url=$mod_url",
+                "modversion=" + rootProject.version,
+                "pzversion=$game_version",
+        ] as String[])
+        if (file.exists() && !file.delete()) {
+            throw new IOException("Unable to delete mod.info file")
+        } else if (!file.createNewFile()) {
+            throw new IOException("Unable to create mod.info file")
+        }
+        file.withWriter('utf-8') { writer ->
+            info.forEach({ l -> writer.writeLine(l) })
+        }
     }
 }
