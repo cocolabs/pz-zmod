@@ -28,22 +28,17 @@ jar.dependsOn(zomboidLuaJar.get())
 
 tasks.register("annotateZomboidLua", JavaExec.class) {
     it.setGroup('documentation')
-    it.description('Annotate game Lua files with EmmyLua annotations.')
+    it.description('Annotate vanilla Lua with EmmyLua.')
 
     it.main = "io.yooksi.pz.zdoc.Main"
     it.classpath = configurations.zomboidImplementation + configurations.zomboidDoc
-
-    it.jvmArgs("-Dld.logger=dev")
-    it.args('lua', '-i', "$gameDir/media/lua", '-o', 'build/generated/sources/zdoc/')
+    it.args('annotate', '-i', "$gameDir/media/lua", '-o', "$buildDir/generated/sources/zdoc/media/lua")
 }
 
 tasks.register("compileZomboidLua", JavaExec.class) {
-    it.description('Parse game api doc and compile to lua.')
+    it.description('Compile Lua library from modding API.')
 
     it.main = "io.yooksi.pz.zdoc.Main"
     it.classpath = configurations.zomboidImplementation + configurations.zomboidDoc
-
-    it.jvmArgs("-Dld.logger=dev")
-    it.args('java', '--api-docs', 'zombie/Lua/LuaManager.GlobalObject.html', '-o',
-            'build/generated/sources/zdoc/shared/Library', '-e', 'Recipe,Vector2')
+    it.args('compile', '-i', "$gameDir", '-o', "$buildDir/generated/sources/zdoc/media/lua/shared/Library")
 }
