@@ -13,8 +13,8 @@ dependencies {
 }
 
 def zomboidLuaJar = tasks.register("zomboidLuaJar", Jar.class) {
-    it.setGroup('build')
     it.description('Assembles a jar containing compiled lua classes.')
+    it.setGroup('zomboid')
 
     it.archiveFileName = "pz-zdoc-lua-${game_version}.jar"
     it.destinationDir(file("$buildDir/libs"))
@@ -27,8 +27,8 @@ def zomboidLuaJar = tasks.register("zomboidLuaJar", Jar.class) {
 jar.dependsOn(zomboidLuaJar.get())
 
 tasks.register("annotateZomboidLua", JavaExec.class) {
-    it.setGroup('documentation')
     it.description('Annotate vanilla Lua with EmmyLua.')
+    it.setGroup('zomboid')
 
     it.main = "io.yooksi.pz.zdoc.Main"
     it.classpath = configurations.zomboidImplementation + configurations.zomboidDoc
@@ -37,6 +37,7 @@ tasks.register("annotateZomboidLua", JavaExec.class) {
 
 tasks.register("compileZomboidLua", JavaExec.class) {
     it.description('Compile Lua library from modding API.')
+    it.setGroup('zomboid')
 
     it.main = "io.yooksi.pz.zdoc.Main"
     it.classpath = configurations.zomboidImplementation + configurations.zomboidDoc

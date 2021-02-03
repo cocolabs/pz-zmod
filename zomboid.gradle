@@ -17,7 +17,7 @@ def zomboidJar = tasks.register("zomboidJar", Jar.class) {
         !project.ext.gameDir.empty
     }
     it.description('Assembles a jar archive containing game classes.')
-    it.setGroup('build')
+    it.setGroup('zomboid')
 
     it.archiveFileName = "zomboid-${game_version}.jar"
     it.includeEmptyDirs = false
@@ -50,6 +50,7 @@ tasks.register("decompileZomboid", Exec.class) {
         !project.ext.ideaHome.empty
     }
     it.description('Decompile Project Zomboid classes.')
+    it.setGroup('zomboid')
 
     def classpath = "$ideaHome/plugins/java-decompiler/lib/java-decompiler.jar"
     def mainClass = 'org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler'
@@ -84,7 +85,7 @@ tasks.register("decompileZomboid", Exec.class) {
 
 def zomboidSourcesJar = tasks.register("zomboidSourcesJar", Jar.class) {
     it.description('Assembles a jar containing decompiled game sources.')
-    it.setGroup('build')
+    it.setGroup('zomboid')
 
     it.archiveFileName = "zomboid-${game_version}-sources.jar"
     it.from "$buildDir/generated/sources/zomboid"
