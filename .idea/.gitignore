@@ -3,6 +3,7 @@
 /workspace.xml
 
 # Other files
+/.name
 /libraries/
 /modules/
 /modules.xml
