@@ -6,7 +6,7 @@ configurations {
 }
 dependencies {
     // https://github.com/yooksi/pz-zdoc
-    zomboidDoc 'com.github.yooksi:pz-zdoc:master-SNAPSHOT
+    zomboidDoc 'com.github.yooksi:pz-zdoc:master-SNAPSHOT'
 
     // ZomboidDoc compiled Lua library
     compileOnly files("lib/pz-zdoc-lua-$game_version" + '.jar')
