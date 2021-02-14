@@ -1,4 +1,5 @@
 import org.codehaus.groovy.runtime.MethodClosure
+
 import java.nio.file.Paths
 
 buildscript {
@@ -20,7 +21,12 @@ void copyDirectory(File src, File dest) {
     org.apache.commons.io.FileUtils.copyDirectory(src, dest)
 }
 
+void writeLinesToFile(ArrayList<String> lines, File file, boolean append) {
+    org.apache.commons.io.FileUtils.writeLines(file, lines, append)
+}
+
 ext {
     copyJarOutputToLib = this.&copyJarOutputToLib as MethodClosure
     copyDirectory = this.&copyDirectory as MethodClosure
+    writeLinesToFile = this.&writeLinesToFile as MethodClosure
 }

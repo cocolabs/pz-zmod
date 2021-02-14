@@ -35,7 +35,33 @@ task validateLocalProperties {
         }
     })
 }
+tasks.register('initLocalProperties') {
+    it.dependsOn(validateLocalProperties)
+    it.doLast {
+        ArrayList<String> content = new ArrayList<String>()
+        content.add("# This file contains local properties used to configure project build.")
+        content.add("# Note: paths need to be Unix-style where segments need to be separated with forward-slashes (/)")
+        content.add("# this is for compatibility and stability purposes as backslashes don't play well in some cases\n")
 
+        content.add("# Path to game installation directory")
+        ant.input(message: 'Enter path to game installation directory: ', addproperty: 'gameDir')
+        content.add("gameDir=${ant.properties.gameDir}")
+
+        content.add("\n# Path to IntelliJ IDEA installation directory")
+        ant.input(message: '\nEnter path to IntelliJ IDEA installation directory: ', addproperty: 'ideaHome')
+        content.add("ideaHome=${ant.properties.ideaHome}")
+
+        // noinspection GroovyAssignabilityCheck
+        writeLinesToFile(content, propertiesFile, false)
+    }
+}
+/**
+ * Initialize Zomboid mod development environment.
+ * - Local properties are resolved by asking user for input.
+ */
+tasks.register('initZomboidMod') {
+    it.dependsOn(initLocalProperties)
+}
 /**
  * Initialize and get project property from {@code local.properties} file with designated type.
  *
