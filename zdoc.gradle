@@ -2,7 +2,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 configurations {
-    zomboidDoc
+    zomboidDoc.extendsFrom zomboidRuntimeOnly
 }
 dependencies {
     // https://github.com/real-coco-labs/pz-zdoc

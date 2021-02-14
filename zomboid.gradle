@@ -1,43 +1,32 @@
-import java.nio.file.Files
-import java.nio.file.Path
+// directory containing a copy of Project Zomboid classes
+project.ext.zomboidClassesDir = file("$buildDir/classes/zomboid").absoluteFile
+
+/**
+ * This task will sync zomboidClassesDir with classes found in game install directory.
+ * Note that it needs to run before dependencies are declared so that
+ * the assembled classes can be included onto the classpath
+ */
+task zomboidClasses(type: Sync) {
+    description 'Assembles zomboid classes.'
+    group 'zomboid'
+    includeEmptyDirs false
+    from project.ext.gameDir
+    include '**/*.class', 'stdlib.lbc'
+    into zomboidClassesDir
+}
+classes.dependsOn(zomboidClasses)
 
 configurations {
+    runtimeOnly.extendsFrom zomboidRuntimeOnly
     implementation.extendsFrom zomboidImplementation
 }
 dependencies {
     // Project Zomboid libraries
-    zomboidImplementation fileTree(dir: gameDir, include: ['*.jar'])
+    zomboidRuntimeOnly fileTree(dir: gameDir, include: ['*.jar'])
 
     // Project Zomboid classes
-    zomboidImplementation files("lib/zomboid-$game_version" + '.jar')
+    zomboidImplementation files(zomboidClassesDir)
 }
-
-def zomboidJar = tasks.register("zomboidJar", Jar.class) {
-    it.onlyIf {
-        !project.ext.gameDir.empty
-    }
-    it.description('Assembles a jar archive containing game classes.')
-    it.setGroup('zomboid')
-
-    it.archiveFileName = "zomboid-${game_version}.jar"
-    it.includeEmptyDirs = false
-
-    it.from project.ext.gameDir
-
-    HashSet<String> excludePaths = new HashSet<>()
-    Files.walk(project.ext.gameDir as Path).withCloseable
-    {
-        it.filter({Files.isRegularFile(it) && !it.fileName.toString().endsWith('class') && it.fileName.toString() != "stdlib.lbc"
-        }).collect().forEach({ excludePaths.add(gameDir.relativize(it as Path).toString()) })
-    }
-    it.setExcludes(excludePaths)
-    it.doLast {
-        //noinspection GroovyAssignabilityCheck
-        copyJarOutputToLib(it)
-    }
-}
-jar.dependsOn(zomboidJar)
-
 /**
  * Decompile game classes with FernFlower using default IDEA settings.
  * Default task behaviour is to decompile all class files found in game root directory.
