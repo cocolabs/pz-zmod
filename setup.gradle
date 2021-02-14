@@ -108,7 +108,7 @@ def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolea
  * @return found project property or {@code null} if no property found.
  */
 def registerLocalProjectProperty(String name, Class<Object> type, String env, boolean required) {
-    project.ext.setProperty(name, getLocalProjectProperty(name, type, env, required, null))
+    project.ext.set(name, getLocalProjectProperty(name, type, env, required, null))
 }
 // path to Project Zomboid installation directory
 registerLocalProjectProperty('gameDir', Path.class, 'PZ_DIR_PATH', true)
