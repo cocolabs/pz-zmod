@@ -3,6 +3,7 @@ repositories {
 }
 configurations {
     zomboidDoc.extendsFrom zomboidRuntimeOnly
+    zomboidDoc.extendsFrom zomboidImplementation
 }
 dependencies {
     // https://github.com/real-coco-labs/pz-zdoc
@@ -27,8 +28,8 @@ tasks.register('annotateZomboidLua', JavaExec.class) {
     it.description('Annotate vanilla Lua with EmmyLua.')
     it.setGroup('zomboid')
 
-    it.classpath = configurations.zomboidImplementation + configurations.zomboidDoc
     it.main = 'io.yooksi.pz.zdoc.Main'
+    it.classpath = configurations.zomboidDoc
     it.args('annotate', '-i', "$gameDir/media/lua", '-o', "$buildDir/generated/sources/zdoc/media/lua")
 }
 
@@ -36,7 +37,7 @@ tasks.register('compileZomboidLua', JavaExec.class) {
     it.description('Compile Lua library from modding API.')
     it.setGroup('zomboid')
 
-    it.classpath = configurations.zomboidImplementation + configurations.zomboidDoc
     it.main = 'io.yooksi.pz.zdoc.Main'
+    it.classpath = configurations.zomboidDoc
     it.args('compile', '-i', "$gameDir", '-o', "$buildDir/generated/sources/zdoc/media/lua/shared/Library")
 }
