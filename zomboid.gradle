@@ -35,8 +35,8 @@ dependencies {
  * example: gradle decompileZomboid -Psrc="<path>"
  */
 tasks.register("decompileZomboid", Exec.class) {
-    it.onlyIf {
-        !project.ext.ideaHome.empty
+    if (!project.ext.hasProperty('ideaHome')) {
+        throw new InvalidUserDataException('Local property \"ideaHome\" is not defined')
     }
     it.description('Decompile Project Zomboid classes.')
     it.setGroup('zomboid')
