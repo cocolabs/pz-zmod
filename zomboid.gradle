@@ -92,7 +92,7 @@ def zomboidJar = tasks.register("zomboidJar", Jar.class) {
     }
     it.setExcludes(excludePaths)
 }
-jar.dependsOn(zomboidJar)
+jar.dependsOn(zomboidJar.get())
 
 def zomboidSourcesJar = tasks.register("zomboidSourcesJar", Jar.class) {
     it.description('Assembles a jar containing decompiled game sources.')
