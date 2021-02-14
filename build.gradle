@@ -15,8 +15,8 @@ sourceSets {
     }
 }
 
-apply from: 'setup.gradle'
 apply from: 'utils.gradle'
+apply from: 'setup.gradle'
 apply from: 'zomboid.gradle'
 apply from: 'zdoc.gradle'
 apply from: 'mod.gradle'
