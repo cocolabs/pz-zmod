@@ -12,7 +12,7 @@ dependencies {
     compileOnly files("lib/pz-zdoc-lua-$game_version" + '.jar')
 }
 
-def zomboidLuaJar = tasks.register("zomboidLuaJar", Jar.class) {
+def zomboidLuaJar = tasks.register('zomboidLuaJar', Jar.class) {
     it.description('Assembles a jar containing compiled lua classes.')
     it.setGroup('zomboid')
 
@@ -23,20 +23,20 @@ def zomboidLuaJar = tasks.register("zomboidLuaJar", Jar.class) {
 }
 jar.dependsOn(zomboidLuaJar.get())
 
-tasks.register("annotateZomboidLua", JavaExec.class) {
+tasks.register('annotateZomboidLua', JavaExec.class) {
     it.description('Annotate vanilla Lua with EmmyLua.')
     it.setGroup('zomboid')
 
-    it.main = "io.yooksi.pz.zdoc.Main"
     it.classpath = configurations.zomboidImplementation + configurations.zomboidDoc
+    it.main = 'io.yooksi.pz.zdoc.Main'
     it.args('annotate', '-i', "$gameDir/media/lua", '-o', "$buildDir/generated/sources/zdoc/media/lua")
 }
 
-tasks.register("compileZomboidLua", JavaExec.class) {
+tasks.register('compileZomboidLua', JavaExec.class) {
     it.description('Compile Lua library from modding API.')
     it.setGroup('zomboid')
 
-    it.main = "io.yooksi.pz.zdoc.Main"
     it.classpath = configurations.zomboidImplementation + configurations.zomboidDoc
+    it.main = 'io.yooksi.pz.zdoc.Main'
     it.args('compile', '-i', "$gameDir", '-o', "$buildDir/generated/sources/zdoc/media/lua/shared/Library")
 }
