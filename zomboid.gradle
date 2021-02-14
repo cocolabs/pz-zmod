@@ -78,9 +78,6 @@ def zomboidSourcesJar = tasks.register("zomboidSourcesJar", Jar.class) {
 
     it.archiveFileName = "zomboid-${game_version}-sources.jar"
     it.from "$buildDir/generated/sources/zomboid"
-    it.doLast {
-        //noinspection GroovyAssignabilityCheck
-        copyJarOutputToLib(it)
-    }
+    it.into 'lib'
 }
 jar.dependsOn(zomboidSourcesJar.get())

@@ -1,7 +1,5 @@
 import org.codehaus.groovy.runtime.MethodClosure
 
-import java.nio.file.Paths
-
 buildscript {
     repositories {
         jcenter()
@@ -9,12 +7,6 @@ buildscript {
     dependencies {
         classpath group: 'commons-io', name: 'commons-io', version: '2.8.0'
     }
-}
-
-void copyJarOutputToLib(Jar jarTask) {
-    def archiveFile = jarTask.archiveFile.get().asFile as File
-    def destination = Paths.get(projectDir.path, 'lib', archiveFile.name).toFile()
-    org.apache.commons.io.FileUtils.copyFile(archiveFile, destination)
 }
 
 void copyDirectory(File src, File dest) {
@@ -26,7 +18,6 @@ void writeLinesToFile(ArrayList<String> lines, File file, boolean append) {
 }
 
 ext {
-    copyJarOutputToLib = this.&copyJarOutputToLib as MethodClosure
     copyDirectory = this.&copyDirectory as MethodClosure
     writeLinesToFile = this.&writeLinesToFile as MethodClosure
 }
