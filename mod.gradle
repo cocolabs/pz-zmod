@@ -58,27 +58,126 @@ processMediaResources {
         fcd.setRelativePath(getRelativeCopyPath(fcd, mResources))
     }
 }
+// This is where mod properties are stored
+def propertiesFile = rootDir.toPath().resolve('mod.properties').toFile()
+project.ext.modProperties = new Properties()
+
+task loadModProperties {
+    if (!propertiesFile.exists())
+    {
+        println('Creating mod.properties file...')
+        if (!propertiesFile.createNewFile()) {
+            throw new IOException('Unable to create mod.properties file')
+        }
+        return // no further validation is needed
+    }
+    // load properties from properties file
+    propertiesFile.withInputStream { modProperties.load(it) }
+}
+
+void validateModProperties() {
+    println('Validating mod properties...')
+    // map of all available mod properties
+    def propertiesMap = [
+            modURL: false,
+            modDesc: false,
+            modName: true,
+            //game version is checked in zdoc.gradle
+            //gameVersion: String.class,
+    ]
+    propertiesMap.entrySet().forEach({
+        def key = it.key
+        def property = modProperties.getProperty(key)
+        if (property == null || property.trim().empty)
+        {
+            def log = "Missing mod property \'${key}\'"
+            if ((it.value as boolean)) {
+                throw new InvalidUserDataException(log)
+            }
+            else println("WARN: ${log}")
+        }
+    })
+    def modUrl = modProperties.getProperty('modURL')
+    if (modUrl != null && !modUrl.trim().empty) {
+        try {
+            new URL(modUrl)
+        }
+        catch (MalformedURLException e) {
+            throw new InvalidUserDataException("Mod property \'modURL\' " +
+                    "is not a valid value for property \'${modUrl}\'", e)
+        }
+    }
+};
+
+// Validating through a task allows us to make sure validation happens on
+// every run configuration as well as provide way of validating through dependency
+task validateModProperties {
+    doLast {
+        validateModProperties()
+    }
+}
+
+def saveModInfo = tasks.register('saveModInfo') {
+    it.doLast {
+        // validate properties before saving them
+        validateModProperties()
+
+        // game version is not set via user input
+        def sGameVersion = (project.ext.gameVersion as String).replaceAll('\\r\\n?', '')
+        modProperties.setProperty('gameVersion', sGameVersion)
+
+        // load mod properties as project extra properties
+        modProperties.entrySet().forEach({
+            project.ext.set(it.key, it.value as String)
+        })
+        propertiesFile.withOutputStream {
+            modProperties.store(it, 'This file contains properties used when writing to mod.info.\n'
+                    + 'It is initialized with \'initModInfo\' and updated with \'saveModInfo\' tasks.\n'
+                    + 'Change these values as you see fit and run \'writeModInfo\' to write them to mod.info.'
+            )
+        }
+    }
+    it.dependsOn('zomboidVersion')
+}
+
+tasks.register('initModInfo') {
+    it.doLast {
+        ant.input(message: 'Enter mod name: \n', addproperty: 'modName')
+        modProperties.setProperty('modName', ant.properties.modName as String)
+
+        ant.input(message: 'Enter mod description: \n', addproperty: 'modDesc')
+        modProperties.setProperty('modDesc', ant.properties.modDesc as String)
+
+        ant.input(message: 'Enter mod repo/workshop URL: \n', addproperty: 'modURL')
+        modProperties.setProperty('modURL', ant.properties.modURL as String)
+    }
+    it.finalizedBy(saveModInfo.get(), writeModInfo)
+}
 
 task writeModInfo {
     description('Create and write to mod.info file.')
     doLast {
         File file = file('mod.info')
         List<String> info = Arrays.asList([
-                "name=$mod_name",
+                "name=$modName",
                 "poster=poster.png",
-                "description=$mod_desc",
+                "description=$modDesc",
                 "id=$rootProject.name",
-                "url=$mod_url",
+                // remove backslash used to escape key/value separators
+                'url=' + (modURL as String).replaceAll('\\\\:', ':'),
                 "modversion=" + rootProject.version,
-                "pzversion=$game_version",
+                "pzversion=$gameVersion",
         ] as String[])
         if (file.exists() && !file.delete()) {
             throw new IOException("Unable to delete mod.info file")
-        } else if (!file.createNewFile()) {
+        }
+        else if (!file.createNewFile()) {
             throw new IOException("Unable to create mod.info file")
         }
         file.withWriter('utf-8') { writer ->
             info.forEach({ l -> writer.writeLine(l) })
         }
     }
+    it.dependsOn(saveModInfo.get())
+    it.mustRunAfter(saveModInfo.get())
 }
