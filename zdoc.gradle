@@ -1,3 +1,6 @@
+// directory containing generated lua library
+project.ext.zDocLuaDir = file("$buildDir/generated/sources/zdoc/").absoluteFile
+
 repositories {
     maven { url 'https://jitpack.io' }
 }
@@ -52,7 +55,7 @@ tasks.register('annotateZomboidLua', JavaExec.class) {
 
     it.main = 'io.yooksi.pz.zdoc.Main'
     it.classpath = configurations.zomboidDoc
-    it.args('annotate', '-i', "$gameDir/media/lua", '-o', "$buildDir/generated/sources/zdoc/media/lua")
+    it.args('annotate', '-i', "$gameDir/media/lua", '-o', "$zDocLuaDir/media/lua")
 }
 
 tasks.register('compileZomboidLua', JavaExec.class) {
@@ -61,5 +64,5 @@ tasks.register('compileZomboidLua', JavaExec.class) {
 
     it.main = 'io.yooksi.pz.zdoc.Main'
     it.classpath = configurations.zomboidDoc
-    it.args('compile', '-i', "$gameDir", '-o', "$buildDir/generated/sources/zdoc/media/lua/shared/Library")
+    it.args('compile', '-i', "$gameDir", '-o', "$zDocLuaDir/media/lua/shared/Library")
 }

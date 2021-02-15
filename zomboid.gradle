@@ -3,6 +3,9 @@ import java.nio.file.Files
 // directory containing a copy of Project Zomboid classes
 project.ext.zomboidClassesDir = file("$buildDir/classes/zomboid").absoluteFile
 
+// directory containing Project Zomboid sources
+project.ext.zomboidSourcesDir = file("$buildDir/generated/sources/zomboid").absoluteFile
+
 /**
  * This task will sync zomboidClassesDir with classes found in game install directory.
  * Note that it needs to run before dependencies are declared so that
@@ -66,12 +69,12 @@ tasks.register("decompileZomboid", Exec.class) {
         copyDirectory(copySrc, copyDest)
     }
     gameDir.resolve(project.ext.has('src') ? project.ext.src : 'zombie').toString()
-    def destDir = file("$buildDir/generated/sources/zomboid")
 
     // decompiler will throw error if destination dir doesn't exist
-    destDir.mkdirs()
+    zomboidSourcesDir.mkdirs()
 
-    it.setCommandLine(['java', '-classpath', classpath, mainClass] + params + srcDir.path + destDir.path)
+    it.setCommandLine(['java', '-classpath', classpath, mainClass] +
+            params + srcDir.path + zomboidSourcesDir.path)
 }
 
 def zomboidJar = tasks.register("zomboidJar", Jar.class) {
