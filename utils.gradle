@@ -1,5 +1,7 @@
 import org.codehaus.groovy.runtime.MethodClosure
 
+import java.nio.charset.Charset
+
 buildscript {
     repositories {
         jcenter()
@@ -17,7 +19,12 @@ void writeLinesToFile(ArrayList<String> lines, File file, boolean append) {
     org.apache.commons.io.FileUtils.writeLines(file, lines, append)
 }
 
+List<String> readLines(File file) {
+    return org.apache.commons.io.FileUtils.readLines(file, Charset.defaultCharset())
+}
+
 ext {
     copyDirectory = this.&copyDirectory as MethodClosure
     writeLinesToFile = this.&writeLinesToFile as MethodClosure
+    readLines = this.&readLines as MethodClosure
 }
