@@ -1,6 +1,6 @@
 # ZomboidMod
 
-![Game Version](https://img.shields.io/badge/PZ%20Version-IWBUMS%3A%2041.47-red) [![License](https://img.shields.io/github/license/yooksi/pz-zmod)](https://www.gnu.org/licenses/)
+![Game Version](https://img.shields.io/badge/PZ%20Version-IWBUMS%3A%2041.47-red) [![License](https://img.shields.io/github/license/yooksi/pz-zmod)](https://mit-license.org/)
 
 Short description of what this mod is all about.
 
