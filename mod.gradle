@@ -112,9 +112,7 @@ void validateModProperties() {
 // Validating through a task allows us to make sure validation happens on
 // every run configuration as well as provide way of validating through dependency
 task validateModProperties {
-    doLast {
-        validateModProperties()
-    }
+    validateModProperties()
 }
 
 def saveModInfo = tasks.register('saveModInfo') {
