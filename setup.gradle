@@ -1,3 +1,5 @@
+import org.gradle.util.GFileUtils
+
 import java.nio.file.InvalidPathException
 import java.nio.file.Paths
 import java.nio.file.Path
@@ -52,7 +54,7 @@ tasks.register('initLocalProperties') {
         content.add("ideaHome=${ant.properties.ideaHome}")
 
         // noinspection GroovyAssignabilityCheck
-        writeLinesToFile(content, propertiesFile, false)
+        GFileUtils.writeFile(content.join(System.lineSeparator()), propertiesFile)
     }
 }
 /**

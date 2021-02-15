@@ -1,3 +1,5 @@
+import org.gradle.util.GFileUtils
+
 // directory containing a copy of Project Zomboid classes
 project.ext.zomboidClassesDir = file("$buildDir/classes/zomboid").absoluteFile
 
@@ -67,8 +69,7 @@ tasks.register("decompileZomboid", JavaExec.class) {
         def copySrc = gameDir.resolve(sDir).toFile()
 
         logger.info("copying class package \'${copySrc.name}\'")
-        //noinspection GroovyAssignabilityCheck
-        copyDirectory(copySrc, copyDest)
+		GFileUtils.copyDirectory(copySrc, copyDest)
     }
     gameDir.resolve(project.ext.has('src') ? project.ext.src : 'zombie').toString()
 
