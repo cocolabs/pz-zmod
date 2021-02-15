@@ -43,7 +43,7 @@ tasks.register('initLocalProperties') {
         ArrayList<String> content = new ArrayList<String>()
         content.add('# This file contains local properties used to configure project build.')
         content.add('# Note: paths need to be Unix-style where segments need to be separated with forward-slashes (/)')
-        content.add('#       this is for compatibility and stability purposes as backslashes don\'t play well.')
+        content.add('# this is for compatibility and stability purposes as backslashes don\'t play well.\n')
 
         content.add('# Path to game installation directory')
         ant.input(message: 'Enter path to game installation directory: ', addproperty: 'gameDir')

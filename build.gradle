@@ -22,7 +22,6 @@ sourceSets {
     }
 }
 
-apply from: 'utils.gradle'
 apply from: 'setup.gradle'
 apply from: 'zomboid.gradle'
 apply from: 'mod.gradle'
