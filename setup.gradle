@@ -49,7 +49,7 @@ tasks.register('initLocalProperties') {
 
         content.add('\n# Path to IntelliJ IDEA installation directory')
         ant.input(message: '\nEnter path to IntelliJ IDEA installation directory: ', addproperty: 'ideaHome')
-        content.add('ideaHome=${ant.properties.ideaHome}')
+        content.add("ideaHome=${ant.properties.ideaHome}")
 
         // noinspection GroovyAssignabilityCheck
         writeLinesToFile(content, propertiesFile, false)
