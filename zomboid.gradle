@@ -1,5 +1,3 @@
-import java.nio.file.Files
-
 // directory containing a copy of Project Zomboid classes
 project.ext.zomboidClassesDir = file("$buildDir/classes/zomboid").absoluteFile
 
@@ -76,32 +74,20 @@ tasks.register("decompileZomboid", JavaExec.class) {
     it.args params + srcDir.path + zomboidSourcesDir.path
 }
 
-def zomboidJar = tasks.register("zomboidJar", Jar.class) {
+tasks.register('zomboidJar', ZDocJar.class) {
     it.description('Assembles a jar archive containing game classes.')
-    it.setGroup('zomboid')
-
-    it.archiveFileName = "zomboid-${game_version}.jar"
     it.includeEmptyDirs = false
 
-    it.from project.ext.gameDir
-    it.into 'lib'
-
-    HashSet<String> excludePaths = new HashSet<>()
-    Files.walk(project.ext.gameDir as java.nio.file.Path).withCloseable
-    {
-        it.filter({Files.isRegularFile(it) && !it.fileName.toString().endsWith('class') && it.fileName.toString() != "stdlib.lbc"
-        }).collect().forEach({ excludePaths.add(gameDir.relativize(it as java.nio.file.Path).toString()) })
-    }
-    it.setExcludes(excludePaths)
+    it.archiveBaseName.set('zomboid')
+    it.from zomboidClassesDir
+    it.destinationDir file('lib')
 }
-jar.dependsOn(zomboidJar.get())
 
-def zomboidSourcesJar = tasks.register("zomboidSourcesJar", Jar.class) {
+tasks.register("zomboidSourcesJar", ZDocJar.class) {
     it.description('Assembles a jar containing decompiled game sources.')
-    it.setGroup('zomboid')
 
-    it.archiveFileName = "zomboid-${game_version}-sources.jar"
-    it.from "$buildDir/generated/sources/zomboid"
-    it.into 'lib'
+    it.archiveBaseName.set('zomboid')
+    it.classifier 'sources'
+    it.from zomboidSourcesDir
+    it.destinationDir file('lib')
 }
-jar.dependsOn(zomboidSourcesJar.get())
