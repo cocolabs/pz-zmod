@@ -1,3 +1,6 @@
+// directory containing generated lua library
+project.ext.zDocLuaDir = file("$buildDir/generated/sources/zdoc/").absoluteFile
+
 repositories {
     maven { url 'https://jitpack.io' }
 }
@@ -10,19 +13,41 @@ dependencies {
     zomboidDoc 'com.github.real-coco-labs:pz-zdoc:v2+'
 
     // ZomboidDoc compiled Lua library
-    compileOnly files("lib/pz-zdoc-lua-$game_version" + '.jar')
+    if (project.ext.has('gameVersion')) {
+        compileOnly files("lib/pz-zdoc-lua-$gameVersion" + '.jar')
+    }
+    else logger.error('Unable to find gameVersion property')
 }
 
-def zomboidLuaJar = tasks.register('zomboidLuaJar', Jar.class) {
+tasks.register('zomboidLuaJar', ZDocJar.class) {
     it.description('Assembles a jar containing compiled lua classes.')
-    it.setGroup('zomboid')
 
-    it.archiveFileName = "pz-zdoc-lua-${game_version}.jar"
-    it.destinationDir(file("$buildDir/libs"))
-    it.from "$buildDir/generated/sources/zdoc/"
-    it.into 'lib'
+    it.archiveBaseName.set('zdoc-lua')
+    it.from zDocLuaDir
 }
-jar.dependsOn(zomboidLuaJar.get())
+
+tasks.register('zomboidVersion', JavaExec.class) {
+    it.description('Read Project Zomboid game version.')
+    it.group('zomboid')
+
+    it.main = 'io.yooksi.pz.zdoc.Main'
+    it.classpath = configurations.zomboidDoc
+    it.args 'version'
+
+    OutputStream oStream = new ByteArrayOutputStream()
+    it.setStandardOutput(oStream)
+
+    it.doLast {
+        // get application command output from stream
+        // ex. game version 41.50 - IWBUMS
+        def versionText = oStream.toString()
+
+        // get version number and classifier (ex. 41.50-IWBUMS)
+        project.ext.gameVersion = versionText.substring(18).replaceAll(" ", "")
+        println("game version: ${project.ext.gameVersion}")
+    }
+    it.dependsOn('zomboidClasses')
+}
 
 tasks.register('annotateZomboidLua', JavaExec.class) {
     it.description('Annotate vanilla Lua with EmmyLua.')
@@ -30,7 +55,8 @@ tasks.register('annotateZomboidLua', JavaExec.class) {
 
     it.main = 'io.yooksi.pz.zdoc.Main'
     it.classpath = configurations.zomboidDoc
-    it.args('annotate', '-i', "$gameDir/media/lua", '-o', "$buildDir/generated/sources/zdoc/media/lua")
+    it.args('annotate', '-i', "$gameDir/media/lua", '-o', "$zDocLuaDir/media/lua")
+    it.dependsOn('zomboidClasses')
 }
 
 tasks.register('compileZomboidLua', JavaExec.class) {
@@ -39,5 +65,6 @@ tasks.register('compileZomboidLua', JavaExec.class) {
 
     it.main = 'io.yooksi.pz.zdoc.Main'
     it.classpath = configurations.zomboidDoc
-    it.args('compile', '-i', "$gameDir", '-o', "$buildDir/generated/sources/zdoc/media/lua/shared/Library")
+    it.args('compile', '-i', "$gameDir", '-o', "$zDocLuaDir/media/lua/shared/Library")
+    it.dependsOn('zomboidClasses')
 }

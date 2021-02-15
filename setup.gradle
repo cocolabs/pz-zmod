@@ -12,7 +12,7 @@ task validateLocalProperties {
         throw new FileNotFoundException('Missing local properties file, run \"initUserData\" task')
     }
     // load properties from properties file
-    localProperties.load(propertiesFile.newDataInputStream())
+    propertiesFile.withInputStream { localProperties.load(it) }
 
     // map of all available local properties
     def propertyMap = [gameDir: Path.class, ideaHome: Path.class]
