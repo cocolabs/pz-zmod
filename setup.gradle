@@ -19,14 +19,14 @@ task validateLocalProperties {
     propertyMap.entrySet().forEach({
         def key = it.key
         def property = localProperties.getProperty(key)
-        if (property == null) {
-            logger.quiet("WARN: Missing local property \"${key}\"")
+        if (property == null || property.trim().empty) {
+            println("WARN: Missing local property \"${key}\"")
         }
         else if (it.value == Path.class) {
             try {
                 Path propertyPath = Paths.get(property)
                 if (!propertyPath.toFile().exists()) {
-                    logger.quiet("WARN: Property path (${propertyPath}) does not exist")
+                    println("WARN: Property path (${propertyPath}) does not exist")
                 }
             }
             catch (InvalidPathException e) {
