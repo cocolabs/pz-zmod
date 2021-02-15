@@ -72,7 +72,13 @@ task loadModProperties {
         return // no further validation is needed
     }
     // load properties from properties file
-    propertiesFile.withInputStream { modProperties.load(it) }
+    propertiesFile.withInputStream {
+        modProperties.load(it)
+    }
+    // load mod properties as project extra properties
+    modProperties.entrySet().forEach({
+        project.ext.set(it.key, it.value as String)
+    })
 }
 
 void validateModProperties() {
@@ -124,10 +130,7 @@ def saveModInfo = tasks.register('saveModInfo') {
         def sGameVersion = (project.ext.gameVersion as String).replaceAll('\\r\\n?', '')
         modProperties.setProperty('gameVersion', sGameVersion)
 
-        // load mod properties as project extra properties
-        modProperties.entrySet().forEach({
-            project.ext.set(it.key, it.value as String)
-        })
+        // save mod properties to mod.properties file
         propertiesFile.withOutputStream {
             modProperties.store(it, 'This file contains properties used when writing to mod.info.\n'
                     + 'It is initialized with \'initModInfo\' and updated with \'saveModInfo\' tasks.\n'
