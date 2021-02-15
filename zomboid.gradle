@@ -81,6 +81,10 @@ tasks.register('zomboidJar', ZDocJar.class) {
     it.archiveBaseName.set('zomboid')
     it.from zomboidClassesDir
     it.destinationDir file('lib')
+	onlyIf {
+		def files = zomboidClassesDir.exists() ? zomboidClassesDir.listFiles() : null
+		return files != null && files.size() > 0
+	}
 }
 
 tasks.register("zomboidSourcesJar", ZDocJar.class) {
@@ -90,4 +94,8 @@ tasks.register("zomboidSourcesJar", ZDocJar.class) {
     it.classifier 'sources'
     it.from zomboidSourcesDir
     it.destinationDir file('lib')
+	it.onlyIf {
+		def files = zomboidSourcesDir.exists() ? zomboidSourcesDir.listFiles() : null
+		return files != null && files.size() > 0
+	}
 }
