@@ -44,6 +44,10 @@ tasks.register("decompileZomboid", JavaExec.class) {
     it.description('Decompile Project Zomboid classes.')
     it.setGroup('zomboid')
 
+	//noinspection GroovyAssignabilityCheck,GroovyAccessibility
+	it.javaLauncher = javaToolchains.launcherFor {
+		languageVersion = JavaLanguageVersion.of(11)
+	}
     it.classpath files("$ideaHome/plugins/java-decompiler/lib/java-decompiler.jar")
     it.main 'org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler'
 
