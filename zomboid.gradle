@@ -39,15 +39,15 @@ dependencies {
  * This can be changed by defining specific file to decompile with project property 'src'.
  * example: gradle decompileZomboid -Psrc="<path>"
  */
-tasks.register("decompileZomboid", Exec.class) {
+tasks.register("decompileZomboid", JavaExec.class) {
     if (!project.ext.has('ideaHome')) {
         throw new InvalidUserDataException('Local property \"ideaHome\" is not defined')
     }
     it.description('Decompile Project Zomboid classes.')
     it.setGroup('zomboid')
 
-    def classpath = "$ideaHome/plugins/java-decompiler/lib/java-decompiler.jar"
-    def mainClass = 'org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler'
+    it.classpath files("$ideaHome/plugins/java-decompiler/lib/java-decompiler.jar")
+    it.main 'org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler'
 
     // default parameters used by IDEA compiler
     def params = ['-hdc=0', '-dgs=1', '-rsy=1', '-rbr=1', '-lit=1', '-nls=1', '-mpm=60']
@@ -73,8 +73,7 @@ tasks.register("decompileZomboid", Exec.class) {
     // decompiler will throw error if destination dir doesn't exist
     zomboidSourcesDir.mkdirs()
 
-    it.setCommandLine(['java', '-classpath', classpath, mainClass] +
-            params + srcDir.path + zomboidSourcesDir.path)
+    it.args params + srcDir.path + zomboidSourcesDir.path
 }
 
 def zomboidJar = tasks.register("zomboidJar", Jar.class) {
