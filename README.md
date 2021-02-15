@@ -19,7 +19,7 @@ Write about things that make this mod great.
 ## Installation
 
 - Download the [latest release](https://github.com/yooksi/pz-zmod/releases/latest) from the repository releases section.
-- Unpack the release with your preferred file archiver (rar, zip, 7zip, etc.) to game mod directory.
+- Unpack the release with your preferred file archiver[<sup>?</sup>](a "rar, zip, 7zip, etc.") to game mod directory.
 - Start the game and toggle the mod in the Mod-Options screen.
 
 For more information read [How To Install / Uninstall Mods](https://theindiestone.com/forums/index.php?/topic/1395-how-to-install-uninstall-mods/) forum thread.
