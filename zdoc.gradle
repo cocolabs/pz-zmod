@@ -13,7 +13,10 @@ dependencies {
     zomboidDoc 'com.github.real-coco-labs:pz-zdoc:v2+'
 
     // ZomboidDoc compiled Lua library
-    compileOnly files("lib/pz-zdoc-lua-$game_version" + '.jar')
+    if (project.ext.has('gameVersion')) {
+        compileOnly files("lib/pz-zdoc-lua-$gameVersion" + '.jar')
+    }
+    else logger.error('Unable to find gameVersion property')
 }
 
 tasks.register('zomboidLuaJar', ZDocJar.class) {
