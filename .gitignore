@@ -1,6 +1,7 @@
 # User data
 local.properties
 mod.properties
+mod.info
 
 # Libraries
 /lib/
