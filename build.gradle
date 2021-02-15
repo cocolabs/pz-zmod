@@ -8,6 +8,13 @@ repositories {
     jcenter()
 }
 
+java {
+    // ZomboidDoc can only be executed with Java 8
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
 sourceSets {
     media {
         java.srcDirs = ['media/lua', 'media/scripts']
