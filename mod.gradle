@@ -71,7 +71,7 @@ task loadModProperties {
 
     if (!propertiesFile.exists())
     {
-        println('Creating mod.properties file...')
+        logger.info('Creating mod.properties file...')
         if (!propertiesFile.createNewFile()) {
             throw new IOException('Unable to create mod.properties file')
         }
@@ -83,12 +83,13 @@ task loadModProperties {
     }
     // load mod properties as project extra properties
     modProperties.entrySet().forEach({
+        logger.info("Loading property ${it.key}:${it.value}")
         project.ext.set(it.key, it.value as String)
     })
 }
 
 void validateModProperties() {
-    println('Validating mod properties...')
+
     // map of all available mod properties
     def propertiesMap = [
             modURL: false,
@@ -106,7 +107,7 @@ void validateModProperties() {
             if ((it.value as boolean)) {
                 throw new InvalidUserDataException(log)
             }
-            else println("WARN: ${log}")
+            else logger.warn("WARN: ${log}")
         }
     })
     def modUrl = modProperties.getProperty('modURL')
