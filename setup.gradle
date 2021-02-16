@@ -10,6 +10,10 @@ def localProperties = new Properties()
 project.ext.localProperties = localProperties
 
 task validateLocalProperties {
+
+    description('Check if local project properties are correct.')
+    group('verification')
+
     if (!propertiesFile.exists()) {
         throw new FileNotFoundException('Missing local properties file, run \"initUserData\" task')
     }
@@ -38,6 +42,10 @@ task validateLocalProperties {
     })
 }
 tasks.register('initLocalProperties') {
+
+    description('Initialize local project properties.')
+    group('build setup')
+
     it.dependsOn(validateLocalProperties)
     it.doLast {
         ArrayList<String> content = new ArrayList<String>()
@@ -62,6 +70,10 @@ tasks.register('initLocalProperties') {
  * - Local properties are resolved by asking user for input.
  */
 tasks.register('initZomboidMod') {
+
+    description('Initialize new Project Zomboid mod.')
+    group('build setup')
+
     it.dependsOn(initLocalProperties)
 }
 /**

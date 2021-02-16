@@ -63,6 +63,10 @@ def propertiesFile = rootDir.toPath().resolve('mod.properties').toFile()
 project.ext.modProperties = new Properties()
 
 task loadModProperties {
+
+    description('Load mod.properties to gradle properties.')
+    group('mod')
+
     if (!propertiesFile.exists())
     {
         println('Creating mod.properties file...')
@@ -118,10 +122,18 @@ void validateModProperties() {
 // Validating through a task allows us to make sure validation happens on
 // every run configuration as well as provide way of validating through dependency
 task validateModProperties {
+
+    description('Check if loaded mod properties are correct.')
+    group('verification')
+
     validateModProperties()
 }
 
 def saveModInfo = tasks.register('saveModInfo') {
+
+    description('Save mod properties to mod.properties file.')
+    group('mod')
+
     it.doLast {
         // validate properties before saving them
         validateModProperties()
@@ -142,6 +154,10 @@ def saveModInfo = tasks.register('saveModInfo') {
 }
 
 tasks.register('initModInfo') {
+
+    description('Initialize mod properties and mod.info file.')
+    group('mod')
+
     it.doLast {
         ant.input(message: 'Enter mod name: \n', addproperty: 'modName')
         modProperties.setProperty('modName', ant.properties.modName as String)
@@ -157,6 +173,8 @@ tasks.register('initModInfo') {
 
 task writeModInfo {
     description('Create and write to mod.info file.')
+    group('mod')
+
     doLast {
         File file = file('mod.info')
         List<String> info = Arrays.asList([
