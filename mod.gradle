@@ -98,7 +98,9 @@ void validateModProperties() {
             //game version is checked in zdoc.gradle
             //gameVersion: String.class,
     ]
-    propertiesMap.entrySet().forEach({
+    //@formatter:off
+    propertiesMap.entrySet().forEach(
+    {
         def key = it.key
         def property = modProperties.getProperty(key)
         if (property == null || property.trim().empty)
@@ -109,9 +111,10 @@ void validateModProperties() {
             }
             else logger.warn("WARN: ${log}")
         }
-    })
+    })//@formatter:on
     def modUrl = modProperties.getProperty('modURL')
-    if (modUrl != null && !modUrl.trim().empty) {
+    if (modUrl != null && !modUrl.trim().empty)
+    {
         try {
             new URL(modUrl)
         }
