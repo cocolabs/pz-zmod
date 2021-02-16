@@ -99,8 +99,5 @@ if (propertiesFile.exists())
 
     // path to Project Zomboid installation directory
     registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', false)
-
-    // path to GitBash for Windows users
-    registerLocalProjectProperty('gitBashExe', Path.class, 'GIT_BASH_EXE', false)
 }
 else logger.warn('WARN: Unable to find local.properties file')
