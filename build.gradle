@@ -24,12 +24,13 @@ sourceSets {
         resources.srcDirs = ['media/sound', 'media/textures']
     }
 }
-
 apply from: 'setup.gradle'
 apply from: 'distribution.gradle'
 apply from: 'zomboid.gradle'
 apply from: 'mod.gradle'
 apply from: 'zdoc.gradle'
+
+defaultTasks 'showModInfo'
 
 jar {
     from sourceSets.media.output
