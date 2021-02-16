@@ -1,2 +1,7 @@
+import org.apache.tools.ant.DirectoryScanner
+
+DirectoryScanner.removeDefaultExclude('**/.gitignore')
+DirectoryScanner.removeDefaultExclude('**/.gitattributes')
+
 gradle.startParameter.excludedTaskNames += "compileJava"
 rootProject.name = 'pz-zmod'
