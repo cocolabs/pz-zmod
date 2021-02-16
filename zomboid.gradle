@@ -11,15 +11,16 @@ project.ext.zomboidSourcesDir = file("$buildDir/generated/sources/zomboid").abso
  * Note that it needs to run before dependencies are declared so that
  * the assembled classes can be included onto the classpath
  */
-task zomboidClasses(type: Sync) {
+def zomboidClasses = tasks.register('zomboidClasses', Sync.class) {
 
-    description 'Assembles zomboid classes.'
-    group 'zomboid'
+	it.description 'Assembles zomboid classes.'
+	it.group 'zomboid'
 
-    includeEmptyDirs false
-    from project.ext.gameDir
-    include '**/*.class', 'stdlib.lbc'
-    into zomboidClassesDir
+	it.includeEmptyDirs false
+	it.from project.ext.gameDir
+	it.include '**/*.class', 'stdlib.lbc'
+	it.into zomboidClassesDir
+	it.dependsOn tasks.named('loadLocalProperties')
 }
 classes.dependsOn(zomboidClasses)
 
@@ -28,9 +29,10 @@ configurations {
     implementation.extendsFrom zomboidImplementation
 }
 dependencies {
-    // Project Zomboid libraries
-    zomboidRuntimeOnly fileTree(dir: gameDir, include: ['*.jar'])
-
+	// Project Zomboid libraries
+	if (project.ext.has('gameDir')) {
+		zomboidRuntimeOnly fileTree(dir: gameDir, include: ['*.jar'])
+	}
     // Project Zomboid classes
     zomboidImplementation files(zomboidClassesDir)
 }

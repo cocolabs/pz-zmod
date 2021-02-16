@@ -47,7 +47,7 @@ tasks.register('zomboidVersion', JavaExec.class) {
         project.ext.gameVersion = versionText.substring(18).replaceAll(" ", "")
         println("game version: ${project.ext.gameVersion}")
     }
-    it.dependsOn('zomboidClasses')
+    it.dependsOn(tasks.getByName('zomboidClasses'))
 }
 
 tasks.register('annotateZomboidLua', JavaExec.class) {
@@ -57,7 +57,7 @@ tasks.register('annotateZomboidLua', JavaExec.class) {
 
     it.main = 'io.yooksi.pz.zdoc.Main'
     it.classpath = configurations.zomboidDoc
-    it.args('annotate', '-i', "$gameDir/media/lua", '-o', "$zDocLuaDir/media/lua")
+    it.args('annotate', '-i', "${project.ext.gameDir}/media/lua", '-o', "$zDocLuaDir/media/lua")
     it.dependsOn('zomboidClasses')
 }
 

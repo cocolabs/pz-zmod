@@ -6,76 +6,8 @@ import java.nio.file.Path
 
 // This is where local project properties are stored
 def propertiesFile = rootDir.toPath().resolve('local.properties').toFile()
-def localProperties = new Properties()
-project.ext.localProperties = localProperties
+project.ext.localProperties = new Properties()
 
-task validateLocalProperties {
-
-    description('Check if local project properties are correct.')
-    group('verification')
-
-    if (!propertiesFile.exists()) {
-        throw new FileNotFoundException('Missing local properties file, run \"initUserData\" task')
-    }
-    // load properties from properties file
-    propertiesFile.withInputStream { localProperties.load(it) }
-
-    // map of all available local properties
-    def propertyMap = [gameDir: Path.class, ideaHome: Path.class]
-    propertyMap.entrySet().forEach({
-        def key = it.key
-        def property = localProperties.getProperty(key)
-        if (property == null || property.trim().empty) {
-            println("WARN: Missing local property \"${key}\"")
-        }
-        else if (it.value == Path.class) {
-            try {
-                Path propertyPath = Paths.get(property)
-                if (!propertyPath.toFile().exists()) {
-                    println("WARN: Property path (${propertyPath}) does not exist")
-                }
-            }
-            catch (InvalidPathException e) {
-                throw new InvalidUserDataException("Property (${property}) is not a valid property", e)
-            }
-        }
-    })
-}
-tasks.register('initLocalProperties') {
-
-    description('Initialize local project properties.')
-    group('build setup')
-
-    it.dependsOn(validateLocalProperties)
-    it.doLast {
-        ArrayList<String> content = new ArrayList<String>()
-        content.add('# This file contains local properties used to configure project build.')
-        content.add('# Note: paths need to be Unix-style where segments need to be separated with forward-slashes (/)')
-        content.add('# this is for compatibility and stability purposes as backslashes don\'t play well.\n')
-
-        content.add('# Path to game installation directory')
-        ant.input(message: 'Enter path to game installation directory: ', addproperty: 'gameDir')
-        content.add("gameDir=${ant.properties.gameDir}")
-
-        content.add('\n# Path to IntelliJ IDEA installation directory')
-        ant.input(message: '\nEnter path to IntelliJ IDEA installation directory: ', addproperty: 'ideaHome')
-        content.add("ideaHome=${ant.properties.ideaHome}")
-
-        // noinspection GroovyAssignabilityCheck
-        GFileUtils.writeFile(content.join(System.lineSeparator()), propertiesFile)
-    }
-}
-/**
- * Initialize Zomboid mod development environment.
- * - Local properties are resolved by asking user for input.
- */
-tasks.register('initZomboidMod') {
-
-    description('Initialize new Project Zomboid mod.')
-    group('build setup')
-
-    it.dependsOn(initLocalProperties)
-}
 /**
  * Initialize and get project property from {@code local.properties} file with designated type.
  *
@@ -124,11 +56,93 @@ def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolea
 def registerLocalProjectProperty(String name, Class<Object> type, String env, boolean required) {
     project.ext.set(name, getLocalProjectProperty(name, type, env, required, null))
 }
-// path to Project Zomboid installation directory
-registerLocalProjectProperty('gameDir', Path.class, 'PZ_DIR_PATH', true)
 
-// path to Project Zomboid installation directory
-registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', false)
+tasks.register('loadLocalProperties') {
 
-// path to GitBash for Windows users
-registerLocalProjectProperty('gitBashExe', Path.class, 'GIT_BASH_EXE', false)
+    it.description('Load local.properties to gradle properties.')
+    it.group('mod')
+
+    if (!propertiesFile.exists()) {
+       throw new FileNotFoundException('Cannot load from local properties, file doesn\'t exist')
+    }
+    // load properties from properties file
+    propertiesFile.withInputStream {
+        localProperties.load(it)
+    }
+    // path to Project Zomboid installation directory
+    registerLocalProjectProperty('gameDir', Path.class, 'PZ_DIR_PATH', true)
+
+    // path to Project Zomboid installation directory
+    registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', false)
+
+    // path to GitBash for Windows users
+    registerLocalProjectProperty('gitBashExe', Path.class, 'GIT_BASH_EXE', false)
+}
+
+tasks.register('validateLocalProperties') {
+
+    description('Check if local project properties are correct.')
+    group('verification')
+
+    // map of all available local properties
+    def propertyMap = [gameDir: Path.class, ideaHome: Path.class]
+    propertyMap.entrySet().forEach({
+        def key = it.key
+        def property = localProperties.getProperty(key)
+        if (property == null || property.trim().empty) {
+            println("WARN: Missing local property \"${key}\"")
+        }
+        else if (it.value == Path.class) {
+            try {
+                Path propertyPath = Paths.get(property)
+                if (!propertyPath.toFile().exists()) {
+                    println("WARN: Property path (${propertyPath}) does not exist")
+                }
+            }
+            catch (InvalidPathException e) {
+                throw new InvalidUserDataException("Property (${property}) is not a valid property", e)
+            }
+        }
+    })
+}
+tasks.register('initLocalProperties') {
+
+    description('Initialize local project properties.')
+    group('build setup')
+
+    it.doLast {
+        ArrayList<String> content = new ArrayList<String>()
+        content.add('# This file contains local properties used to configure project build.')
+        content.add('# Note: paths need to be Unix-style where segments need to be separated with forward-slashes (/)')
+        content.add('# this is for compatibility and stability purposes as backslashes don\'t play well.\n')
+
+        content.add('# Path to game installation directory')
+        ant.input(message: 'Enter path to game installation directory: ', addproperty: 'gameDir')
+        content.add("gameDir=${ant.properties.gameDir}")
+
+        content.add('\n# Path to IntelliJ IDEA installation directory')
+        ant.input(message: '\nEnter path to IntelliJ IDEA installation directory: ', addproperty: 'ideaHome')
+        content.add("ideaHome=${ant.properties.ideaHome}")
+
+        if (!propertiesFile.exists())
+        {
+            logger.info('Creating local.properties file...')
+            if (!propertiesFile.createNewFile()) {
+                throw new IOException('Unable to create local.properties file')
+            }
+        }
+        // noinspection GroovyAssignabilityCheck
+        GFileUtils.writeFile(content.join(System.lineSeparator()), propertiesFile)
+    }
+}
+/**
+ * Initialize Zomboid mod development environment.
+ * - Local properties are resolved by asking user for input.
+ */
+tasks.register('initZomboidMod') {
+
+    description('Initialize new Project Zomboid mod.')
+    group('build setup')
+
+    it.dependsOn(initLocalProperties)
+}
