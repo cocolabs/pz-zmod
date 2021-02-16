@@ -40,7 +40,7 @@ dependencies {
  * example: gradle decompileZomboid -Psrc="<path>"
  */
 tasks.register("decompileZomboid", JavaExec.class) {
-    if (!project.ext.has('ideaHome')) {
+    if (project.ext.ideaHome == null) {
         throw new InvalidUserDataException('Local property \"ideaHome\" is not defined')
     }
     it.description('Decompile Project Zomboid classes.')
