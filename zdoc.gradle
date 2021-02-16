@@ -23,7 +23,9 @@ tasks.register('zomboidLuaJar', ZDocJar.class) {
 
     it.description('Assembles a jar containing compiled lua classes.')
     it.archiveBaseName.set('zdoc-lua')
+
     it.from zDocLuaDir
+    it.destinationDir file('lib')
 }
 
 tasks.register('zomboidVersion', JavaExec.class) {
