@@ -114,6 +114,11 @@ def saveModProperties = tasks.register('saveModProperties') {
         def sGameVersion = (project.ext.gameVersion as String).replaceAll('\\r\\n?', '')
         modProperties.setProperty('gameVersion', sGameVersion)
 
+        // trim all mod property values
+        modProperties.entrySet().forEach({
+            modProperties.setProperty(it.key as String, (it.value as String).trim())
+        })
+        // ensure that properties file exists before writing to it
         if (!propertiesFile.exists())
         {
             if (!propertiesFile.createNewFile()) {
