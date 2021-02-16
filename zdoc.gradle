@@ -45,7 +45,7 @@ tasks.register('zomboidVersion', JavaExec.class) {
 
         // get version number and classifier (ex. 41.50-IWBUMS)
         project.ext.gameVersion = versionText.substring(18).replaceAll(" ", "")
-        println("game version: ${project.ext.gameVersion}")
+        logger.lifecycle("game version: ${project.ext.gameVersion}")
     }
     it.dependsOn(tasks.getByName('zomboidClasses'))
 }

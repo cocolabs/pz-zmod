@@ -37,7 +37,7 @@ tasks.register('stageDistribution', Copy.class) {
 			ignoredFiles.each {
 				File ignoredFile = stagePath.resolve(it).normalize().toFile()
 				if (ignoredFile.exists() && !ignoredFile.isDirectory() && !ignoredFile.delete()) {
-					println("WARN: Unable to delete ${ignoredFile.path}")
+					logger.warn("WARN: Unable to delete ${ignoredFile.path}")
 				}
 			}
 		}
