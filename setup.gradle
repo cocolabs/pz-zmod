@@ -104,15 +104,3 @@ if (propertiesFile.exists())
     registerLocalProjectProperty('gitBashExe', Path.class, 'GIT_BASH_EXE', false)
 }
 else logger.warn('WARN: Unable to find local.properties file')
-
-/**
- * Initialize Zomboid mod development environment.
- * - Local properties are resolved by asking user for input.
- */
-tasks.register('initZomboidMod') {
-
-    description('Initialize new Project Zomboid mod.')
-    group('mod')
-
-    it.dependsOn(initLocalProperties)
-}
