@@ -118,11 +118,11 @@ tasks.register('initLocalProperties') {
 
         content.add('# Path to game installation directory')
         ant.input(message: 'Enter path to game installation directory: ', addproperty: 'gameDir')
-        content.add("gameDir=${ant.properties.gameDir}")
+        content.add("gameDir=${ant.properties.gameDir.toString().replace('\\', '/')}")
 
         content.add('\n# Path to IntelliJ IDEA installation directory')
         ant.input(message: '\nEnter path to IntelliJ IDEA installation directory: ', addproperty: 'ideaHome')
-        content.add("ideaHome=${ant.properties.ideaHome}")
+        content.add("ideaHome=${ant.properties.ideaHome.toString().replace('\\', '/')}")
 
         if (!propertiesFile.exists())
         {
