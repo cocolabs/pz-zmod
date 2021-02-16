@@ -171,7 +171,7 @@ tasks.register('initModInfo') {
         ant.input(message: 'Enter mod repo/workshop URL: \n', addproperty: 'modURL')
         modProperties.setProperty('modURL', ant.properties.modURL as String)
     }
-    it.finalizedBy(saveModInfo.get(), writeModInfo)
+    it.finalizedBy(saveModInfo, writeModInfo)
 }
 
 task writeModInfo {
@@ -201,6 +201,6 @@ task writeModInfo {
             info.forEach({ l -> writer.writeLine(l) })
         }
     }
-    it.dependsOn(saveModInfo.get())
-    it.mustRunAfter(saveModInfo.get())
+    it.dependsOn(saveModInfo)
+    it.mustRunAfter(saveModInfo)
 }

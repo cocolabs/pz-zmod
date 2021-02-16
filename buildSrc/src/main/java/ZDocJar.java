@@ -48,7 +48,7 @@ public class ZDocJar extends Jar {
 		 * additional configuration actions
 		 */
 		setGroup("zomboid");
-		dependsOn("zomboidVersion");
+		dependsOn(project.getTasks().named("zomboidVersion"));
 		getTaskByName("jar").dependsOn(this);
 		return configure;
 	}
