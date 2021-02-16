@@ -95,7 +95,7 @@ tasks.register('zomboidJar', ZDocJar.class) {
     it.archiveBaseName.set('zomboid')
     it.from zomboidClassesDir
     it.destinationDir file('lib')
-	onlyIf {
+	it.onlyIf {
 		def files = zomboidClassesDir.exists() ? zomboidClassesDir.listFiles() : null
 		return files != null && files.size() > 0
 	}
