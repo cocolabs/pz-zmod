@@ -204,7 +204,7 @@ task writeModInfo {
 String getDisplayProperty(String name) {
 
     String property = project.ext.get(name)
-    return property.empty ? '<property not set>' : property
+    return property.empty ? '<not specified>' : property
 }
 
 task showModInfo {
