@@ -20,7 +20,6 @@ def zomboidClasses = tasks.register('zomboidClasses', Sync.class) {
 	it.from project.ext.gameDir
 	it.include '**/*.class', 'stdlib.lbc'
 	it.into zomboidClassesDir
-	it.dependsOn tasks.named('loadLocalProperties')
 }
 classes.dependsOn(zomboidClasses)
 
@@ -99,6 +98,7 @@ tasks.register('zomboidJar', ZDocJar.class) {
 		def files = zomboidClassesDir.exists() ? zomboidClassesDir.listFiles() : null
 		return files != null && files.size() > 0
 	}
+	it.dependsOn(zomboidClasses)
 }
 
 tasks.register("zomboidSourcesJar", ZDocJar.class) {

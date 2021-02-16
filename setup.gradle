@@ -1,6 +1,5 @@
 import org.gradle.util.GFileUtils
 
-import java.nio.file.InvalidPathException
 import java.nio.file.Paths
 import java.nio.file.Path
 
@@ -57,54 +56,6 @@ def registerLocalProjectProperty(String name, Class<Object> type, String env, bo
     project.ext.set(name, getLocalProjectProperty(name, type, env, required, null))
 }
 
-tasks.register('loadLocalProperties') {
-
-    it.description('Load local.properties to gradle properties.')
-    it.group('mod')
-
-    if (!propertiesFile.exists()) {
-       throw new FileNotFoundException('Cannot load from local properties, file doesn\'t exist')
-    }
-    // load properties from properties file
-    propertiesFile.withInputStream {
-        localProperties.load(it)
-    }
-    // path to Project Zomboid installation directory
-    registerLocalProjectProperty('gameDir', Path.class, 'PZ_DIR_PATH', true)
-
-    // path to Project Zomboid installation directory
-    registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', false)
-
-    // path to GitBash for Windows users
-    registerLocalProjectProperty('gitBashExe', Path.class, 'GIT_BASH_EXE', false)
-}
-
-tasks.register('validateLocalProperties') {
-
-    description('Check if local project properties are correct.')
-    group('verification')
-
-    // map of all available local properties
-    def propertyMap = [gameDir: Path.class, ideaHome: Path.class]
-    propertyMap.entrySet().forEach({
-        def key = it.key
-        def property = localProperties.getProperty(key)
-        if (property == null || property.trim().empty) {
-            println("WARN: Missing local property \"${key}\"")
-        }
-        else if (it.value == Path.class) {
-            try {
-                Path propertyPath = Paths.get(property)
-                if (!propertyPath.toFile().exists()) {
-                    println("WARN: Property path (${propertyPath}) does not exist")
-                }
-            }
-            catch (InvalidPathException e) {
-                throw new InvalidUserDataException("Property (${property}) is not a valid property", e)
-            }
-        }
-    })
-}
 tasks.register('initLocalProperties') {
 
     description('Initialize local project properties.')
@@ -135,6 +86,25 @@ tasks.register('initLocalProperties') {
         GFileUtils.writeFile(content.join(System.lineSeparator()), propertiesFile)
     }
 }
+// load and register all local properties
+if (propertiesFile.exists())
+{
+    // load properties from properties file
+    logger.info('Loading local properties...')
+    propertiesFile.withInputStream {
+        localProperties.load(it)
+    }
+    // path to Project Zomboid installation directory
+    registerLocalProjectProperty('gameDir', Path.class, 'PZ_DIR_PATH', true)
+
+    // path to Project Zomboid installation directory
+    registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', false)
+
+    // path to GitBash for Windows users
+    registerLocalProjectProperty('gitBashExe', Path.class, 'GIT_BASH_EXE', false)
+}
+else logger.warn('WARN: Unable to find local.properties file')
+
 /**
  * Initialize Zomboid mod development environment.
  * - Local properties are resolved by asking user for input.
@@ -142,7 +112,7 @@ tasks.register('initLocalProperties') {
 tasks.register('initZomboidMod') {
 
     description('Initialize new Project Zomboid mod.')
-    group('build setup')
+    group('mod')
 
     it.dependsOn(initLocalProperties)
 }

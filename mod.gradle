@@ -64,30 +64,6 @@ processMediaResources {
 def propertiesFile = rootDir.toPath().resolve('mod.properties').toFile()
 project.ext.modProperties = new Properties()
 
-task loadModProperties {
-
-    description('Load mod.properties to gradle properties.')
-    group('mod')
-
-    if (!propertiesFile.exists())
-    {
-        logger.info('Creating mod.properties file...')
-        if (!propertiesFile.createNewFile()) {
-            throw new IOException('Unable to create mod.properties file')
-        }
-        return // no further validation is needed
-    }
-    // load properties from properties file
-    propertiesFile.withInputStream {
-        modProperties.load(it)
-    }
-    // load mod properties as project extra properties
-    modProperties.entrySet().forEach({
-        logger.info("Loading property ${it.key}:${it.value}")
-        project.ext.set(it.key, it.value as String)
-    })
-}
-
 void validateModProperties() {
 
     // map of all available mod properties
@@ -123,21 +99,11 @@ void validateModProperties() {
                     "is not a valid value for property \'${modUrl}\'", e)
         }
     }
-};
-
-// Validating through a task allows us to make sure validation happens on
-// every run configuration as well as provide way of validating through dependency
-task validateModProperties {
-
-    description('Check if loaded mod properties are correct.')
-    group('verification')
-
-    validateModProperties()
 }
 
-def saveModInfo = tasks.register('saveModInfo') {
+def saveModProperties = tasks.register('saveModProperties') {
 
-    description('Save mod properties to mod.properties file.')
+    description('Save mod properties to properties file.')
     group('mod')
 
     it.doLast {
@@ -148,20 +114,26 @@ def saveModInfo = tasks.register('saveModInfo') {
         def sGameVersion = (project.ext.gameVersion as String).replaceAll('\\r\\n?', '')
         modProperties.setProperty('gameVersion', sGameVersion)
 
+        if (!propertiesFile.exists())
+        {
+            if (!propertiesFile.createNewFile()) {
+                throw new IOException('Unable to create mod.properties file')
+            }
+        }
         // save mod properties to mod.properties file
         propertiesFile.withOutputStream {
             modProperties.store(it, 'This file contains properties used when writing to mod.info.\n'
-                    + 'It is initialized with \'initModInfo\' and updated with \'saveModInfo\' tasks.\n'
+                    + 'It is initialized with \'initModProperties\' and updated with \'saveModProperties\'.\n'
                     + 'Change these values as you see fit and run \'writeModInfo\' to write them to mod.info.'
             )
         }
     }
-    it.dependsOn('zomboidVersion')
+    it.dependsOn(tasks.named('zomboidVersion'))
 }
 
-tasks.register('initModInfo') {
+tasks.register('initModProperties') {
 
-    description('Initialize mod properties and mod.info file.')
+    description('Initialize mod properties.')
     group('mod')
 
     it.doLast {
@@ -174,12 +146,26 @@ tasks.register('initModInfo') {
         ant.input(message: 'Enter mod repo/workshop URL: \n', addproperty: 'modURL')
         modProperties.setProperty('modURL', ant.properties.modURL as String)
     }
-    it.finalizedBy(saveModInfo, writeModInfo)
+    it.finalizedBy(saveModProperties)
 }
+
+if (propertiesFile.exists())
+{
+    // load properties from properties file
+    propertiesFile.withInputStream {
+        modProperties.load(it)
+    }
+    // load mod properties as project extra properties
+    modProperties.entrySet().forEach({
+        logger.info("Loading property ${it.key}:${it.value}")
+        project.ext.set(it.key as String, it.value as String)
+    })
+}
+else logger.warn('WARN: Unable to find mod.properties file')
 
 task writeModInfo {
 
-    description('Create and write to mod.info file.')
+    description('Write properties to mod.info file.')
     group('mod')
 
     doLast {
@@ -204,6 +190,5 @@ task writeModInfo {
             info.forEach({ l -> writer.writeLine(l) })
         }
     }
-    it.dependsOn(saveModInfo)
-    it.mustRunAfter(saveModInfo)
+    mustRunAfter(saveModProperties)
 }
