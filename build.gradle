@@ -1,6 +1,9 @@
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
+
+    // Facilitates building archives that serve as project distributions
+    id 'distribution'
 }
 version '1.0'
 
@@ -23,6 +26,7 @@ sourceSets {
 }
 
 apply from: 'setup.gradle'
+apply from: 'distribution.gradle'
 apply from: 'zomboid.gradle'
 apply from: 'mod.gradle'
 apply from: 'zdoc.gradle'
