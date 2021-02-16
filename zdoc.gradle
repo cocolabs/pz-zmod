@@ -16,7 +16,7 @@ dependencies {
     if (project.ext.has('gameVersion')) {
         compileOnly files("lib/pz-zdoc-lua-$gameVersion" + '.jar')
     }
-    else logger.error('Unable to find gameVersion property')
+    else logger.warn('WARN: Unable to find gameVersion property')
 }
 
 tasks.register('zomboidLuaJar', ZDocJar.class) {
