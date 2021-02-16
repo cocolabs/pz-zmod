@@ -35,3 +35,5 @@ logs/
 # Ignore Gradle build output directory
 build/
 
+# Exclude gradle-wrapper.jar from rules
+!/gradle/wrapper/gradle-wrapper.jar
