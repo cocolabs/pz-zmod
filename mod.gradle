@@ -39,6 +39,7 @@ static def getRelativeCopyPath(fcd, relativePathMap) {
 }
 
 task mediaClasses(type: Copy, overwrite: true) {
+
     includeEmptyDirs = false
     from(sourceSets.media.java.srcDirs) {
         def mSources = getPathsRelativeToModule('media', sourceSets.media.java)
@@ -51,6 +52,7 @@ task mediaClasses(type: Copy, overwrite: true) {
 }
 
 processMediaResources {
+
     includeEmptyDirs = false
     def mResources = getPathsRelativeToModule('media', sourceSets.media.resources)
     eachFile {
@@ -172,6 +174,7 @@ tasks.register('initModInfo') {
 }
 
 task writeModInfo {
+
     description('Create and write to mod.info file.')
     group('mod')
 

@@ -12,8 +12,10 @@ project.ext.zomboidSourcesDir = file("$buildDir/generated/sources/zomboid").abso
  * the assembled classes can be included onto the classpath
  */
 task zomboidClasses(type: Sync) {
+
     description 'Assembles zomboid classes.'
     group 'zomboid'
+
     includeEmptyDirs false
     from project.ext.gameDir
     include '**/*.class', 'stdlib.lbc'
@@ -84,6 +86,7 @@ tasks.register("decompileZomboid", JavaExec.class) {
 }
 
 tasks.register('zomboidJar', ZDocJar.class) {
+
     it.description('Assembles a jar archive containing game classes.')
     it.includeEmptyDirs = false
 
@@ -97,10 +100,11 @@ tasks.register('zomboidJar', ZDocJar.class) {
 }
 
 tasks.register("zomboidSourcesJar", ZDocJar.class) {
-    it.description('Assembles a jar containing decompiled game sources.')
 
+    it.description('Assembles a jar containing decompiled game sources.')
     it.archiveBaseName.set('zomboid')
     it.classifier 'sources'
+
     it.from zomboidSourcesDir
     it.destinationDir file('lib')
 	it.onlyIf {
