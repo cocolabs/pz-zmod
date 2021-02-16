@@ -197,3 +197,32 @@ task writeModInfo {
     }
     mustRunAfter(saveModProperties)
 }
+/**
+ * Returns property name for use in console output
+ * @param name property name
+ */
+String getDisplayProperty(String name) {
+
+    String property = project.ext.get(name)
+    return property.empty ? '<property not set>' : property
+}
+
+task showModInfo {
+
+    description('Print mod metadata information.')
+    group('mod')
+
+    doLast {
+        [ 'gameVersion', 'modName' ].forEach({
+            if (!project.ext.has(it)) {
+                throw new InvalidUserDataException("Missing mod property ${it}, " +
+                        "please (re)initialize mod properties.")
+            }
+        })
+        logger.lifecycle("This is a mod for Project Zomboid (${gameVersion})")
+        logger.lifecycle('------------------------------------------------')
+        logger.lifecycle("Name: ${getDisplayProperty('modName')}")
+        logger.lifecycle("Description: ${getDisplayProperty('modDesc')}")
+        logger.lifecycle("URL: ${getDisplayProperty('modURL')}")
+    }
+}
