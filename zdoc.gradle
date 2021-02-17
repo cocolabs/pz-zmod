@@ -14,7 +14,7 @@ dependencies {
 
     // ZomboidDoc compiled Lua library
     if (project.ext.has('gameVersion')) {
-        compileOnly files("lib/pz-zdoc-lua-$gameVersion" + '.jar')
+        compileOnly files("lib/zdoc-lua-$gameVersion" + '.jar')
     }
     else logger.warn('WARN: Unable to find gameVersion property')
 }
