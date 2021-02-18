@@ -1,7 +1,7 @@
 import org.gradle.util.GFileUtils
 
 // directory containing a copy of Project Zomboid classes
-project.ext.zomboidClassesDir = file("$buildDir/classes/zomboid").absoluteFile
+project.ext.zomboidClassesDir = file('lib/zomboid').absoluteFile
 
 // directory containing Project Zomboid sources
 project.ext.zomboidSourcesDir = file("$buildDir/generated/sources/zomboid").absoluteFile
