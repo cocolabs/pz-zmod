@@ -2,15 +2,19 @@
 project.ext.zDocLuaDir = file("$buildDir/generated/sources/zdoc/").absoluteFile
 
 repositories {
-    maven { url 'https://jitpack.io' }
+    // try to find dependencies locally first
+    mavenLocal()
+    maven {
+        url = uri('https://maven.pkg.github.com/real-coco-labs/pz-zdoc')
+    }
 }
 configurations {
     zomboidDoc.extendsFrom zomboidRuntimeOnly
     zomboidDoc.extendsFrom zomboidImplementation
 }
 dependencies {
-    // https://github.com/real-coco-labs/pz-zdoc
-    zomboidDoc 'com.github.real-coco-labs:pz-zdoc:b27b7679'
+    // https://github.com/orgs/real-coco-labs/packages?repo_name=pz-zdoc
+    zomboidDoc 'io.cocolabs:pz-zdoc:3.+'
 
     // ZomboidDoc compiled Lua library
     if (project.ext.has('gameVersion')) {
@@ -33,7 +37,7 @@ tasks.register('zomboidVersion', JavaExec.class) {
     it.description('Read Project Zomboid game version.')
     it.group('zomboid')
 
-    it.main = 'io.yooksi.pz.zdoc.Main'
+    it.main = 'io.cocolabs.pz.zdoc.Main'
     it.classpath = configurations.zomboidDoc
     it.args 'version'
 
@@ -57,7 +61,7 @@ tasks.register('annotateZomboidLua', JavaExec.class) {
     it.description('Annotate vanilla Lua with EmmyLua.')
     it.setGroup('zomboid')
 
-    it.main = 'io.yooksi.pz.zdoc.Main'
+    it.main = 'io.cocolabs.pz.zdoc.Main'
     it.classpath = configurations.zomboidDoc
     it.args('annotate', '-i', "${project.ext.gameDir}/media/lua", '-o', "$zDocLuaDir/media/lua")
     it.dependsOn(tasks.getByName('zomboidClasses'))
@@ -68,7 +72,7 @@ tasks.register('compileZomboidLua', JavaExec.class) {
     it.description('Compile Lua library from modding API.')
     it.setGroup('zomboid')
 
-    it.main = 'io.yooksi.pz.zdoc.Main'
+    it.main = 'io.cocolabs.pz.zdoc.Main'
     it.classpath = configurations.zomboidDoc
     it.args('compile', '-i', "$gameDir", '-o', "$zDocLuaDir/media/lua/shared/Library")
     it.dependsOn(tasks.getByName('zomboidClasses'))
