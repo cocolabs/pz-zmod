@@ -10,7 +10,7 @@ configurations {
 }
 dependencies {
     // https://github.com/real-coco-labs/pz-zdoc
-    zomboidDoc 'com.github.real-coco-labs:pz-zdoc:v2+'
+    zomboidDoc 'com.github.real-coco-labs:pz-zdoc:b27b7679'
 
     // ZomboidDoc compiled Lua library
     if (project.ext.has('gameVersion')) {
