@@ -29,10 +29,9 @@ configurations {
 }
 dependencies {
 	// Project Zomboid libraries
-	if (project.ext.has('gameDir')) {
-		zomboidRuntimeOnly fileTree(dir: gameDir, include: ['*.jar'])
-	}
-    // Project Zomboid classes
+	zomboidRuntimeOnly fileTree(dir: gameDir, include: ['*.jar'])
+
+	// Project Zomboid classes
     zomboidImplementation files(zomboidClassesDir)
 }
 /**

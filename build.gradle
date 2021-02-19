@@ -26,10 +26,12 @@ sourceSets {
 }
 apply from: 'setup.gradle'
 apply from: 'distribution.gradle'
-apply from: 'zomboid.gradle'
-apply from: 'mod.gradle'
-apply from: 'zdoc.gradle'
-
+if (project.ext.has('gameDir'))
+{
+    apply from: 'zomboid.gradle'
+    apply from: 'mod.gradle'
+    apply from: 'zdoc.gradle'
+}
 defaultTasks 'showModInfo'
 
 jar {
