@@ -4,10 +4,11 @@ project.ext.zDocLuaDir = file("$buildDir/generated/sources/zdoc/").absoluteFile
 repositories {
     // try to find dependencies locally first
     mavenLocal()
-    maven {
-        url = uri('https://maven.pkg.github.com/real-coco-labs/pz-zdoc')
-    }
 }
+// Github Packages repository credentials
+project.ext.cocoLabsRepo = 'pz-zdoc'
+apply from: 'https://git.io/JtydE'
+
 configurations {
     zomboidDoc.extendsFrom zomboidRuntimeOnly
     zomboidDoc.extendsFrom zomboidImplementation
