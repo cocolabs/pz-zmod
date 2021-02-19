@@ -59,6 +59,7 @@ tasks.register('zomboidVersion', JavaExec.class) {
         logger.lifecycle("game version ${project.ext.gameVersion}")
     }
     it.dependsOn(tasks.getByName('zomboidClasses'))
+    it.finalizedBy(tasks.getByName('saveModProperties'))
 }
 
 tasks.register('annotateZomboidLua', JavaExec.class) {
