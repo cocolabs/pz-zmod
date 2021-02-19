@@ -17,3 +17,12 @@ Whether you are a creating textures, models, maps or writing code you are workin
 
 ZomboidMod serves as an umbrella for these tools, connecting everything you need in one system.
 
+## Features
+
+- Decompiles and packages game classes to expose game engine code.
+- Uses [ZomboidDoc](https://github.com/yooksi/pz-zdoc/) to compile a readable and always up-to-date modding Lua library.
+- Compact workspace that can be used straight out of the box.
+- Easy installation steps for enabling advanced features.
+- Comes pre-configured for use with Git. 
+- Fully integrates with IntelliJ IDEA.
+
