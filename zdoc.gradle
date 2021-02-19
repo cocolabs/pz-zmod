@@ -1,3 +1,5 @@
+import java.nio.charset.StandardCharsets
+
 // directory containing generated lua library
 project.ext.zDocLuaDir = file("$buildDir/generated/sources/zdoc/").absoluteFile
 
@@ -46,13 +48,15 @@ tasks.register('zomboidVersion', JavaExec.class) {
     it.setStandardOutput(oStream)
 
     it.doLast {
-        // get application command output from stream
-        // ex. game version 41.50 - IWBUMS
-        def versionText = oStream.toString()
+        // get command output from stream
+        def versionText = oStream.toString(StandardCharsets.UTF_8.name()).split('\r\n|\r|\n')
+
+        // ZomboidDoc version
+        logger.lifecycle(versionText[0])
 
         // get version number and classifier (ex. 41.50-IWBUMS)
-        project.ext.gameVersion = versionText.substring(18).replaceAll(" ", "")
-        logger.lifecycle("game version: ${project.ext.gameVersion}")
+        project.ext.gameVersion = versionText[1].substring(12).replaceAll(" ", "").trim()
+        logger.lifecycle("game version ${project.ext.gameVersion}")
     }
     it.dependsOn(tasks.getByName('zomboidClasses'))
 }
