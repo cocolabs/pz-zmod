@@ -228,3 +228,19 @@ task showModInfo {
         logger.lifecycle("Version: v${project.version}")
     }
 }
+
+task createModStructure {
+
+    group 'mod'
+    description 'Create default mod directory structure.'
+
+    doLast {
+        def media = sourceSets.named('media').get()
+        media.java.getSrcDirs().forEach({
+            project.mkdir(it)
+        })
+        media.resources.srcDirs.forEach({
+            project.mkdir(it)
+        })
+    }
+}
