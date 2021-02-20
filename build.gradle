@@ -20,8 +20,11 @@ java {
 
 sourceSets {
     media {
-        java.srcDirs = ['media/lua', 'media/scripts']
-        resources.srcDirs = ['media/sound', 'media/textures']
+        java.srcDirs = ['media/lua']
+        resources.srcDirs = [
+                'media/models', 'media/scripts',
+                'media/sound', 'media/textures'
+        ]
     }
 }
 apply from: 'setup.gradle'
