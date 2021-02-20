@@ -28,7 +28,7 @@ ZomboidMod serves as an umbrella for these tools, connecting everything you need
 
 Download the [latest release](https://github.com/real-coco-labs/pz-zmod/releases/latest) from the repository.
 
-Note that since version `v1.1` you **should** not clone the repository and use it as a template.
+Note that you **should** not clone the repository and use it as a template.
 Instead, obtain the latest release and follow the [installation](#installation) instructions. 
 
 ## Installation
