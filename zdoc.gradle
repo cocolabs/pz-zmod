@@ -78,6 +78,10 @@ tasks.register('compileZomboidLua', JavaExec.class) {
     it.description('Compile Lua library from modding API.')
     it.setGroup('zomboid')
 
+    //noinspection GroovyAssignabilityCheck,GroovyAccessibility
+    it.javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
     it.main = 'io.cocolabs.pz.zdoc.Main'
     it.classpath = configurations.zomboidDoc
     it.args('compile', '-i', "$gameDir", '-o', "$zDocLuaDir/media/lua/shared/Library")
