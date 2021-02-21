@@ -14,7 +14,7 @@ import org.gradle.util.GUtil;
 @NonNullApi
 public class ZDocJar extends Jar {
 
-	private static final String GAME_VERSION_PROPERTY = "gameVersion";
+	private static final String GAME_VERSION_PROPERTY = "mod.pzversion";
 	private final Project project = this.getProject();
 
 	public ZDocJar() {

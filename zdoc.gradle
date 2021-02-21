@@ -20,10 +20,12 @@ dependencies {
     zomboidDoc 'io.cocolabs:pz-zdoc:3.+'
 
     // ZomboidDoc compiled Lua library
-    if (project.ext.has('gameVersion')) {
-        compileOnly files("lib/zdoc-lua-$gameVersion" + '.jar')
+    if (project.ext.has('mod.pzversion')) {
+        compileOnly files("lib/zdoc-lua-${project.ext.get('mod.pzversion')}" + '.jar')
     }
-    else logger.warn('WARN: Unable to find gameVersion property')
+    else if (file('mod.info').exists()) {
+        logger.warn('WARN: Unable to find mod.pzversion property')
+    }
 }
 
 tasks.register('zomboidLuaJar', ZDocJar.class) {
@@ -55,11 +57,11 @@ tasks.register('zomboidVersion', JavaExec.class) {
         logger.lifecycle(versionText[0])
 
         // get version number and classifier (ex. 41.50-IWBUMS)
-        project.ext.gameVersion = versionText[1].substring(12).replaceAll(" ", "").trim()
-        logger.lifecycle("game version ${project.ext.gameVersion}")
+        project.ext.set('mod.pzversion', versionText[1].substring(12).replaceAll(" ", "").trim())
+        logger.lifecycle("game version ${project.ext.get('mod.pzversion')}")
     }
     it.dependsOn(tasks.getByName('zomboidClasses'))
-    it.finalizedBy(tasks.getByName('saveModProperties'))
+    it.finalizedBy(tasks.getByName('saveModInfo'))
 }
 
 tasks.register('annotateZomboidLua', JavaExec.class) {
