@@ -72,6 +72,12 @@ Instead, obtain the latest release and follow the [installation](#installation) 
 
 - Reload Gradle project[<sup>?</sup>](https://www.jetbrains.com/help/idea/work-with-gradle-projects.html#gradle_refresh_project).
 
+- <details>
+	<summary>Attach decompiled sources to classes.</summary>
+	<br/><img src="./media/module_dependencies.png" width=90%/>
+	<br/><br/><img src="./media/module_library.png" width=65%/>
+</details>
+
 ## How to use
 
 ### Mod tasks
