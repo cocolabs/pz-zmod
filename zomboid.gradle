@@ -34,7 +34,9 @@ dependencies {
 	zomboidImplementation files(gameDirPath.resolve('media'))
 
 	// Project Zomboid classes
-	zomboidImplementation files("lib/zomboid-${project.ext.get('mod.pzversion')}.jar")
+	if (project.ext.has('mod.pzversion')) {
+		zomboidImplementation files("lib/zomboid-${project.ext.get('mod.pzversion')}.jar")
+	}
 }
 /**
  * Decompile game classes with FernFlower using default IDEA settings.

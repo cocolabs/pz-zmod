@@ -39,9 +39,9 @@ if (project.ext.has('gameDir'))
     apply from: 'mod.gradle'
     apply from: 'zomboid.gradle'
     apply from: 'zdoc.gradle'
+
+    jar {
+        from sourceSets.media.output
+    }
 }
 defaultTasks 'showModInfo'
-
-jar {
-    from sourceSets.media.output
-}
