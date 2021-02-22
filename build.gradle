@@ -31,8 +31,8 @@ apply from: 'setup.gradle'
 apply from: 'distribution.gradle'
 if (project.ext.has('gameDir'))
 {
-    apply from: 'zomboid.gradle'
     apply from: 'mod.gradle'
+    apply from: 'zomboid.gradle'
     apply from: 'zdoc.gradle'
 }
 defaultTasks 'showModInfo'
