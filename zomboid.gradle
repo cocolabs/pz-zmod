@@ -29,6 +29,10 @@ dependencies {
 	// Project Zomboid libraries
 	zomboidRuntimeOnly fileTree(dir: gameDir, include: ['*.jar'])
 
+	// Project Zomboid assets
+	def gameDirPath = gameDir as java.nio.file.Path
+	zomboidImplementation files(gameDirPath.resolve('media'))
+
 	// Project Zomboid classes
 	zomboidImplementation files("lib/zomboid-${project.ext.get('mod.pzversion')}.jar")
 }
