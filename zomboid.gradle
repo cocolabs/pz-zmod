@@ -1,5 +1,3 @@
-import org.gradle.util.GFileUtils
-
 // directory containing a copy of Project Zomboid classes
 project.ext.zomboidClassesDir = file('lib/zomboid').absoluteFile
 
@@ -41,7 +39,7 @@ dependencies {
  * This can be changed by defining specific file to decompile with project property 'src'.
  * example: gradle decompileZomboid -Psrc="<path>"
  */
-tasks.register("decompileZomboid", JavaExec.class) {
+tasks.register('decompileZomboid', JavaExec.class) {
 
 	description('Decompile Project Zomboid classes.')
 	group('zomboid')
@@ -49,9 +47,10 @@ tasks.register("decompileZomboid", JavaExec.class) {
     if (project.ext.ideaHome == null) {
         throw new InvalidUserDataException('Local property \"ideaHome\" is not defined')
     }
-    it.description('Decompile Project Zomboid classes.')
-    it.setGroup('zomboid')
-
+	it.onlyIf {
+		def files = zomboidClassesDir.exists() ? zomboidClassesDir.listFiles() : null
+		return files != null && files.size() > 0
+	}
 	//noinspection GroovyAssignabilityCheck,GroovyAccessibility
 	it.javaLauncher = javaToolchains.launcherFor {
 		languageVersion = JavaLanguageVersion.of(11)
@@ -62,27 +61,11 @@ tasks.register("decompileZomboid", JavaExec.class) {
     // default parameters used by IDEA compiler
     def params = ['-hdc=0', '-dgs=1', '-rsy=1', '-rbr=1', '-lit=1', '-nls=1', '-mpm=60']
 
-    def srcDir = file("$buildDir/tmp/zomboid")
-    if (!srcDir.exists() && !srcDir.mkdirs()) {
-        throw new IOException("Unable to create decompile tmp dir")
-    }
-    // directories containing class files
-    String[] sourceDirs = ['astar', 'com', 'de', 'fmod', 'javax', 'org', 'se', 'zombie']
-    for (int i = 0; i < sourceDirs.size(); i++)
-    {
-        def sDir = sourceDirs[i]
-        def copyDest = srcDir.toPath().resolve(sDir).toFile()
-        def copySrc = gameDir.resolve(sDir).toFile()
-
-        logger.info("copying class package \'${copySrc.name}\'")
-		GFileUtils.copyDirectory(copySrc, copyDest)
-    }
-    gameDir.resolve(project.ext.has('src') ? project.ext.src : 'zombie').toString()
-
     // decompiler will throw error if destination dir doesn't exist
     zomboidSourcesDir.mkdirs()
 
-    it.args params + srcDir.path + zomboidSourcesDir.path
+    it.args params + zomboidClassesDir.path + zomboidSourcesDir.path
+    it.dependsOn(zomboidClasses)
 }
 
 tasks.register('zomboidJar', ZDocJar.class) {
