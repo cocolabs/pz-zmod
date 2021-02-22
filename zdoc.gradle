@@ -13,7 +13,6 @@ apply from: 'https://git.io/JtydE'
 
 configurations {
     zomboidDoc.extendsFrom zomboidRuntimeOnly
-    zomboidDoc.extendsFrom zomboidImplementation
 }
 dependencies {
     // https://github.com/orgs/real-coco-labs/packages?repo_name=pz-zdoc
@@ -26,6 +25,8 @@ dependencies {
     else if (file('mod.info').exists()) {
         logger.warn('WARN: Unable to find mod.pzversion property')
     }
+    // Project Zomboid classes
+    zomboidDoc files(zomboidClassesDir)
 }
 
 tasks.register('zomboidLuaJar', ZDocJar.class) {
