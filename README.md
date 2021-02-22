@@ -57,8 +57,8 @@ Instead, obtain the latest release and follow the [installation](#installation) 
   
 - <details>
 	<summary>Open the project as a Gradle project with Intellij IDEA<a href="https://www.jetbrains.com/help/idea/gradle.html#gradle_import_project_start"><sup>?</sup></a>.</summary>
-	<br><img src="./media/open_project.png" width=65%/>
-	<br><img src="./media/load_gradle_project.png" width=50%/>
+	<br><img src="./media/open_project.png" width=75%/>
+	<br><img src="./media/load_gradle_project.png" width=40%/>
 </details>
 
 - Ensure project SDK is set to JDK 8[<sup>?</sup>](https://www.jetbrains.com/help/idea/sdk.html#change-project-sdk).
