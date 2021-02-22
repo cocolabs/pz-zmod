@@ -1,5 +1,5 @@
-// directory containing a copy of Project Zomboid classes
-project.ext.zomboidClassesDir = file('lib/zomboid').absoluteFile
+// directory containing Project Zomboid classes
+project.ext.zomboidClassesDir = file("$buildDir/classes/zomboid").absoluteFile
 
 // directory containing Project Zomboid sources
 project.ext.zomboidSourcesDir = file("$buildDir/generated/sources/zomboid").absoluteFile
@@ -30,7 +30,7 @@ dependencies {
 	zomboidRuntimeOnly fileTree(dir: gameDir, include: ['*.jar'])
 
 	// Project Zomboid classes
-    zomboidImplementation files(zomboidClassesDir)
+	zomboidImplementation files("lib/zomboid-${project.ext.get('mod.pzversion')}.jar")
 }
 /**
  * Decompile game classes with FernFlower using default IDEA settings.
