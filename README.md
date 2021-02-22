@@ -61,6 +61,8 @@ Instead, obtain the latest release and follow the [installation](#installation) 
 	<br><img src="./media/load_gradle_project.png" width=50%/>
 </details>
 
+- Ensure project SDK is set to JDK 8[<sup>?</sup>](https://www.jetbrains.com/help/idea/sdk.html#change-project-sdk).
+
 - <details>
 	<summary>Initialize mod by running <code>initializeMod</code> run configuration<a href="https://www.jetbrains.com/help/idea/run-debug-configuration.html"><sup>?</sup></a>.</summary>
 	<br><img src="./media/init_mod.gif" width=65%/>
