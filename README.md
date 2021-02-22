@@ -75,10 +75,10 @@ Instead, obtain the latest release and follow the [installation](#installation) 
 ### Mod tasks
 
 - `createModStructure` - Create default mod directory structure.
-- `initModProperties` - Initialize mod properties.
-- `saveModProperties` - Save mod properties to properties file.
+- `initModInfo` - Initialize mod metadata information.
+- `loadModInfo` - Load mod metadata information.
+- `saveModInfo` - Save mod metadata to file.
 - `showModInfo` - Print mod metadata information.
-- `writeModInfo` - Write properties to `mod.info` file.
 
 ### Zomboid tasks
 
