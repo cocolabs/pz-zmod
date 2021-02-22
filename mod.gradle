@@ -145,7 +145,7 @@ def saveModInfo = tasks.register('saveModInfo') {
 
 tasks.register('initModInfo') {
 
-    description('Initialize mod.info file.')
+    description('Initialize mod metadata information.')
     group('mod')
 
     it.doLast {
