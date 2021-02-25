@@ -49,6 +49,8 @@ Instead, obtain the latest release and follow the [installation](#installation) 
 
 ### Setup
 
+- Download the [latest release](https://github.com/real-coco-labs/pz-zmod/releases/latest) from the repository.
+
 - Extract the release archive in your mod root directory (overwrite if updating).
 
 - Make sure the root directory follows project naming standards:
