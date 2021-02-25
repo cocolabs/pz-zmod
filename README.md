@@ -74,7 +74,7 @@ Instead, obtain the latest release and follow the [installation](#installation) 
 
 - <details>
 	<summary>Attach decompiled sources to classes.</summary>
-	<br/><img src="./media/module_dependencies.png" width=90%/>
+	<br/><img src="./media/module_dependencies.png" width=100%/>
 	<br/><br/><img src="./media/module_library.png" width=65%/>
 </details>
 
