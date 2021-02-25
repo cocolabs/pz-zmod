@@ -34,4 +34,4 @@ Give proper credits to those that helped make this project.
 ## License
 A short snippet describing the license (MIT, Apache etc).
 
-MIT © [Yourname](https://github.com/yooksi)
+MIT © [Yourname](https://github.com/real-coco-labs)
