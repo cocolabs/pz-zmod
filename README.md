@@ -92,6 +92,28 @@ Instead, obtain the latest release and follow the [installation](#installation) 
 	<br/><img src="./media/project_search_scopes.png" width=100%/>
 </details>
 
+### License
+
+It is important to license your project with an appropriate open source license to ensure others have the right to copy, distribute or modify your work without being at risk of take-downs, shake-downs, or litigation.
+
+Learn what happens when [you choose not to license your project](https://choosealicense.com/no-permission/).
+
+ZomboidMod distributions contain a template MIT license for your project to use. Keep in mind that you can choose to license your project under a different license at any point in time. To apply the template license provided in the distribution to your project follow these steps:
+
+- Update copyright in `LICENSE.txt` to include the current year and your name:
+
+  ```
+  Copyright (c) [year] [fullname]
+  ```
+
+- Update copyright in `README.md` under 'License' section to include your name and (optionally) a link to your Github profile, personal website, or another place online you can be reached:
+
+  ```
+  MIT © [Yourname](https://github.com/username)
+  ```
+
+Note that you can choose to include your full name or your Github username. It is a matter of preference and legally speaking both should be valid as long as you can prove the identity provided represents you. 
+
 ## How to use
 
 ### Mod tasks
@@ -114,23 +136,5 @@ Instead, obtain the latest release and follow the [installation](#installation) 
 - `zomboidVersion` - Read Project Zomboid game version.
 
 
-## License
 
-It is important to license your project with an appropriate open source license to ensure others have the right to copy, distribute or modify your work without being at risk of take-downs, shake-downs, or litigation.
 
-Learn what happens when [you choose not to license your project](https://choosealicense.com/no-permission/).
-
-ZomboidMod distributions contain a template MIT license for your project to use. Keep in mind that you can choose to license your project under a different license at any point in time. To apply the template license provided in the distribution to your project follow these steps:
-
-- Update copyright in `LICENSE.txt` to include the current year and your name:
-	```
-	Copyright (c) [year] [fullname]
-	```
-	
-- Update copyright in `README.md` under 'License' section to include your name and (optionally) a link to your Github profile, personal website, or another place online you can be reached:
-
-  ```
-  MIT © [Yourname](https://github.com/username)
-  ```
-
-Note that you can choose to include your full name or your Github username. It is a matter of preference and legally speaking both should be valid as long as you can prove the identity provided represents you. 
