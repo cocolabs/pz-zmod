@@ -1,5 +1,7 @@
 # ZomboidMod
 
+[![release](https://img.shields.io/github/v/release/real-coco-labs/pz-zmod)](https://github.com/real-coco-labs/pz-zmod/releases/latest) ![commits](https://img.shields.io/github/commits-since/real-coco-labs/pz-zmod/latest/dev?include_prereleases) [![License](https://img.shields.io/github/license/real-coco-labs/pz-zmod)](https://mit-license.org/) [![chat](https://img.shields.io/discord/717757483376050203?color=7289DA)](https://discord.gg/vCeydWCbd9)
+
 ZomboidMod is a compact mod development environment for [Project Zomboid](https://projectzomboid.com/blog/).
 
 It is essentially a wrapper for you mod that enables powerful [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment) features and improves your modding workflow. With a collection of [Gradle](https://gradle.org/) scripts it helps automate the process of setting up, assembling and deploying your project.
