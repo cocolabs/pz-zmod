@@ -105,8 +105,8 @@ Instead, obtain the latest release and follow the [installation](#installation) 
 - `annotateZomboidLua` - Annotate vanilla Lua with EmmyLua.
 - `compileZomboidLua` - Compile Lua library from modding API.
 - `decompileZomboid` - Decompile Project Zomboid classes.
-- `zomboidClasses` - Assembles zomboid classes.
+- `zomboidClasses` - Assembles Project Zomboid classes.
 - `zomboidJar` - Assembles a jar archive containing game classes.
-- `zomboidLuaJar` - Assembles a jar containing compiled lua classes.
+- `zomboidLuaJar` - Assembles a jar containing compiled Lua classes.
 - `zomboidSourcesJar` - Assembles a jar containing decompiled game sources.
 - `zomboidVersion` - Read Project Zomboid game version.

@@ -11,7 +11,7 @@ project.ext.zomboidSourcesDir = file("$buildDir/generated/sources/zomboid").abso
  */
 def zomboidClasses = tasks.register('zomboidClasses', Sync.class) {
 
-	it.description 'Assembles zomboid classes.'
+	it.description 'Assembles Project Zomboid classes.'
 	it.group 'zomboid'
 
 	it.includeEmptyDirs false

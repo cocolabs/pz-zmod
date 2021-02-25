@@ -31,7 +31,7 @@ dependencies {
 
 tasks.register('zomboidLuaJar', ZDocJar.class) {
 
-    it.description('Assembles a jar containing compiled lua classes.')
+    it.description('Assembles a jar containing compiled Lua classes.')
     it.archiveBaseName.set('zdoc-lua')
 
     it.from zDocLuaDir
