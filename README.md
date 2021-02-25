@@ -135,6 +135,9 @@ Note that you can choose to include your full name or your Github username. It i
 - `zomboidSourcesJar` - Assembles a jar containing decompiled game sources.
 - `zomboidVersion` - Read Project Zomboid game version.
 
+## Discussion
 
+- Feel free to [open a ticket](https://github.com/real-coco-labs/pz-zmod/issues/new) if you have any problems, questions or suggestions regarding the project.
+- You are also welcome to join us on [Discord](https://discord.gg/vCeydWCbd9) to talk about modding and follow community projects.
 
 
