@@ -9,6 +9,10 @@ mod.info
 # Libraries
 /lib/
 
+# Zmod resources
+/media/*
+!/media/zmod/
+
 ### IntelliJ ###
 
 # Project file-based format
