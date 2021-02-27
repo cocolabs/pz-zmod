@@ -224,7 +224,7 @@ task showModInfo {
         logger.lifecycle("Description: ${getDisplayProperty('mod.description')}")
         logger.lifecycle("URL: ${getDisplayProperty('mod.url')}")
         logger.lifecycle("ID: ${rootProject.name}")
-        logger.lifecycle("Version: v${project.version}")
+        logger.lifecycle("Version: ${project.version}")
     }
 }
 
