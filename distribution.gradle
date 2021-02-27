@@ -28,7 +28,10 @@ tasks.register('stageDistribution', Copy.class) {
 	// do additional copy actions we cannot do with this Copy task
 	it.doLast {
 		file('dist').listFiles().each {
-			GFileUtils.copyFile(it, stagePath.resolve(it.getName()).toFile() as File)
+			if (it.directory) {
+				GFileUtils.copyDirectory(it, stagePath.resolve(it.getName()).toFile() as File)
+			}
+			else GFileUtils.copyFile(it, stagePath.resolve(it.getName()).toFile() as File)
 		}
 		def gitIgnored = file('.gitignored')
 		if (gitIgnored.exists())
