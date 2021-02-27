@@ -1,51 +1,47 @@
-import java.nio.file.Paths
-
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
-}
-version '1.0'
 
+    // Facilitates building archives that serve as project distributions
+    id 'distribution'
+}
 repositories {
     jcenter()
 }
 
-sourceSets {
-    media {
-        java.srcDirs = ['media/lua', 'media/scripts']
-        resources.srcDirs = ['media/sound', 'media/textures']
+java {
+    // ZomboidDoc can only be executed with Java 8
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
     }
 }
-
-wrapper {
-    gradleVersion = '6.7.1'
-    distributionType = Wrapper.DistributionType.ALL
-}
-
-Properties properties = new Properties()
-def propertiesFile = project.rootProject.file('local.properties')
-if (propertiesFile.exists()) {
-    properties.load(propertiesFile.newDataInputStream())
-}
-project.ext.ideaHome = properties.getProperty('idea.home', '')
-project.ext.gameDir = Paths.get(properties.getProperty('game.dir', ''))
-
-if (project.ext.gameDir == null)
+apply from: 'setup.gradle'
+if (project.ext.has('gameDir'))
 {
-    if (providers.environmentVariable('GAME_DIR').present) {
-        project.ext.gameDir = Paths.get(providers.environmentVariable('GAME_DIR').get())
+    List<String> resourcesList = new ArrayList<>()
+    def gameDirPath = gameDir as java.nio.file.Path
+    //@formatter:off
+    gameDirPath.resolve('media').toFile().listFiles().each
+    {
+        if (it.directory) {
+            resourcesList.add("media/${it.name}")
+        }
+    }//@formatter:on
+    sourceSets {
+        media {
+            java.srcDirs = ['media/lua']
+            resources.srcDirs resourcesList
+        }
     }
-    else if (System.hasProperty('game.dir')) {
-        project.ext.gameDir = Paths.get(System.getProperty('game.dir'))
+    apply from: 'mod.gradle'
+    apply from: 'zomboid.gradle'
+    apply from: 'zdoc.gradle'
+
+    jar {
+        from sourceSets.media.output
     }
-    else throw new RuntimeException("Game directory path not specified")
-}
+    version modInfoProperties.getProperty('modversion')
+    apply from: 'distribution.gradle'
 
-apply from: 'utils.gradle'
-apply from: 'zomboid.gradle'
-apply from: 'zdoc.gradle'
-apply from: 'mod.gradle'
-
-jar {
-    from sourceSets.media.output
+    defaultTasks 'showModInfo'
 }

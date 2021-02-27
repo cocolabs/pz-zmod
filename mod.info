@@ -1,7 +1,7 @@
-name=Zomboid Mod
+name=ZomboidMod
 poster=poster.png
-description=This is a zomboid mod template
+description=Compact mod development environment.
 id=pz-zmod
-url=https://github.com/yooksi/pz-zmod
-modversion=1.0
-pzversion=41.47
+url=https://github.com/real-coco-labs/pz-zmod
+modversion=2.0.0
+pzversion=41.50-IWBUMS

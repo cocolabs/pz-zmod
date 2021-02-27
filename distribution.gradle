@@ -1,0 +1,56 @@
+import org.gradle.util.GFileUtils
+
+def stagePath = file("$buildDir/tmp/distribution/stage").toPath()
+task cleanDistributionStage(type: Delete) {
+
+	description('Clean distribution stage directory.')
+	group('distribution')
+
+	delete(stagePath)
+}
+tasks.register('stageDistribution', Copy.class) {
+
+	description('Copy distribution files to stage directory.')
+	group('distribution')
+
+	it.from projectDir
+	it.into stagePath
+
+	// files that need to be excluded
+	it.exclude '/README.md', '/LICENSE.txt', '/.gitignore',
+			'.gitignored', 'distribution.sh', 'distribution.gradle',
+			'.idea/runConfigurations/distribution.xml', 'mod.info'
+
+	// dirs that are already excluded but we don't want to spend time on staging
+	it.exclude '/dist/**', '.gradle/**', 'buildSrc/.gradle/**', '/build/**',
+			'buildSrc/build/**', '/lib/**', '/media/**', '/logs/**'
+
+	// do additional copy actions we cannot do with this Copy task
+	it.doLast {
+		file('dist').listFiles().each {
+			GFileUtils.copyFile(it, stagePath.resolve(it.getName()).toFile() as File)
+		}
+		def gitIgnored = file('.gitignored')
+		if (gitIgnored.exists())
+		{
+			def ignoredFiles = GFileUtils.readFile(gitIgnored).split('\r|\n|\r\n')
+			ignoredFiles.each {
+				File ignoredFile = stagePath.resolve(it).normalize().toFile()
+				if (ignoredFile.exists() && !ignoredFile.isDirectory() && !ignoredFile.delete()) {
+					logger.warn("WARN: Unable to delete ${ignoredFile.path}")
+				}
+			}
+		}
+	}
+	it.dependsOn(cleanDistributionStage)
+}
+
+distributions.main.contents {
+	it.from stagePath
+	it.includeEmptyDirs false
+}
+
+// All distribution tasks need to first stage files
+[ distZip, distTar, assembleDist, installDist ].forEach {
+	it.dependsOn(stageDistribution)
+}

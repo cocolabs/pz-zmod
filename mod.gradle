@@ -1,6 +1,7 @@
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.Path
+import java.util.regex.Pattern
 
 apply plugin: 'java'
 
@@ -39,6 +40,7 @@ static def getRelativeCopyPath(fcd, relativePathMap) {
 }
 
 task mediaClasses(type: Copy, overwrite: true) {
+
     includeEmptyDirs = false
     from(sourceSets.media.java.srcDirs) {
         def mSources = getPathsRelativeToModule('media', sourceSets.media.java)
@@ -51,6 +53,7 @@ task mediaClasses(type: Copy, overwrite: true) {
 }
 
 processMediaResources {
+
     includeEmptyDirs = false
     def mResources = getPathsRelativeToModule('media', sourceSets.media.resources)
     eachFile {
@@ -58,27 +61,185 @@ processMediaResources {
         fcd.setRelativePath(getRelativeCopyPath(fcd, mResources))
     }
 }
+// This is where mod properties are stored
+def modInfoFile = file('mod.info')
+project.ext.modInfoProperties = new Properties()
 
-task writeModInfo {
-    description('Create and write to mod.info file.')
+// Semantic versioning scheme
+project.ext.semVersion = Pattern.compile('\\d+\\.\\d+\\.\\d+')
+
+void validateModInfo() {
+
+    // map of all available mod properties
+    def propertiesMap = [
+            'url': false,
+            'description': false,
+            'name': true,
+            'modversion': true
+            //game version is checked in zdoc.gradle
+            //mod.pzversion: String.class,
+    ]
+    //@formatter:off
+    propertiesMap.entrySet().forEach(
+    {
+        def key = it.key
+        def property = modInfoProperties.getProperty(key)
+        if (property == null || property.trim().empty)
+        {
+            def log = "Missing mod property \'${key}\'"
+            if ((it.value as boolean)) {
+                throw new InvalidUserDataException(log)
+            }
+            else logger.warn("WARN: ${log}")
+        }
+        else if (key == 'url')
+        {
+            try {
+                new URL(property)
+            }
+            catch (MalformedURLException e) {
+                throw new InvalidUserDataException("Mod URL \'${property}\' is not a valid URL", e)
+            }
+        }
+        else if (key == 'modversion')
+        {
+            if (!(semVersion as Pattern).matcher(property).find()) {
+                throw new InvalidUserDataException("Mod version \'${property}\' " +
+                        'does not follow semantic versioning rules: https://semver.org/')
+            }
+        }
+    })//@formatter:on
+}
+
+def saveModInfo = tasks.register('saveModInfo') {
+
+    description('Save mod metadata to file.')
+    group('mod')
+
+    it.doLast {
+        // validate properties before saving them
+        validateModInfo()
+
+        // game version is not set via user input
+        def sGameVersion = (project.ext.get('mod.pzversion') as String).replaceAll('\\r\\n?', '')
+        modInfoProperties.setProperty('pzversion', sGameVersion)
+
+        // trim all mod property values
+        modInfoProperties.entrySet().forEach({
+            modInfoProperties.setProperty(it.key as String, (it.value as String).trim())
+        })
+        // ensure that mod.info file exists before writing to it
+        if (!modInfoFile.exists())
+        {
+            if (!modInfoFile.createNewFile()) {
+                throw new IOException('Unable to create mod.info file')
+            }
+        }
+        // save mod properties to mod.info file
+        modInfoFile.withWriter('utf-8') { writer ->
+            def modUrl = modInfoProperties.get('url') as String
+            Arrays.asList([
+                    "name=${modInfoProperties.get('name')}",
+                    "poster=poster.png",
+                    "description=${modInfoProperties.get('description')}",
+                    "id=$rootProject.name",
+                    // remove backslash used to escape key/value separators
+                    "url=${modUrl != null ? modUrl.replaceAll('\\\\\\\\:', ':') : ''}",
+                    "modversion=" + modInfoProperties.get('modversion'),
+                    "pzversion=${modInfoProperties.get('pzversion')}",
+            ] as String[]).forEach({ l -> writer.writeLine(l) })
+        }
+    }
+    it.dependsOn(tasks.named('zomboidVersion'), loadModInfo)
+}
+
+tasks.register('initModInfo') {
+
+    description('Initialize mod metadata information.')
+    group('mod')
+
+    it.doLast {
+        ant.input(message: 'Enter mod name: \n', addproperty: 'mod.name')
+        modInfoProperties.setProperty('name', ant.properties.get('mod.name') as String)
+
+        ant.input(message: 'Enter mod description: \n', addproperty: 'mod.description')
+        modInfoProperties.setProperty('description', ant.properties.get('mod.description') as String)
+
+        ant.input(message: 'Enter mod repo/workshop URL: \n', addproperty: 'mod.url')
+        modInfoProperties.setProperty('url', ant.properties.get('mod.url') as String)
+
+        // starting mod version is 0.1.0 (sem-ver)
+        modInfoProperties.setProperty('modversion', '0.1.0')
+    }
+    it.finalizedBy(saveModInfo)
+}
+
+task loadModInfo {
+
+    description 'Load mod metadata information.'
+    group 'mod'
+
+    if (modInfoFile.exists())
+    {
+        // load properties from properties file
+        modInfoFile.withInputStream {
+            modInfoProperties.load(it)
+        }
+        // load mod properties as project extra properties
+        modInfoProperties.entrySet().forEach({
+            logger.info("Loading property ${it.key}:${it.value}")
+            project.ext.set("mod.${(it.key as String)}", it.value as String)
+        })
+    }
+    else logger.warn('WARN: Unable to find mod.info file')
+}
+
+/**
+ * Returns property name for use in console output
+ * @param name property name
+ */
+String getDisplayProperty(String name) {
+
+    String property = project.ext.get(name)
+    return property.empty ? '<not specified>' : property
+}
+
+task showModInfo {
+
+    description('Print mod metadata information.')
+    group('mod')
+    onlyIf {
+        modInfoFile.exists()
+    }
     doLast {
-        File file = file('mod.info')
-        List<String> info = Arrays.asList([
-                "name=$mod_name",
-                "poster=poster.png",
-                "description=$mod_desc",
-                "id=$rootProject.name",
-                "url=$mod_url",
-                "modversion=" + rootProject.version,
-                "pzversion=$game_version",
-        ] as String[])
-        if (file.exists() && !file.delete()) {
-            throw new IOException("Unable to delete mod.info file")
-        } else if (!file.createNewFile()) {
-            throw new IOException("Unable to create mod.info file")
-        }
-        file.withWriter('utf-8') { writer ->
-            info.forEach({ l -> writer.writeLine(l) })
-        }
+        [ 'mod.pzversion', 'mod.name' ].forEach({
+            if (!project.ext.has(it)) {
+                throw new InvalidUserDataException("Missing mod property ${it}, " +
+                        "please (re)initialize mod properties.")
+            }
+        })
+        logger.lifecycle("This is a mod for Project Zomboid (${getDisplayProperty('mod.pzversion')})")
+        logger.lifecycle('------------------------------------------------')
+        logger.lifecycle("Name: ${getDisplayProperty('mod.name')}")
+        logger.lifecycle("Description: ${getDisplayProperty('mod.description')}")
+        logger.lifecycle("URL: ${getDisplayProperty('mod.url')}")
+        logger.lifecycle("ID: ${rootProject.name}")
+        logger.lifecycle("Version: ${project.version}")
+    }
+}
+
+task createModStructure {
+
+    group 'mod'
+    description 'Create default mod directory structure.'
+
+    doLast {
+        def media = sourceSets.named('media').get()
+        media.java.getSrcDirs().forEach({
+            project.mkdir(it)
+        })
+        media.resources.srcDirs.forEach({
+            project.mkdir(it)
+        })
     }
 }

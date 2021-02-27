@@ -1,0 +1,103 @@
+import org.gradle.util.GFileUtils
+
+import java.nio.file.Paths
+import java.nio.file.Path
+
+// This is where local project properties are stored
+def propertiesFile = rootDir.toPath().resolve('local.properties').toFile()
+project.ext.localProperties = new Properties()
+
+/**
+ * Initialize and get project property from {@code local.properties} file with designated type.
+ *
+ * @param name property name to search for in local properties.
+ * @param type class to initialize the property as.
+ * @param env environment variable to use if property not found.
+ * @param required whether to throw an exception if property is not found.
+ * @param defaultValue value to be used if property was not found.
+ * @return found project property of type {@code T} or {@code null} if no property found.
+ */
+def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolean required, T defaultValue) {
+
+    Properties localProperties = project.ext.localProperties
+    String property = localProperties.getProperty(name, '')
+    if (property.isEmpty())
+    {
+        if (!System.hasProperty(name))
+        {
+            // when env parameter is not defined search for env variable with property name
+            def sEnv = env != null && !env.isEmpty() ? env : name
+            def envVariable = providers.environmentVariable(sEnv).forUseAtConfigurationTime()
+            if (envVariable.present) {
+                property = envVariable.get()
+            }
+            else if (required && defaultValue == null) {
+                throw new InvalidUserDataException("Unable to find local project property ${name}")
+            }
+            else return defaultValue
+        }
+        else property = System.getProperty(name)
+    }
+    if (type == Path) {
+        return Paths.get(property) as T
+    }
+    else return property as T
+}
+/**
+ * Initialize and register project property from {@code local.properties} file.
+ *
+ * @param name property name to search for in local properties.
+ * @param type class to initialize the property as.
+ * @param env environment variable to use if property not found.
+ * @param required whether to throw an exception if property is not found.
+ * @return found project property or {@code null} if no property found.
+ */
+def registerLocalProjectProperty(String name, Class<Object> type, String env, boolean required) {
+    project.ext.set(name, getLocalProjectProperty(name, type, env, required, null))
+}
+
+tasks.register('initLocalProperties') {
+
+    description('Initialize local project properties.')
+    group('build setup')
+
+    it.doLast {
+        ArrayList<String> content = new ArrayList<String>()
+        content.add('# This file contains local properties used to configure project build.')
+        content.add('# Note: paths need to be Unix-style where segments need to be separated with forward-slashes (/)')
+        content.add('# this is for compatibility and stability purposes as backslashes don\'t play well.\n')
+
+        content.add('# Path to game installation directory')
+        ant.input(message: 'Enter path to game installation directory: ', addproperty: 'gameDir')
+        content.add("gameDir=${ant.properties.gameDir.toString().replace('\\', '/')}")
+
+        content.add('\n# Path to IntelliJ IDEA installation directory')
+        ant.input(message: '\nEnter path to IntelliJ IDEA installation directory: ', addproperty: 'ideaHome')
+        content.add("ideaHome=${ant.properties.ideaHome.toString().replace('\\', '/')}")
+
+        if (!propertiesFile.exists())
+        {
+            logger.info('Creating local.properties file...')
+            if (!propertiesFile.createNewFile()) {
+                throw new IOException('Unable to create local.properties file')
+            }
+        }
+        // noinspection GroovyAssignabilityCheck
+        GFileUtils.writeFile(content.join(System.lineSeparator()), propertiesFile)
+    }
+}
+// load and register all local properties
+if (propertiesFile.exists())
+{
+    // load properties from properties file
+    logger.info('Loading local properties...')
+    propertiesFile.withInputStream {
+        localProperties.load(it)
+    }
+    // path to Project Zomboid installation directory
+    registerLocalProjectProperty('gameDir', Path.class, 'PZ_DIR_PATH', true)
+
+    // path to Project Zomboid installation directory
+    registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', false)
+}
+else logger.warn('WARN: Unable to find local.properties file')

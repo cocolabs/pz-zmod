@@ -1,45 +1,92 @@
+import java.nio.charset.StandardCharsets
+
+// directory containing generated lua library
+project.ext.zDocLuaDir = file("$buildDir/generated/sources/zdoc/").absoluteFile
+
 repositories {
-    maven { url 'https://jitpack.io' }
+    // try to find dependencies locally first
+    mavenLocal()
 }
+// Github Packages repository credentials
+project.ext.cocoLabsRepo = 'pz-zdoc'
+apply from: 'https://git.io/JtydE'
+
 configurations {
     zomboidDoc.extendsFrom zomboidRuntimeOnly
 }
 dependencies {
-    // https://github.com/real-coco-labs/pz-zdoc
-    zomboidDoc 'com.github.real-coco-labs:pz-zdoc:v2+'
+    // https://github.com/orgs/real-coco-labs/packages?repo_name=pz-zdoc
+    zomboidDoc 'io.cocolabs:pz-zdoc:3.+'
 
     // ZomboidDoc compiled Lua library
-    compileOnly files("lib/pz-zdoc-lua-$game_version" + '.jar')
-}
-
-def zomboidLuaJar = tasks.register("zomboidLuaJar", Jar.class) {
-    it.description('Assembles a jar containing compiled lua classes.')
-    it.setGroup('zomboid')
-
-    it.archiveFileName = "pz-zdoc-lua-${game_version}.jar"
-    it.destinationDir(file("$buildDir/libs"))
-    it.from "$buildDir/generated/sources/zdoc/"
-    it.doLast {
-        //noinspection GroovyAssignabilityCheck
-        copyJarOutputToLib(it)
+    if (project.ext.has('mod.pzversion')) {
+        compileOnly files("lib/zdoc-lua-${project.ext.get('mod.pzversion')}" + '.jar')
     }
+    else if (file('mod.info').exists()) {
+        logger.warn('WARN: Unable to find mod.pzversion property')
+    }
+    // Project Zomboid classes
+    zomboidDoc files(zomboidClassesDir)
 }
-jar.dependsOn(zomboidLuaJar.get())
 
-tasks.register("annotateZomboidLua", JavaExec.class) {
+tasks.register('zomboidLuaJar', ZDocJar.class) {
+
+    it.description('Assembles a jar containing compiled Lua classes.')
+    it.archiveBaseName.set('zdoc-lua')
+
+    it.from zDocLuaDir
+    it.destinationDir file('lib')
+}
+
+tasks.register('zomboidVersion', JavaExec.class) {
+
+    it.description('Read Project Zomboid game version.')
+    it.group('zomboid')
+
+    it.main = 'io.cocolabs.pz.zdoc.Main'
+    it.classpath = configurations.zomboidDoc
+    it.args 'version'
+
+    OutputStream oStream = new ByteArrayOutputStream()
+    it.setStandardOutput(oStream)
+
+    it.doLast {
+        // get command output from stream
+        def versionText = oStream.toString(StandardCharsets.UTF_8.name()).split('\r\n|\r|\n')
+
+        // ZomboidDoc version
+        logger.lifecycle(versionText[0])
+
+        // get version number and classifier (ex. 41.50-IWBUMS)
+        project.ext.set('mod.pzversion', versionText[1].substring(12).replaceAll(" ", "").trim())
+        logger.lifecycle("game version ${project.ext.get('mod.pzversion')}")
+    }
+    it.dependsOn(tasks.getByName('zomboidClasses'))
+    it.finalizedBy(tasks.getByName('saveModInfo'))
+}
+
+tasks.register('annotateZomboidLua', JavaExec.class) {
+
     it.description('Annotate vanilla Lua with EmmyLua.')
     it.setGroup('zomboid')
 
-    it.main = "io.yooksi.pz.zdoc.Main"
-    it.classpath = configurations.zomboidImplementation + configurations.zomboidDoc
-    it.args('annotate', '-i', "$gameDir/media/lua", '-o', "$buildDir/generated/sources/zdoc/media/lua")
+    it.main = 'io.cocolabs.pz.zdoc.Main'
+    it.classpath = configurations.zomboidDoc
+    it.args('annotate', '-i', "${project.ext.gameDir}/media/lua", '-o', "$zDocLuaDir/media/lua")
+    it.dependsOn(tasks.getByName('zomboidClasses'))
 }
 
-tasks.register("compileZomboidLua", JavaExec.class) {
+tasks.register('compileZomboidLua', JavaExec.class) {
+
     it.description('Compile Lua library from modding API.')
     it.setGroup('zomboid')
 
-    it.main = "io.yooksi.pz.zdoc.Main"
-    it.classpath = configurations.zomboidImplementation + configurations.zomboidDoc
-    it.args('compile', '-i', "$gameDir", '-o', "$buildDir/generated/sources/zdoc/media/lua/shared/Library")
+    //noinspection GroovyAssignabilityCheck,GroovyAccessibility
+    it.javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+    it.main = 'io.cocolabs.pz.zdoc.Main'
+    it.classpath = configurations.zomboidDoc
+    it.args('compile', '-i', "$gameDir", '-o', "$zDocLuaDir/media/lua/shared/Library")
+    it.dependsOn(tasks.getByName('zomboidClasses'))
 }

@@ -1,2 +1,17 @@
+import org.apache.tools.ant.DirectoryScanner
+
+DirectoryScanner.removeDefaultExclude('**/.gitignore')
+DirectoryScanner.removeDefaultExclude('**/.gitattributes')
+
 gradle.startParameter.excludedTaskNames += "compileJava"
-rootProject.name = 'pz-zmod'
+
+/* This property defines your mod ID in mod.info.
+*
+ * When not explicitly defined it will inherit the name of the project root directory.
+ * For example if the project root directory path is /home/documents/pz-supermod
+ * the rootProject.name value will be 'pz-supermod'.
+ *
+ * You can override this behaviour by uncommenting this line
+ * and setting a custom name for your project.
+ */
+//rootProject.name = 'pz-zmod'

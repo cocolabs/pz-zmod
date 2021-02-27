@@ -1,15 +1,8 @@
 # User data
 local.properties
 
-# Temporary
-.gitignored
-
 # Libraries
 /lib/
-
-# Zmod resources
-/media/*
-!/media/zmod/
 
 ### IntelliJ ###
 
@@ -39,9 +32,6 @@ logs/
 
 # Ignore Gradle build output directory
 build/
-
-# Exclude gradle-wrapper.jar from rules
-!/gradle/wrapper/gradle-wrapper.jar
 
 ### Windows ###
 # Windows thumbnail cache files

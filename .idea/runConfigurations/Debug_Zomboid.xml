@@ -5,7 +5,7 @@
     <option name="VM_PARAMETERS" value="-Ddebug=1 -Dzomboid.steam=0 -Dzomboid.znetlog=1 -XX:+UseConcMarkSweepGC -XX:-CreateMinidumpOnCrash -XX:-OmitStackTraceInFastThrow -Xms1800m -Xmx2048m" />
     <option name="WORKING_DIRECTORY" value="$PZ_DIR_PATH$" />
     <method v="2">
-      <option name="Gradle.BeforeRunTask" enabled="true" tasks="zomboidJar" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="zomboidClasses" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
     </method>
   </configuration>
 </component>
