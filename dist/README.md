@@ -32,6 +32,5 @@ Explain different ways in which your mod can be used in-game.
 Give proper credits to those that helped make this project.
 
 ## License
-A short snippet describing the license (MIT, Apache etc).
 
 MIT © [Yourname](https://github.com/real-coco-labs)
