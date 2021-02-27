@@ -5,8 +5,6 @@ plugins {
     // Facilitates building archives that serve as project distributions
     id 'distribution'
 }
-version '1.0'
-
 repositories {
     jcenter()
 }
@@ -18,7 +16,6 @@ java {
     }
 }
 apply from: 'setup.gradle'
-apply from: 'distribution.gradle'
 if (project.ext.has('gameDir'))
 {
     List<String> resourcesList = new ArrayList<>()
@@ -43,5 +40,8 @@ if (project.ext.has('gameDir'))
     jar {
         from sourceSets.media.output
     }
+    version modInfoProperties.getProperty('modversion')
+    apply from: 'distribution.gradle'
+
+    defaultTasks 'showModInfo'
 }
-defaultTasks 'showModInfo'

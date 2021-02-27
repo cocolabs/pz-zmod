@@ -1,6 +1,7 @@
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.Path
+import java.util.regex.Pattern
 
 apply plugin: 'java'
 
@@ -64,6 +65,9 @@ processMediaResources {
 def modInfoFile = file('mod.info')
 project.ext.modInfoProperties = new Properties()
 
+// Semantic versioning scheme
+project.ext.semVersion = Pattern.compile('\\d+\\.\\d+\\.\\d+')
+
 void validateModInfo() {
 
     // map of all available mod properties
@@ -71,6 +75,7 @@ void validateModInfo() {
             'url': false,
             'description': false,
             'name': true,
+            'modversion': true
             //game version is checked in zdoc.gradle
             //mod.pzversion: String.class,
     ]
@@ -87,18 +92,23 @@ void validateModInfo() {
             }
             else logger.warn("WARN: ${log}")
         }
+        else if (key == 'url')
+        {
+            try {
+                new URL(property)
+            }
+            catch (MalformedURLException e) {
+                throw new InvalidUserDataException("Mod URL \'${property}\' is not a valid URL", e)
+            }
+        }
+        else if (key == 'modversion')
+        {
+            if (!(semVersion as Pattern).matcher(property).find()) {
+                throw new InvalidUserDataException("Mod version \'${property}\' " +
+                        'does not follow semantic versioning rules: https://semver.org/')
+            }
+        }
     })//@formatter:on
-    def modUrl = modInfoProperties.getProperty('url')
-    if (modUrl != null && !modUrl.trim().empty)
-    {
-        try {
-            new URL(modUrl)
-        }
-        catch (MalformedURLException e) {
-            throw new InvalidUserDataException("Mod property \'url\' " +
-                    "is not a valid value for property \'${modUrl}\'", e)
-        }
-    }
 }
 
 def saveModInfo = tasks.register('saveModInfo') {
@@ -135,7 +145,7 @@ def saveModInfo = tasks.register('saveModInfo') {
                     "id=$rootProject.name",
                     // remove backslash used to escape key/value separators
                     "url=${modUrl != null ? modUrl.replaceAll('\\\\\\\\:', ':') : ''}",
-                    "modversion=" + rootProject.version,
+                    "modversion=" + modInfoProperties.get('modversion'),
                     "pzversion=${modInfoProperties.get('pzversion')}",
             ] as String[]).forEach({ l -> writer.writeLine(l) })
         }
@@ -157,6 +167,9 @@ tasks.register('initModInfo') {
 
         ant.input(message: 'Enter mod repo/workshop URL: \n', addproperty: 'mod.url')
         modInfoProperties.setProperty('url', ant.properties.get('mod.url') as String)
+
+        // starting mod version is 0.1.0 (sem-ver)
+        modInfoProperties.setProperty('modversion', '0.1.0')
     }
     it.finalizedBy(saveModInfo)
 }
