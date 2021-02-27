@@ -19,7 +19,7 @@ tasks.register('stageDistribution', Copy.class) {
 	// files that need to be excluded
 	it.exclude '/README.md', '/LICENSE.txt', '/.gitignore',
 			'.gitignored', 'distribution.sh', 'distribution.gradle',
-			'.idea/runConfigurations/distribution.xml'
+			'.idea/runConfigurations/distribution.xml', 'mod.info'
 
 	// dirs that are already excluded but we don't want to spend time on staging
 	it.exclude '/dist/**', '.gradle/**', 'buildSrc/.gradle/**', '/build/**',
