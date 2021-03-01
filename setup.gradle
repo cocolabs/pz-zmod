@@ -101,3 +101,27 @@ if (propertiesFile.exists())
     registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', false)
 }
 else logger.warn('WARN: Unable to find local.properties file')
+tasks.register('createModSearchScopes') {
+
+    it.description 'Create IDEA mod search scopes.'
+    it.group 'build setup'
+
+    def modLuaScope = [
+            '<component name="DependencyValidationManager">',
+            "<scope name=\"mod-lua\" pattern=\"file[${rootProject.name}.media]:*.lua\" />",
+            '</component>'
+    ]
+    def modMediaScope = [
+            '<component name="DependencyValidationManager">',
+            "<scope name=\"mod-lua\" pattern=\"file[${rootProject.name}.media]:*.*\" />",
+            '</component>'
+    ]
+    it.doLast {
+        file('./.idea/scopes/mod_lua.xml').withWriter {
+            modLuaScope.each { l -> it.writeLine(l) }
+        }
+        file('./.idea/scopes/mod_media.xml').withWriter {
+            modMediaScope.each { l -> it.writeLine(l) }
+        }
+    }
+}
