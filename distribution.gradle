@@ -35,20 +35,39 @@ tasks.register('stageDistribution', Copy.class) {
 	// do additional copy actions we cannot do with this Copy task
 	it.doLast {
 		file('dist').listFiles().each {
+			/*
+			 * copy additional distribution files manually because files
+			 * excluded by task filters cannot be copied with Copy task
+			 */
 			if (it.directory) {
 				GFileUtils.copyDirectory(it, stagePath.resolve(it.getName()).toFile() as File)
 			}
 			else GFileUtils.copyFile(it, stagePath.resolve(it.getName()).toFile() as File)
 		}
-		def gitIgnored = file('.gitignored')
-		if (gitIgnored.exists())
-		{
-			def ignoredFiles = GFileUtils.readFile(gitIgnored).split('\r|\n|\r\n')
-			ignoredFiles.each {
-				File ignoredFile = stagePath.resolve(it).normalize().toFile()
-				if (ignoredFile.exists() && !ignoredFile.isDirectory() && !ignoredFile.delete()) {
-					logger.warn("WARN: Unable to delete ${ignoredFile.path}")
-				}
+		// remove duplicate docs in root directory
+		docsList.forEach({
+			GFileUtils.deleteQuietly(stagePath.resolve(it).toFile())
+		})
+	}
+	it.dependsOn(cleanDistributionStage)
+}
+
+tasks.register('pruneDistributionStage', Delete.class) {
+
+	final def task = it
+	it.onlyIf {
+		file(stagePath).exists()
+	}
+	def gitIgnored = file('.gitignored')
+	if (gitIgnored.exists())
+	{
+		def ignoredFiles = GFileUtils.readFile(gitIgnored).split('\r|\n|\r\n')
+		ignoredFiles.each {
+			File ignoredFile = file(it)
+			if (ignoredFile.toPath().toAbsolutePath().startsWith(stagePath.toAbsolutePath()))
+			{
+				task.delete(ignoredFile)
+				logger.quiet("Deleting ignored file ${it}")
 			}
 		}
 	}
