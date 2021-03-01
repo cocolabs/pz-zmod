@@ -58,8 +58,8 @@ def registerLocalProjectProperty(String name, Class<Object> type, String env, bo
 
 tasks.register('initLocalProperties') {
 
-    description('Initialize local project properties.')
-    group('build setup')
+    description 'Initialize local project properties.'
+    group 'build setup'
 
     it.doLast {
         ArrayList<String> content = new ArrayList<String>()

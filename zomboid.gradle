@@ -47,8 +47,8 @@ dependencies {
  */
 tasks.register('decompileZomboid', JavaExec.class) {
 
-	description('Decompile Project Zomboid classes.')
-	group('zomboid')
+	it.description 'Decompile Project Zomboid classes.'
+	it.group 'zomboid'
 
     if (project.ext.ideaHome == null) {
         throw new InvalidUserDataException('Local property \"ideaHome\" is not defined')
@@ -76,7 +76,7 @@ tasks.register('decompileZomboid', JavaExec.class) {
 
 tasks.register('zomboidJar', ZDocJar.class) {
 
-    it.description('Assembles a jar archive containing game classes.')
+    it.description 'Assembles a jar archive containing game classes.'
     it.includeEmptyDirs = false
 
     it.archiveBaseName.set('zomboid')
@@ -91,7 +91,7 @@ tasks.register('zomboidJar', ZDocJar.class) {
 
 tasks.register("zomboidSourcesJar", ZDocJar.class) {
 
-    it.description('Assembles a jar containing decompiled game sources.')
+    it.description 'Assembles a jar containing decompiled game sources.'
     it.archiveBaseName.set('zomboid')
     it.classifier 'sources'
 

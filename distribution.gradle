@@ -3,8 +3,9 @@ import org.gradle.util.GFileUtils
 def stagePath = file("stage").toPath()
 task cleanDistributionStage(type: Delete) {
 
-	description('Clean distribution stage directory.')
-	group('distribution')
+	description 'Clean distribution stage directory.'
+	group 'distribution'
+
 	it.onlyIf {
 		file(stagePath).exists()
 	}
@@ -13,8 +14,8 @@ task cleanDistributionStage(type: Delete) {
 def docsList = [ 'README.md', 'LICENSE.txt', 'CHANGELOG.md' ]
 tasks.register('stageDistribution', Copy.class) {
 
-	description('Copy distribution files to stage directory.')
-	group('distribution')
+	it.description 'Copy distribution files to stage directory.'
+	it.group 'distribution'
 
 	it.from projectDir
 	it.into stagePath

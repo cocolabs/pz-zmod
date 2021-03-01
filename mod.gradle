@@ -113,8 +113,8 @@ void validateModInfo() {
 
 def saveModInfo = tasks.register('saveModInfo') {
 
-    description('Save mod metadata to file.')
-    group('mod')
+    it.description 'Save mod metadata to file.'
+    it.group 'mod'
 
     it.doLast {
         // validate properties before saving them
@@ -155,8 +155,8 @@ def saveModInfo = tasks.register('saveModInfo') {
 
 tasks.register('initModInfo') {
 
-    description('Initialize mod metadata information.')
-    group('mod')
+    it.description 'Initialize mod metadata information.'
+    it.group 'mod'
 
     it.doLast {
         ant.input(message: 'Enter mod name: \n', addproperty: 'mod.name')
@@ -206,8 +206,9 @@ String getDisplayProperty(String name) {
 
 task showModInfo {
 
-    description('Print mod metadata information.')
-    group('mod')
+    description 'Print mod metadata information.'
+    group 'mod'
+
     onlyIf {
         modInfoFile.exists()
     }
@@ -230,8 +231,8 @@ task showModInfo {
 
 task createModStructure {
 
-    group 'mod'
     description 'Create default mod directory structure.'
+    group 'mod'
 
     doLast {
         def media = sourceSets.named('media').get()
