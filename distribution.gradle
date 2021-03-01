@@ -54,6 +54,9 @@ tasks.register('stageDistribution', Copy.class) {
 
 tasks.register('pruneDistributionStage', Delete.class) {
 
+	it.description 'Selectively delete files from distribution stage.'
+	it.group 'distribution'
+
 	final def task = it
 	it.onlyIf {
 		file(stagePath).exists()
