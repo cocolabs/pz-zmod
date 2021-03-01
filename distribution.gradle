@@ -5,7 +5,9 @@ task cleanDistributionStage(type: Delete) {
 
 	description('Clean distribution stage directory.')
 	group('distribution')
-
+	it.onlyIf {
+		file(stagePath).exists()
+	}
 	delete(stagePath)
 }
 tasks.register('stageDistribution', Copy.class) {
