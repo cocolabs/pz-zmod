@@ -58,7 +58,6 @@ tasks.register('pruneDistributionStage', Delete.class) {
 	it.description 'Selectively delete files from distribution stage.'
 	it.group 'distribution'
 
-	final def task = it
 	it.onlyIf {
 		file(stagePath).exists()
 	}
@@ -66,12 +65,12 @@ tasks.register('pruneDistributionStage', Delete.class) {
 	if (gitIgnored.exists())
 	{
 		def ignoredFiles = GFileUtils.readFile(gitIgnored).split('\r|\n|\r\n')
-		ignoredFiles.each {
-			File ignoredFile = file(it)
+		ignoredFiles.each {s ->
+			File ignoredFile = file(s)
 			if (ignoredFile.toPath().toAbsolutePath().startsWith(stagePath.toAbsolutePath()))
 			{
-				task.delete(ignoredFile)
-				logger.quiet("Deleting ignored file ${it}")
+				it.delete(ignoredFile)
+				logger.quiet("Deleting ignored file ${s}")
 			}
 		}
 	}
