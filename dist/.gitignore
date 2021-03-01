@@ -4,6 +4,10 @@ local.properties
 # Libraries
 /lib/
 
+# Template
+/docs/template/
+/docs/zmod/
+
 ### IntelliJ ###
 
 # Project file-based format
