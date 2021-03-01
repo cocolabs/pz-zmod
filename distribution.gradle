@@ -71,15 +71,9 @@ tasks.register('pruneDistributionStage', Delete.class) {
 			}
 		}
 	}
-	it.dependsOn(cleanDistributionStage)
 }
 
 distributions.main.contents {
 	it.from stagePath
 	it.includeEmptyDirs false
-}
-
-// All distribution tasks need to first stage files
-[ distZip, distTar, assembleDist, installDist ].forEach {
-	it.dependsOn(stageDistribution)
 }
