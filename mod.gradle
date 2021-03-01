@@ -243,3 +243,12 @@ task createModStructure {
         })
     }
 }
+
+tasks.register('applyModTemplate', Copy.class) {
+
+    it.description 'Apply Project Zomboid mod template.'
+    it.group 'mod'
+
+    it.into projectDir
+    it.from 'docs/template'
+}
