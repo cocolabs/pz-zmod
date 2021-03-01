@@ -78,7 +78,19 @@ Instead, obtain the latest release and follow the [installation](#installation) 
 
 - <details>
 	<summary>Attach decompiled sources to classes.</summary>
+	<ul>
+	<li>Open project structure - <code>File -> Project Structure...</code></li>
+	<li>Open <code>modules -> main -> Dependencies</code> panel.</li>
+	<li>Find and select <code>zomboid-&ltversion&gt.jar</code> dependency.</li>
+	<li>Click the little pencil icon to edit depdendency properties.</li>
+	</ul>
 	<img src="images/module_dependencies.png" width=100%/>
+	<p>You should now be in the window called <code>Configure Module Library</code>.</p>
+	<ul>
+	<li>Click the little plus icon (<code>Alt + Insert</code>) to attach files.</li>
+	<li>In the new explorer window that just popped up find and select compiled sources which should be in <code>./lib/zomboid-&ltversion&gt-sources.jar</code> in project root directory.</li>
+	<li>Click <code>OK</code> in all open windows to save and apply settings.</li>
+	</ul>
 	<img src="images/module_library.png" width=65%/>
 </details>
 
@@ -90,7 +102,10 @@ Instead, obtain the latest release and follow the [installation](#installation) 
 
 - <details>
 	<summary>Update project search scopes.</summary>
-	<p>Navigate to <code>File -> Settings -> Appearance & Behaviour -> Scopes</code> and update all search scope module references to match your project module. For example if your mod ID was <code>awesome-mod</code> you would set the module field to <code>awesome-mod.media</code>.</p>
+	<ul>
+	<li>Navigate to <code>File -> Settings -> Appearance & Behaviour -> Scopes</code> and update all search scope module references to match your project module. For example if your mod ID was <code>awesome-mod</code> you would set the module field to <code>awesome-mod.media</code>.</li>
+	<li>Click <code>OK</code> in all open windows to save and apply settings.</li>
+	</ul>
 	<img src="images/project_search_scopes.png" width=100%/>
 </details>
 
