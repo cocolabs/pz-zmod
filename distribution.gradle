@@ -1,6 +1,6 @@
 import org.gradle.util.GFileUtils
 
-def stagePath = file("$buildDir/tmp/distribution/stage").toPath()
+def stagePath = file("stage").toPath()
 task cleanDistributionStage(type: Delete) {
 
 	description('Clean distribution stage directory.')
