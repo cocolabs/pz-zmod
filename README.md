@@ -1,6 +1,6 @@
 # ZomboidMod
 
-[![release](https://img.shields.io/github/v/release/real-coco-labs/pz-zmod)](https://github.com/real-coco-labs/pz-zmod/releases/latest) ![last-commit](https://img.shields.io/github/last-commit/real-coco-labs/pz-zmod/dev) [![License](https://img.shields.io/github/license/real-coco-labs/pz-zmod)](https://mit-license.org/) [![chat](https://img.shields.io/discord/717757483376050203?color=7289DA)](https://discord.gg/vCeydWCbd9)
+[![release](https://img.shields.io/github/v/release/cocolabs/pz-zmod)](https://github.com/cocolabs/pz-zmod/releases/latest) ![last-commit](https://img.shields.io/github/last-commit/cocolabs/pz-zmod/dev) [![License](https://img.shields.io/github/license/cocolabs/pz-zmod)](https://mit-license.org/) [![chat](https://img.shields.io/discord/717757483376050203?color=7289DA)](https://discord.gg/vCeydWCbd9)
 
 ZomboidMod is a compact mod development environment for [Project Zomboid](https://projectzomboid.com/blog/).
 
@@ -28,7 +28,7 @@ ZomboidMod serves as an umbrella for these tools, connecting everything you need
 
 ## Where do I get it?
 
-Download the [latest release](https://github.com/real-coco-labs/pz-zmod/releases/latest) from the repository.
+Download the [latest release](https://github.com/cocolabs/pz-zmod/releases/latest) from the repository.
 
 Note that you **should** not clone the repository and use it as a template.
 Instead, obtain the latest release and follow the [installation](#installation) instructions. 
@@ -49,7 +49,7 @@ Instead, obtain the latest release and follow the [installation](#installation) 
 
 ### Setup
 
-- Download the [latest release](https://github.com/real-coco-labs/pz-zmod/releases/latest) from the repository.
+- Download the [latest release](https://github.com/cocolabs/pz-zmod/releases/latest) from the repository.
 
 - Extract the release archive in your mod root directory (overwrite if updating).
 
@@ -167,7 +167,7 @@ Note that you can choose to include your full name or your Github username. It i
 
 ## Discussion
 
-- Feel free to [open a ticket](https://github.com/real-coco-labs/pz-zmod/issues/new) if you have any problems, questions or suggestions regarding the project.
+- Feel free to [open a ticket](https://github.com/cocolabs/pz-zmod/issues/new) if you have any problems, questions or suggestions regarding the project.
 - You are also welcome to join us on [Discord](https://discord.gg/vCeydWCbd9) to talk about modding and follow community projects.
 
 ## License
