@@ -2,6 +2,6 @@ name=ZomboidMod
 poster=poster.png
 description=Compact mod development environment.
 id=pz-zmod
-url=https://github.com/real-coco-labs/pz-zmod
+url=https://github.com/cocolabs/pz-zmod
 modversion=2.0.0
 pzversion=41.50-IWBUMS
