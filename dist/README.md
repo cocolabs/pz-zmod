@@ -33,4 +33,4 @@ Give proper credits to those that helped make this project.
 
 ## License
 
-MIT © [Yourname](https://github.com/real-coco-labs)
+MIT © [Yourname](https://github.com/cocolabs)

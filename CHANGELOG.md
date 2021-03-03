@@ -1,29 +1,29 @@
 # Changelog
 
-## [v2.0.0](https://github.com/real-coco-labs/pz-zmod/tree/v2.0.0) (2021-02-27)
+## [v2.0.0](https://github.com/cocolabs/pz-zmod/tree/v2.0.0) (2021-02-27)
 
-[Full Changelog](https://github.com/real-coco-labs/pz-zmod/compare/v1.0.0...v2.0.0)
+[Full Changelog](https://github.com/cocolabs/pz-zmod/compare/v1.0.0...v2.0.0)
 
 **Breaking changes:**
 
-- Automate dev environment creation [\#1](https://github.com/real-coco-labs/pz-zmod/issues/1)
+- Automate dev environment creation [\#1](https://github.com/cocolabs/pz-zmod/issues/1)
 
 **Implemented enhancements:**
 
-- Task to create mod structure [\#18](https://github.com/real-coco-labs/pz-zmod/issues/18)
-- Ignore image thumbnails [\#16](https://github.com/real-coco-labs/pz-zmod/issues/16)
-- Initialize mod.info with console [\#10](https://github.com/real-coco-labs/pz-zmod/issues/10)
-- Set language level for gradle JVM [\#9](https://github.com/real-coco-labs/pz-zmod/issues/9)
-- Dynamic game version property [\#7](https://github.com/real-coco-labs/pz-zmod/issues/7)
-- Mod initialization task [\#5](https://github.com/real-coco-labs/pz-zmod/issues/5)
+- Task to create mod structure [\#18](https://github.com/cocolabs/pz-zmod/issues/18)
+- Ignore image thumbnails [\#16](https://github.com/cocolabs/pz-zmod/issues/16)
+- Initialize mod.info with console [\#10](https://github.com/cocolabs/pz-zmod/issues/10)
+- Set language level for gradle JVM [\#9](https://github.com/cocolabs/pz-zmod/issues/9)
+- Dynamic game version property [\#7](https://github.com/cocolabs/pz-zmod/issues/7)
+- Mod initialization task [\#5](https://github.com/cocolabs/pz-zmod/issues/5)
 
 **Fixed bugs:**
 
-- Error when decompiling with Java 8 \(UnsupportedClassVersionError\) [\#8](https://github.com/real-coco-labs/pz-zmod/issues/8)
+- Error when decompiling with Java 8 \(UnsupportedClassVersionError\) [\#8](https://github.com/cocolabs/pz-zmod/issues/8)
 
-## [v1.0.0](https://github.com/real-coco-labs/pz-zmod/tree/v1.0.0) (2021-02-14)
+## [v1.0.0](https://github.com/cocolabs/pz-zmod/tree/v1.0.0) (2021-02-14)
 
-[Full Changelog](https://github.com/real-coco-labs/pz-zmod/compare/06fb2eb19981c4064b51e9eefa7ab582c1217123...v1.0.0)
+[Full Changelog](https://github.com/cocolabs/pz-zmod/compare/06fb2eb19981c4064b51e9eefa7ab582c1217123...v1.0.0)
 
 
 
