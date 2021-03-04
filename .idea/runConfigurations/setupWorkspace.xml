@@ -17,6 +17,7 @@
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <DebugAllEnabled>false</DebugAllEnabled>
     <method v="2">
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="createLaunchRunConfigs" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="decompileZomboid" run_configuration_type="GradleRunConfiguration" />
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="runZomboidDoc" run_configuration_type="GradleRunConfiguration" />
     </method>

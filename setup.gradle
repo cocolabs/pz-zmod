@@ -101,6 +101,60 @@ if (propertiesFile.exists())
     registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', false)
 }
 else logger.warn('WARN: Unable to find local.properties file')
+
+/**
+ * Create game launch run configuration.
+ *
+ * @param name run configuration name.
+ * @param debug if {@code true} launch game in debug mode.
+ * @param steam if {@code true} enable steam integration.
+ */
+void createRunConfig(String name, boolean debug, boolean steam) {
+
+    def runConfigFormat = [
+            "<component name=\"ProjectRunConfigurationManager\">",
+            "  <configuration default=\"false\" name=\"${name}\" type=\"Application\" factoryName=\"Application\">",
+            "    <option name=\"MAIN_CLASS_NAME\" value=\"zombie.gameStates.MainScreenState\" />",
+            "    <module name=\"pz-zmod.main\" />",
+            "    <option name=\"VM_PARAMETERS\" value=\"-Ddebug=${debug ? 1 : 0} -Dzomboid.steam=${steam ? 1 : 0} " +
+                    "-Dzomboid.znetlog=1 -XX:+UseConcMarkSweepGC -XX:-CreateMinidumpOnCrash " +
+                    "-XX:-OmitStackTraceInFastThrow -Xms1800m -Xmx2048m\" />",
+            "    <option name=\"WORKING_DIRECTORY\" value=\"${gameDir}\" />",
+            "    <method v=\"2\">",
+            "      <option name=\"Gradle.BeforeRunTask\" enabled=\"true\" tasks=\"zomboidClasses\" " +
+                    "externalProjectPath=\"${gameDir}\" vmOptions=\"\" scriptParameters=\"\" />",
+            "    </method>",
+            "  </configuration>",
+            "</component>",
+    ]
+    // translate config name to filename (similar to what IDEA is doing)
+    def filename = name.replaceAll('\\s', '_').replaceAll('[^\\w_]', '').replaceAll("__", '_')
+
+    // write xml configuration to file
+    file("./.idea/runConfigurations/${filename}.xml").withWriter {
+        runConfigFormat.each { l -> it.writeLine(l) }
+    }
+}
+
+tasks.register('createLaunchRunConfigs') {
+
+    it.description 'Create game launch run configurations.'
+    it.group 'build setup'
+
+    it.onlyIf {
+        project.ext.has('gameDir')
+    }
+    it.doLast {
+        // debug configurations
+        createRunConfig('Debug Zomboid', true, true)
+        createRunConfig('Debug Zomboid (local)', true, false)
+
+        // run configurations
+        createRunConfig('Run Zomboid', false, true)
+        createRunConfig('Run Zomboid (local)', false, false)
+    }
+}
+
 tasks.register('createModSearchScopes') {
 
     it.description 'Create IDEA search scopes for mod files.'
