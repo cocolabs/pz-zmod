@@ -58,8 +58,8 @@ def registerLocalProjectProperty(String name, Class<Object> type, String env, bo
 
 tasks.register('initLocalProperties') {
 
-    description 'Initialize local project properties.'
-    group 'build setup'
+    it.description 'Initialize local project properties.'
+    it.group 'build setup'
 
     it.onlyIf {
         !propertiesFile.exists()
