@@ -127,10 +127,12 @@ void createRunConfig(String name, boolean debug, boolean steam) {
             "  </configuration>",
             "</component>",
     ]
-    file("./.idea/runConfigurations/${name}.xml").withWriter {
-        runConfigFormat.each {
-            l -> it.writeLine(l)
-        }
+    // translate config name to filename (similar to what IDEA is doing)
+    def filename = name.replaceAll('\\s', '_').replaceAll('[^\\w_]', '').replaceAll("__", '_')
+
+    // write xml configuration to file
+    file("./.idea/runConfigurations/${filename}.xml").withWriter {
+        runConfigFormat.each { l -> it.writeLine(l) }
     }
 }
 
@@ -144,12 +146,12 @@ tasks.register('createLaunchRunConfigs') {
     }
     it.doLast {
         // debug configurations
-        createRunConfig('Debug_Zomboid', true, true)
-        createRunConfig('Debug_Zomboid_local', true, false)
+        createRunConfig('Debug Zomboid', true, true)
+        createRunConfig('Debug Zomboid (local)', true, false)
 
         // run configurations
-        createRunConfig('Run_Zomboid', false, true)
-        createRunConfig('Run_Zomboid_local', false, false)
+        createRunConfig('Run Zomboid', false, true)
+        createRunConfig('Run Zomboid (local)', false, false)
     }
 }
 
