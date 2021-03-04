@@ -122,7 +122,7 @@ void createRunConfig(String name, boolean debug, boolean steam) {
             "    <option name=\"WORKING_DIRECTORY\" value=\"${gameDir}\" />",
             "    <method v=\"2\">",
             "      <option name=\"Gradle.BeforeRunTask\" enabled=\"true\" tasks=\"zomboidClasses\" " +
-                    "externalProjectPath=\"${gameDir}\" vmOptions=\"\" scriptParameters=\"\" />",
+                    "externalProjectPath=\"\$PROJECT_DIR\$\" vmOptions=\"\" scriptParameters=\"\" />",
             "    </method>",
             "  </configuration>",
             "</component>",
