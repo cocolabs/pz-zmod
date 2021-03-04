@@ -115,7 +115,7 @@ void createRunConfig(String name, boolean debug, boolean steam) {
             "<component name=\"ProjectRunConfigurationManager\">",
             "  <configuration default=\"false\" name=\"${name}\" type=\"Application\" factoryName=\"Application\">",
             "    <option name=\"MAIN_CLASS_NAME\" value=\"zombie.gameStates.MainScreenState\" />",
-            "    <module name=\"pz-zmod.main\" />",
+            "    <module name=\"${rootProject.name}.main\" />",
             "    <option name=\"VM_PARAMETERS\" value=\"-Ddebug=${debug ? 1 : 0} -Dzomboid.steam=${steam ? 1 : 0} " +
                     "-Dzomboid.znetlog=1 -XX:+UseConcMarkSweepGC -XX:-CreateMinidumpOnCrash " +
                     "-XX:-OmitStackTraceInFastThrow -Xms1800m -Xmx2048m\" />",
