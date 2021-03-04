@@ -94,34 +94,6 @@ Instead, obtain the latest release and follow the [installation](#installation) 
 	<img src="images/module_library.png" width=65%/>
 </details>
 
-- <details>
-	<summary>Update application run configurations.</summary>
-	<p>Set application configurations module field to <code>&ltmod_id&gt.main</code>. For example if your mod ID was <code>awesome-mod</code> you would set the module field to <code>awesome-mod.main</code>.</p>
-	<img src="images/update_run_configs.png" width=100%/>
-</details>
-
-- <details>
-	<summary>Set IDEA path variables.</summary>
-	<ul>
-	<li>Open project settings - <code>File -> Settings</code>.</li>
-	<li>Navigate to <code>Appearance & Behavioue -> Path Variables</code>.</li>
-	<li>Click the little pencil icon (<code>Alt + Insert</code>) to add a new path variable.</li>
-	<li>Set the variable name to <code>PZ_DIR_PATH</code>.</li>
-	<li>Set the variable value to the game installation directory path.</li>
-	<li>Click <code>OK</code> in all open windows to save and apply settings.</li>
-	</ul>
-	<img src="images/path_variables.png" width=100%/>
-</details>
-
-- <details>
-	<summary>Update project search scopes.</summary>
-	<ul>
-	<li>Navigate to <code>File -> Settings -> Appearance & Behaviour -> Scopes</code> and update all search scope module references to match your project module. For example if your mod ID was <code>awesome-mod</code> you would set the module field to <code>awesome-mod.media</code>.</li>
-	<li>Click <code>OK</code> in all open windows to save and apply settings.</li>
-	</ul>
-	<img src="images/project_search_scopes.png" width=100%/>
-</details>
-
 ### License
 
 It is important to license your project with an appropriate open source license to ensure others have the right to copy, distribute or modify your work without being at risk of take-downs, shake-downs, or litigation.
