@@ -118,8 +118,15 @@ Note that you can choose to include your full name or your Github username. It i
 
 ## How to use
 
+### Setup tasks
+
+- `createLaunchRunConfigs` - Create game launch run configurations.
+- `createModSearchScopes` - Create IDEA search scopes for mod files.
+- `initLocalProperties` - Initialize local project properties.
+
 ### Mod tasks
 
+- `applyModTemplate` - Apply Project Zomboid mod template.
 - `createModStructure` - Create default mod directory structure.
 - `initModInfo` - Initialize mod metadata information.
 - `loadModInfo` - Load mod metadata information.
