@@ -158,6 +158,9 @@ tasks.register('initModInfo') {
     it.description 'Initialize mod metadata information.'
     it.group 'mod'
 
+    it.onlyIf {
+        !modInfoFile.exists()
+    }
     it.doLast {
         ant.input(message: 'Enter mod name: \n', addproperty: 'mod.name')
         modInfoProperties.setProperty('name', ant.properties.get('mod.name') as String)

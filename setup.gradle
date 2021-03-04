@@ -61,6 +61,9 @@ tasks.register('initLocalProperties') {
     description 'Initialize local project properties.'
     group 'build setup'
 
+    it.onlyIf {
+        !propertiesFile.exists()
+    }
     it.doLast {
         ArrayList<String> content = new ArrayList<String>()
         content.add('# This file contains local properties used to configure project build.')
@@ -75,12 +78,9 @@ tasks.register('initLocalProperties') {
         ant.input(message: '\nEnter path to IntelliJ IDEA installation directory: ', addproperty: 'ideaHome')
         content.add("ideaHome=${ant.properties.ideaHome.toString().replace('\\', '/')}")
 
-        if (!propertiesFile.exists())
-        {
-            logger.info('Creating local.properties file...')
-            if (!propertiesFile.createNewFile()) {
-                throw new IOException('Unable to create local.properties file')
-            }
+        logger.info('Creating local.properties file...')
+        if (!propertiesFile.createNewFile()) {
+            throw new IOException('Unable to create local.properties file')
         }
         // noinspection GroovyAssignabilityCheck
         GFileUtils.writeFile(content.join(System.lineSeparator()), propertiesFile)
