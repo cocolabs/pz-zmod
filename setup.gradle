@@ -103,7 +103,7 @@ if (propertiesFile.exists())
 else logger.warn('WARN: Unable to find local.properties file')
 tasks.register('createModSearchScopes') {
 
-    it.description 'Create IDEA mod search scopes.'
+    it.description 'Create IDEA search scopes for mod files.'
     it.group 'build setup'
 
     def modLuaScope = [
