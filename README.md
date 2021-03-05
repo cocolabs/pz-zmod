@@ -61,15 +61,15 @@ Instead, obtain the latest release and follow the [installation](#installation) 
   
 - <details>
 	<summary>Open the project as a Gradle project with Intellij IDEA<a href="https://www.jetbrains.com/help/idea/gradle.html#gradle_import_project_start"><sup>?</sup></a>.</summary>
-	<br><img src="./media/zmod/open_project.png" width=75%/>
-	<br><img src="./media/zmod/load_gradle_project.png" width=40%/>
+	<br><img src="images/open_project.png" width=75%/>
+	<br><img src="images/load_gradle_project.png" width=40%/>
 </details>
 
 - Ensure project SDK is set to JDK 8[<sup>?</sup>](https://www.jetbrains.com/help/idea/sdk.html#change-project-sdk).
 
 - <details>
 	<summary>Initialize mod by running <code>initializeMod</code> run configuration<a href="https://www.jetbrains.com/help/idea/run-debug-configuration.html"><sup>?</sup></a>.</summary>
-	<br><img src="./media/zmod/init_mod.gif" width=65%/>
+	<br><img src="images/init_mod.gif" width=65%/>
   </details>
 
 - Prepare workspace by running `setupWorkspace` run configuration[<sup>?</sup>](https://www.jetbrains.com/help/idea/run-debug-configuration.html).
@@ -78,20 +78,20 @@ Instead, obtain the latest release and follow the [installation](#installation) 
 
 - <details>
 	<summary>Attach decompiled sources to classes.</summary>
-	<br/><img src="./media/zmod/module_dependencies.png" width=100%/>
-	<br/><br/><img src="./media/zmod/module_library.png" width=65%/>
-</details>
-
-- <details>
-	<summary>Update application run configurations.</summary>
-	<p>Set application configurations module field to <code>&ltmod_id&gt.main</code>. For example if your mod ID was <code>awesome-mod</code> you would set the module field to <code>awesome-mod.main</code>.</p>
-	<br/><img src="./media/zmod/update_run_configs.png" width=100%/>
-</details>
-
-- <details>
-	<summary>Update project search scopes.</summary>
-	<p>Navigate to <code>File -> Settings -> Appearance & Behaviour -> Scopes</code> and update all search scope module references to match your project module. For example if your mod ID was <code>awesome-mod</code> you would set the module field to <code>awesome-mod.media</code>.</p>
-	<br/><img src="./media/zmod/project_search_scopes.png" width=100%/>
+	<ul>
+	<li>Open project structure - <code>File -> Project Structure...</code></li>
+	<li>Open <code>modules -> main -> Dependencies</code> panel.</li>
+	<li>Find and select <code>zomboid-&ltversion&gt.jar</code> dependency.</li>
+	<li>Click the little pencil icon to edit depdendency properties.</li>
+	</ul>
+	<img src="images/module_dependencies.png" width=100%/>
+	<p>You should now be in the window called <code>Configure Module Library</code>.</p>
+	<ul>
+	<li>Click the little plus icon (<code>Alt + Insert</code>) to attach files.</li>
+	<li>In the new explorer window that just popped up find and select compiled sources which should be in <code>./lib/zomboid-&ltversion&gt-sources.jar</code> in project root directory.</li>
+	<li>Click <code>OK</code> in all open windows to save and apply settings.</li>
+	</ul>
+	<img src="images/module_library.png" width=65%/>
 </details>
 
 ### License
@@ -118,8 +118,15 @@ Note that you can choose to include your full name or your Github username. It i
 
 ## How to use
 
+### Setup tasks
+
+- `createLaunchRunConfigs` - Create game launch run configurations.
+- `createModSearchScopes` - Create IDEA search scopes for mod files.
+- `initLocalProperties` - Initialize local project properties.
+
 ### Mod tasks
 
+- `applyModTemplate` - Apply Project Zomboid mod template.
 - `createModStructure` - Create default mod directory structure.
 - `initModInfo` - Initialize mod metadata information.
 - `loadModInfo` - Load mod metadata information.

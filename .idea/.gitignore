@@ -2,6 +2,10 @@
 /shelf/
 /workspace.xml
 
+# Run configurations
+/runConfigurations/Run_Zomboid*.xml
+/runConfigurations/Debug_Zomboid*.xml
+
 # Other files
 /.name
 /libraries/

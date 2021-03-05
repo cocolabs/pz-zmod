@@ -31,8 +31,8 @@ dependencies {
 
 tasks.register('zomboidLuaJar', ZDocJar.class) {
 
-    it.description('Assembles a jar containing compiled Lua classes.')
     it.archiveBaseName.set('zdoc-lua')
+    it.description 'Assembles a jar containing compiled Lua classes.'
 
     it.from zDocLuaDir
     it.destinationDir file('lib')
@@ -40,8 +40,8 @@ tasks.register('zomboidLuaJar', ZDocJar.class) {
 
 tasks.register('zomboidVersion', JavaExec.class) {
 
-    it.description('Read Project Zomboid game version.')
-    it.group('zomboid')
+    it.description 'Read Project Zomboid game version.'
+    it.group 'zomboid'
 
     it.main = 'io.cocolabs.pz.zdoc.Main'
     it.classpath = configurations.zomboidDoc
@@ -67,8 +67,8 @@ tasks.register('zomboidVersion', JavaExec.class) {
 
 tasks.register('annotateZomboidLua', JavaExec.class) {
 
-    it.description('Annotate vanilla Lua with EmmyLua.')
-    it.setGroup('zomboid')
+    it.description 'Annotate vanilla Lua with EmmyLua.'
+    it.setGroup 'zomboid'
 
     it.main = 'io.cocolabs.pz.zdoc.Main'
     it.classpath = configurations.zomboidDoc
@@ -78,8 +78,8 @@ tasks.register('annotateZomboidLua', JavaExec.class) {
 
 tasks.register('compileZomboidLua', JavaExec.class) {
 
-    it.description('Compile Lua library from modding API.')
-    it.setGroup('zomboid')
+    it.description 'Compile Lua library from modding API.'
+    it.setGroup 'zomboid'
 
     //noinspection GroovyAssignabilityCheck,GroovyAccessibility
     it.javaLauncher = javaToolchains.launcherFor {

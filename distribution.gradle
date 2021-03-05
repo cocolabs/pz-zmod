@@ -1,56 +1,80 @@
 import org.gradle.util.GFileUtils
 
-def stagePath = file("$buildDir/tmp/distribution/stage").toPath()
+def stagePath = file("stage").toPath()
 task cleanDistributionStage(type: Delete) {
 
-	description('Clean distribution stage directory.')
-	group('distribution')
+	description 'Clean distribution stage directory.'
+	group 'distribution'
 
+	it.onlyIf {
+		file(stagePath).exists()
+	}
 	delete(stagePath)
 }
+def docsList = [ 'README.md', 'LICENSE.txt', 'CHANGELOG.md' ]
 tasks.register('stageDistribution', Copy.class) {
 
-	description('Copy distribution files to stage directory.')
-	group('distribution')
+	it.description 'Copy distribution files to stage directory.'
+	it.group 'distribution'
 
 	it.from projectDir
 	it.into stagePath
 
 	// files that need to be excluded
-	it.exclude '/README.md', '/LICENSE.txt', '/.gitignore',
-			'.gitignored', 'distribution.sh', 'distribution.gradle',
-			'.idea/runConfigurations/distribution.xml', 'mod.info'
+	it.exclude '**/stage/', '/.gitignore', '.gitignored', 'distribution.sh', 'distribution.gradle',
+			'.idea/runConfigurations/distribution.xml', 'mod.info', '.idea/scopes/mod_*'
 
 	// dirs that are already excluded but we don't want to spend time on staging
 	it.exclude '/dist/**', '.gradle/**', 'buildSrc/.gradle/**', '/build/**',
 			'buildSrc/build/**', '/lib/**', '/media/**', '/logs/**'
 
+	// include project documentation
+	it.into('docs/zmod') {
+		it.from projectDir
+		it.include docsList + 'images/*'
+	}
 	// do additional copy actions we cannot do with this Copy task
 	it.doLast {
 		file('dist').listFiles().each {
-			GFileUtils.copyFile(it, stagePath.resolve(it.getName()).toFile() as File)
+			/*
+			 * copy additional distribution files manually because files
+			 * excluded by task filters cannot be copied with Copy task
+			 */
+			if (it.directory) {
+				GFileUtils.copyDirectory(it, stagePath.resolve(it.getName()).toFile() as File)
+			}
+			else GFileUtils.copyFile(it, stagePath.resolve(it.getName()).toFile() as File)
 		}
-		def gitIgnored = file('.gitignored')
-		if (gitIgnored.exists())
-		{
-			def ignoredFiles = GFileUtils.readFile(gitIgnored).split('\r|\n|\r\n')
-			ignoredFiles.each {
-				File ignoredFile = stagePath.resolve(it).normalize().toFile()
-				if (ignoredFile.exists() && !ignoredFile.isDirectory() && !ignoredFile.delete()) {
-					logger.warn("WARN: Unable to delete ${ignoredFile.path}")
-				}
+		// remove duplicate docs in root directory
+		docsList.forEach({
+			GFileUtils.deleteQuietly(stagePath.resolve(it).toFile())
+		})
+	}
+	it.dependsOn(cleanDistributionStage)
+}
+
+tasks.register('pruneDistributionStage', Delete.class) {
+
+	it.description 'Selectively delete files from distribution stage.'
+	it.group 'distribution'
+
+	def gitIgnored = file('.gitignored')
+	it.onlyIf {
+		file(stagePath).exists() && gitIgnored.exists()
+	}
+	it.doLast {
+		def ignoredFiles = GFileUtils.readFile(gitIgnored).split('\r|\n|\r\n')
+		ignoredFiles.each { s ->
+			File ignoredFile = file(s)
+			if (ignoredFile.toPath().toAbsolutePath().startsWith(stagePath.toAbsolutePath())) {
+				it.delete(ignoredFile)
+				logger.quiet("Deleting ignored file ${s}")
 			}
 		}
 	}
-	it.dependsOn(cleanDistributionStage)
 }
 
 distributions.main.contents {
 	it.from stagePath
 	it.includeEmptyDirs false
-}
-
-// All distribution tasks need to first stage files
-[ distZip, distTar, assembleDist, installDist ].forEach {
-	it.dependsOn(stageDistribution)
 }

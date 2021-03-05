@@ -4,6 +4,10 @@ local.properties
 # Libraries
 /lib/
 
+# Template
+/docs/template/
+/docs/zmod/
+
 ### IntelliJ ###
 
 # Project file-based format
@@ -32,6 +36,9 @@ logs/
 
 # Ignore Gradle build output directory
 build/
+
+# Exclude gradle-wrapper.jar from rules
+!**/wrapper/gradle-wrapper.jar
 
 ### Windows ###
 # Windows thumbnail cache files

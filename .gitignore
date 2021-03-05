@@ -7,10 +7,6 @@ local.properties
 # Libraries
 /lib/
 
-# Zmod resources
-/media/*
-!/media/zmod/
-
 ### IntelliJ ###
 
 # Project file-based format
@@ -41,7 +37,7 @@ logs/
 build/
 
 # Exclude gradle-wrapper.jar from rules
-!/gradle/wrapper/gradle-wrapper.jar
+!**/wrapper/gradle-wrapper.jar
 
 ### Windows ###
 # Windows thumbnail cache files

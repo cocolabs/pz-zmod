@@ -58,9 +58,12 @@ def registerLocalProjectProperty(String name, Class<Object> type, String env, bo
 
 tasks.register('initLocalProperties') {
 
-    description('Initialize local project properties.')
-    group('build setup')
+    it.description 'Initialize local project properties.'
+    it.group 'build setup'
 
+    it.onlyIf {
+        !propertiesFile.exists()
+    }
     it.doLast {
         ArrayList<String> content = new ArrayList<String>()
         content.add('# This file contains local properties used to configure project build.')
@@ -75,12 +78,9 @@ tasks.register('initLocalProperties') {
         ant.input(message: '\nEnter path to IntelliJ IDEA installation directory: ', addproperty: 'ideaHome')
         content.add("ideaHome=${ant.properties.ideaHome.toString().replace('\\', '/')}")
 
-        if (!propertiesFile.exists())
-        {
-            logger.info('Creating local.properties file...')
-            if (!propertiesFile.createNewFile()) {
-                throw new IOException('Unable to create local.properties file')
-            }
+        logger.info('Creating local.properties file...')
+        if (!propertiesFile.createNewFile()) {
+            throw new IOException('Unable to create local.properties file')
         }
         // noinspection GroovyAssignabilityCheck
         GFileUtils.writeFile(content.join(System.lineSeparator()), propertiesFile)
@@ -101,3 +101,81 @@ if (propertiesFile.exists())
     registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', false)
 }
 else logger.warn('WARN: Unable to find local.properties file')
+
+/**
+ * Create game launch run configuration.
+ *
+ * @param name run configuration name.
+ * @param debug if {@code true} launch game in debug mode.
+ * @param steam if {@code true} enable steam integration.
+ */
+void createRunConfig(String name, boolean debug, boolean steam) {
+
+    def runConfigFormat = [
+            "<component name=\"ProjectRunConfigurationManager\">",
+            "  <configuration default=\"false\" name=\"${name}\" type=\"Application\" factoryName=\"Application\">",
+            "    <option name=\"MAIN_CLASS_NAME\" value=\"zombie.gameStates.MainScreenState\" />",
+            "    <module name=\"${rootProject.name}.main\" />",
+            "    <option name=\"VM_PARAMETERS\" value=\"-Ddebug=${debug ? 1 : 0} -Dzomboid.steam=${steam ? 1 : 0} " +
+                    "-Dzomboid.znetlog=1 -XX:+UseConcMarkSweepGC -XX:-CreateMinidumpOnCrash " +
+                    "-XX:-OmitStackTraceInFastThrow -Xms1800m -Xmx2048m\" />",
+            "    <option name=\"WORKING_DIRECTORY\" value=\"${gameDir}\" />",
+            "    <method v=\"2\">",
+            "      <option name=\"Gradle.BeforeRunTask\" enabled=\"true\" tasks=\"zomboidClasses\" " +
+                    "externalProjectPath=\"\$PROJECT_DIR\$\" vmOptions=\"\" scriptParameters=\"\" />",
+            "    </method>",
+            "  </configuration>",
+            "</component>",
+    ]
+    // translate config name to filename (similar to what IDEA is doing)
+    def filename = name.replaceAll('\\s', '_').replaceAll('[^\\w_]', '').replaceAll("__", '_')
+
+    // write xml configuration to file
+    file("./.idea/runConfigurations/${filename}.xml").withWriter {
+        runConfigFormat.each { l -> it.writeLine(l) }
+    }
+}
+
+tasks.register('createLaunchRunConfigs') {
+
+    it.description 'Create game launch run configurations.'
+    it.group 'build setup'
+
+    it.onlyIf {
+        project.ext.has('gameDir')
+    }
+    it.doLast {
+        // debug configurations
+        createRunConfig('Debug Zomboid', true, true)
+        createRunConfig('Debug Zomboid (local)', true, false)
+
+        // run configurations
+        createRunConfig('Run Zomboid', false, true)
+        createRunConfig('Run Zomboid (local)', false, false)
+    }
+}
+
+tasks.register('createModSearchScopes') {
+
+    it.description 'Create IDEA search scopes for mod files.'
+    it.group 'build setup'
+
+    def modLuaScope = [
+            '<component name="DependencyValidationManager">',
+            "<scope name=\"mod-lua\" pattern=\"file[${rootProject.name}.media]:*.lua\" />",
+            '</component>'
+    ]
+    def modMediaScope = [
+            '<component name="DependencyValidationManager">',
+            "<scope name=\"mod-lua\" pattern=\"file[${rootProject.name}.media]:*.*\" />",
+            '</component>'
+    ]
+    it.doLast {
+        file('./.idea/scopes/mod_lua.xml').withWriter {
+            modLuaScope.each { l -> it.writeLine(l) }
+        }
+        file('./.idea/scopes/mod_media.xml').withWriter {
+            modMediaScope.each { l -> it.writeLine(l) }
+        }
+    }
+}
