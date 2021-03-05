@@ -1,5 +1,19 @@
 # Changelog
 
+## [v2.1.0](https://github.com/cocolabs/pz-zmod/tree/v2.1.0) (2021-03-05)
+
+[Full Changelog](https://github.com/cocolabs/pz-zmod/compare/v2.0.0...v2.1.0)
+
+**Implemented enhancements:**
+
+- Automate creating run configurations [\#28](https://github.com/cocolabs/pz-zmod/issues/28)
+- Task to apply mod template [\#25](https://github.com/cocolabs/pz-zmod/issues/25)
+- Automate creating search scopes [\#23](https://github.com/cocolabs/pz-zmod/issues/23)
+
+**Fixed bugs:**
+
+- Steam mods not loading in game [\#12](https://github.com/cocolabs/pz-zmod/issues/12)
+
 ## [v2.0.0](https://github.com/cocolabs/pz-zmod/tree/v2.0.0) (2021-02-27)
 
 [Full Changelog](https://github.com/cocolabs/pz-zmod/compare/v1.0.0...v2.0.0)
