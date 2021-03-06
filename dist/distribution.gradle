@@ -42,9 +42,10 @@ static def getRelativeCopyPath(fcd, relativePathMap) {
 	else throw new Exception("Unable to relativize copy path: $fcd.path")
 }
 
+def mediaClassesDir = "$buildDir/classes/lua/media"
 task mediaClasses(type: Copy, overwrite: true) {
 
-	includeEmptyDirs = false
+	into mediaClassesDir
 	from(sourceSets.media.java.srcDirs) {
 		def mSources = getPathsRelativeToModule('media', sourceSets.media.java)
 		eachFile {
@@ -52,7 +53,7 @@ task mediaClasses(type: Copy, overwrite: true) {
 			fcd.setRelativePath(getRelativeCopyPath(fcd, mSources))
 		}
 	}
-	into "$buildDir/classes/java/media"
+	includeEmptyDirs = false
 }
 
 processMediaResources {
