@@ -1,5 +1,7 @@
 import org.gradle.util.GFileUtils
 
+apply from: 'dist/distribution.gradle'
+
 def stagePath = file("stage").toPath()
 task cleanDistributionStage(type: Delete) {
 
