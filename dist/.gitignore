@@ -4,7 +4,7 @@ local.properties
 # Libraries
 /lib/
 
-# Template
+# Documentation
 /docs/template/
 /docs/zmod/
 
