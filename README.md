@@ -116,6 +116,19 @@ ZomboidMod distributions contain a template MIT license for your project to use.
 
 Note that you can choose to include your full name or your Github username. It is a matter of preference and legally speaking both should be valid as long as you can prove the identity provided represents you. 
 
+### Discord integration
+
+If you are a Discord user and want to let the world know that you are working hard on your Project Zomboid mods you can do so with IntelliJ IDEA Discord integration.
+
+#### Installation
+
+- Install [Discord Integration](https://plugins.jetbrains.com/plugin/10233-discord-integration) IDEA plugin from the marketplace.
+- Run `createDiscordIntegration` task.[<sup>?</sup>](#discord-integration "This task will run automatically when you run setupWorkspace configuration".)
+
+Note that you need to write mod metadata (`mod.info`) before creating Discord integration so that the integration displays correct project name and description. However the integration is automatically setup after running `setupWorkspace` so you don't have to worry about that.
+
+You can rerun the task at any time if you accidentally delete the configuration file.[<sup>?</sup>](#a ".idea/discord.xml")
+
 ## How to use
 
 ### Setup tasks
