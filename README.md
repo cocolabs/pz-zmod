@@ -30,7 +30,7 @@ ZomboidMod serves as an umbrella for these tools, connecting everything you need
 
 Download the [latest release](https://github.com/cocolabs/pz-zmod/releases/latest) from the repository.
 
-Note that you **should** not clone the repository and use it as a template.
+Note that you **should not** clone the repository and use it as a template.
 Instead, obtain the latest release and follow the [installation](#installation) instructions. 
 
 ## Installation
@@ -104,15 +104,12 @@ ZomboidMod distributions contain a template MIT license for your project to use.
 
 - Update copyright in `LICENSE.txt` to include the current year and your name:
 
-  ```
-  Copyright (c) [year] [fullname]
-  ```
+		Copyright (c) [year] [fullname]
+
 
 - Update copyright in `README.md` under 'License' section to include your name and (optionally) a link to your Github profile, personal website, or another place online you can be reached:
 
-  ```
-  MIT © [Yourname](https://github.com/username)
-  ```
+		MIT © [Yourname](https://github.com/username)
 
 Note that you can choose to include your full name or your Github username. It is a matter of preference and legally speaking both should be valid as long as you can prove the identity provided represents you. 
 
