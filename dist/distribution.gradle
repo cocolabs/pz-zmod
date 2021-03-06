@@ -65,3 +65,43 @@ processMediaResources {
 		fcd.setRelativePath(getRelativeCopyPath(fcd, mResources))
 	}
 }
+
+def stagePath = "$buildDir/tmp/distribution/stage"
+task cleanModDistributionStage(type: Delete) {
+
+	description 'Clean distribution stage directory.'
+	group 'distribution'
+
+	it.onlyIf {
+		file(stagePath).exists()
+	}
+	delete(stagePath)
+}
+tasks.register('stageModDistribution', Copy.class) {
+
+	it.description 'Copy mod distribution files to stage directory.'
+	it.group 'distribution'
+
+	it.from mediaClassesDir, "$buildDir/resources/media"
+	it.into stagePath
+
+	it.dependsOn(cleanModDistributionStage)
+	it.mustRunAfter('processMediaResources', 'mediaClasses')
+}
+
+distributions {
+	mod.contents {
+		it.from stagePath
+		it.into 'media'
+	}
+}
+installModDist {
+	def parentDir = destinationDir.parentFile.toPath()
+	destinationDir = parentDir.resolve(rootProject.name).toFile()
+}
+[ 'modDistTar', 'modDistZip' ].forEach({
+	def task = tasks.named(it).get() as AbstractArchiveTask
+	task.archiveBaseName.set(rootProject.name)
+	task.mustRunAfter('stageModDistribution')
+})
+assembleModDist.dependsOn('processMediaResources', 'mediaClasses', 'stageModDistribution')
