@@ -111,6 +111,9 @@ if (propertiesFile.exists())
 
     // path to Project Zomboid installation directory
     registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', false)
+
+    // Github repository token used to generate changelog
+    registerLocalProjectProperty('cg.token', String.class, 'CHANGELOG_GITHUB_TOKEN', false)
 }
 else logger.warn('WARN: Unable to find local.properties file')
 
