@@ -1,6 +1,6 @@
 # ZomboidMod
 
-[![release](https://img.shields.io/github/v/release/cocolabs/pz-zmod)](https://github.com/cocolabs/pz-zmod/releases/latest) ![last-commit](https://img.shields.io/github/last-commit/cocolabs/pz-zmod/dev) [![License](https://img.shields.io/github/license/cocolabs/pz-zmod)](https://mit-license.org/) [![chat](https://img.shields.io/discord/717757483376050203?color=7289DA)](https://discord.gg/vCeydWCbd9)
+[![release](https://img.shields.io/github/v/release/cocolabs/pz-zmod)](https://github.com/cocolabs/pz-zmod/releases/latest) ![last-commit](https://img.shields.io/github/last-commit/cocolabs/pz-zmod/dev) [![License](https://img.shields.io/github/license/cocolabs/pz-zmod)](https://mit-license.org/) [![chat](https://img.shields.io/discord/717757483376050203?color=7289DA&label=discord&logo=discord&logoColor=white)](https://discord.gg/vCeydWCbd9)
 
 ZomboidMod is a compact mod development environment for [Project Zomboid](https://projectzomboid.com/blog/).
 
