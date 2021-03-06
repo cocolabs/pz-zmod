@@ -194,3 +194,28 @@ tasks.register('createModSearchScopes') {
         }
     }
 }
+
+tasks.register('createDiscordIntegration') {
+
+    it.description 'Show IDEA project in Discord via rich presence.'
+    it.group 'build setup'
+
+    it.doLast {
+        def projectName = project.findProperty('mod.name') ?: 'PZ Mod'
+        def projectDescription = project.findProperty('mod.description') ?: 'Project Zomboid mod.'
+        def discordXmlFormat = [
+                '<?xml version="1.0" encoding="UTF-8"?>',
+                '<project version="4">',
+                '  <component name="DiscordProjectSettings">',
+                '    <option name="show" value="PROJECT" />',
+                '    <option name="nameOverrideEnabled" value="true" />',
+                "    <option name=\"nameOverrideText\" value=\"${projectName}\" />",
+                "    <option name=\"description\" value=\"${projectDescription}\" />",
+                '  </component>',
+                '</project>',
+        ]
+        file('./.idea/discord.xml').withWriter {
+            discordXmlFormat.each { l -> it.writeLine(l) }
+        }
+    }
+}
