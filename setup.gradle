@@ -127,20 +127,20 @@ else logger.warn('WARN: Unable to find local.properties file')
 void createRunConfig(String name, boolean debug, boolean steam) {
 
     def runConfigFormat = [
-            "<component name=\"ProjectRunConfigurationManager\">",
+            '<component name="ProjectRunConfigurationManager">',
             "  <configuration default=\"false\" name=\"${name}\" type=\"Application\" factoryName=\"Application\">",
-            "    <option name=\"MAIN_CLASS_NAME\" value=\"zombie.gameStates.MainScreenState\" />",
+            '    <option name="MAIN_CLASS_NAME" value="zombie.gameStates.MainScreenState" />',
             "    <module name=\"${rootProject.name}.main\" />",
             "    <option name=\"VM_PARAMETERS\" value=\"-Ddebug=${debug ? 1 : 0} -Dzomboid.steam=${steam ? 1 : 0} " +
-                    "-Dzomboid.znetlog=1 -XX:+UseConcMarkSweepGC -XX:-CreateMinidumpOnCrash " +
-                    "-XX:-OmitStackTraceInFastThrow -Xms1800m -Xmx2048m\" />",
+                    '-Dzomboid.znetlog=1 -XX:+UseConcMarkSweepGC -XX:-CreateMinidumpOnCrash ' +
+                    '-XX:-OmitStackTraceInFastThrow -Xms1800m -Xmx2048m" />',
             "    <option name=\"WORKING_DIRECTORY\" value=\"${gameDir}\" />",
-            "    <method v=\"2\">",
-            "      <option name=\"Gradle.BeforeRunTask\" enabled=\"true\" tasks=\"zomboidClasses\" " +
-                    "externalProjectPath=\"\$PROJECT_DIR\$\" vmOptions=\"\" scriptParameters=\"\" />",
-            "    </method>",
-            "  </configuration>",
-            "</component>",
+            '    <method v="2">',
+            '      <option name="Gradle.BeforeRunTask" enabled="true" tasks="zomboidClasses" ' +
+                    'externalProjectPath="\$PROJECT_DIR\$" vmOptions="" scriptParameters="" />',
+            '    </method>',
+            '  </configuration>',
+            '</component>',
     ]
     // translate config name to filename (similar to what IDEA is doing)
     def filename = name.replaceAll('\\s', '_').replaceAll('[^\\w_]', '').replaceAll("__", '_')
