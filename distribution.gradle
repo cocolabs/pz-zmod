@@ -60,6 +60,9 @@ tasks.register('pruneDistributionStage', Delete.class) {
 	it.description 'Selectively delete files from distribution stage.'
 	it.group 'distribution'
 
+	// duplicate documentation directory
+	it.delete './stage/images'
+
 	def gitIgnored = file('.gitignored')
 	if (file(stagePath).exists() && gitIgnored.exists())
 	{
