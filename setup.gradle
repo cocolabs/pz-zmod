@@ -3,6 +3,18 @@ import org.gradle.util.GFileUtils
 import java.nio.file.Paths
 import java.nio.file.Path
 
+// write operating system platform name to project property
+switch (org.gradle.internal.os.OperatingSystem.current()) {
+    case org.gradle.internal.os.OperatingSystem.LINUX:
+        project.ext.osName = "Linux"
+        break
+    case org.gradle.internal.os.OperatingSystem.MAC_OS:
+        project.ext.osName = "macOS"
+        break
+    case org.gradle.internal.os.OperatingSystem.WINDOWS:
+        project.ext.osName = "Windows"
+        break
+}
 // This is where local project properties are stored
 def propertiesFile = rootDir.toPath().resolve('local.properties').toFile()
 project.ext.localProperties = new Properties()
