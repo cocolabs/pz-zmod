@@ -78,3 +78,8 @@ $RECYCLE.BIN/
 *.i*86
 *.x86_64
 *.hex
+
+### Ruby ###
+
+# No need for lock file in workflow
+Gemfile.lock
