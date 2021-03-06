@@ -1,0 +1,6 @@
+// set repository owner and name
+project.ext.set('repo.owner', 'cocolabs')
+project.ext.set('repo.name', 'pz-zmod')
+
+// changelog.gradle
+apply from: 'https://git.io/JqJiC'
