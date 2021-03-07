@@ -120,7 +120,7 @@ If you are a Discord user and want to let the world know that you are working ha
 #### Installation
 
 - Install [Discord Integration](https://plugins.jetbrains.com/plugin/10233-discord-integration) IDEA plugin from the marketplace.
-- Run `createDiscordIntegration` task.[<sup>?</sup>](#discord-integration "This task will run automatically when you run setupWorkspace configuration".)
+- Run `createDiscordIntegration` task.[<sup>?</sup>](#discord-integration "This task will run automatically when you run setupWorkspace configuration.")
 
 Note that you need to write mod metadata (`mod.info`) before creating Discord integration so that the integration displays correct project name and description. However the integration is automatically setup after running `setupWorkspace` so you don't have to worry about that.
 
