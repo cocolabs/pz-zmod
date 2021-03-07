@@ -1,5 +1,15 @@
 # Changelog
 
+## [v2.2.0](https://github.com/cocolabs/pz-zmod/tree/v2.2.0) (2021-03-07)
+
+[Full Changelog](https://github.com/cocolabs/pz-zmod/compare/v2.1.0...v2.2.0)
+
+**Implemented enhancements:**
+
+- Generate changelog task [\#29](https://github.com/cocolabs/pz-zmod/issues/29)
+- Discord rich presence [\#11](https://github.com/cocolabs/pz-zmod/issues/11)
+- Assembling mod distributions [\#3](https://github.com/cocolabs/pz-zmod/issues/3)
+
 ## [v2.1.0](https://github.com/cocolabs/pz-zmod/tree/v2.1.0) (2021-03-05)
 
 [Full Changelog](https://github.com/cocolabs/pz-zmod/compare/v2.0.0...v2.1.0)
