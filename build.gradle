@@ -18,19 +18,28 @@ java {
 apply from: 'setup.gradle'
 if (project.ext.has('gameDir'))
 {
-    List<String> resourcesList = new ArrayList<>()
+    Set<String> sourcesList = new HashSet<>(['media/lua'])
+    Set<String> resourcesList = new HashSet<>()
+    Set<String> excludeResources = new HashSet<>([
+            'media/lua', 'media/luaexamples',
+            'media/newuitests', 'media/launcher',
+    ])
     def gameDirPath = gameDir as java.nio.file.Path
     //@formatter:off
     gameDirPath.resolve('media').toFile().listFiles().each
     {
-        if (it.directory) {
-            resourcesList.add("media/${it.name}")
+        if (it.directory)
+        {
+            String filepath = "media/${it.name}"
+            if (!excludeResources.contains(filepath)) {
+                resourcesList.add(filepath)
+            }
         }
     }//@formatter:on
     sourceSets {
         media {
-            java.srcDirs = ['media/lua']
-            resources.srcDirs resourcesList
+            java.srcDirs = sourcesList
+            resources.srcDirs = resourcesList
         }
     }
     apply from: 'mod.gradle'

@@ -1,0 +1,107 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+
+// set repository owner and name
+project.ext.set('repo.owner', 'cocolabs')
+project.ext.set('repo.name', 'pz-zmod')
+
+// changelog.gradle
+apply from: 'https://git.io/JqJiC'
+
+def getPathsRelativeToModule(moduleName, srcDirSet) {
+
+	def module = rootDir.toPath().resolve(moduleName)
+	def map = new HashMap<String, String>()
+
+	def srcDirs = srcDirSet.srcDirs.stream().withCloseable {
+		it.filter({ f -> f.exists() }).collect()
+	}
+	for (File srcDir : (srcDirs as List<File>))
+	{
+		Files.walk(srcDir.toPath()).withCloseable
+		{
+			def paths = it.filter({ Files.isRegularFile(it as java.nio.file.Path) }).collect()
+			for (java.nio.file.Path path : (paths as List<java.nio.file.Path>))
+			{
+				def srcDirPath = srcDir.toPath()
+				def relativePath = srcDirPath.relativize(path)
+				def srcDirName = module.relativize(srcDirPath)
+				map.put(relativePath.toString(), srcDirName.toString())
+			}
+		}
+	}
+	return map
+}
+
+static def getRelativeCopyPath(fcd, relativePathMap) {
+
+	def path = relativePathMap.get(Paths.get(fcd.path).toString())
+	if (path != null) {
+		return fcd.relativePath.prepend(path)
+	}
+	else throw new Exception("Unable to relativize copy path: $fcd.path")
+}
+
+def mediaClassesDir = "$buildDir/classes/lua/media"
+task mediaClasses(type: Copy, overwrite: true) {
+
+	into mediaClassesDir
+	from(sourceSets.media.java.srcDirs) {
+		def mSources = getPathsRelativeToModule('media', sourceSets.media.java)
+		eachFile {
+			def fcd = it as FileCopyDetails
+			fcd.setRelativePath(getRelativeCopyPath(fcd, mSources))
+		}
+	}
+	includeEmptyDirs = false
+}
+
+processMediaResources {
+
+	includeEmptyDirs = false
+	def mResources = getPathsRelativeToModule('media', sourceSets.media.resources)
+	eachFile {
+		def fcd = it as FileCopyDetails
+		fcd.setRelativePath(getRelativeCopyPath(fcd, mResources))
+	}
+}
+
+def stagePath = "$buildDir/tmp/distribution/stage"
+task cleanModDistributionStage(type: Delete) {
+
+	description 'Clean distribution stage directory.'
+	group 'distribution'
+
+	it.onlyIf {
+		file(stagePath).exists()
+	}
+	delete(stagePath)
+}
+tasks.register('stageModDistribution', Copy.class) {
+
+	it.description 'Copy mod distribution files to stage directory.'
+	it.group 'distribution'
+
+	it.from mediaClassesDir, "$buildDir/resources/media"
+	it.into stagePath
+
+	it.dependsOn(cleanModDistributionStage)
+	it.mustRunAfter('processMediaResources', 'mediaClasses')
+}
+
+distributions {
+	mod.contents {
+		it.from stagePath
+		it.into 'media'
+	}
+}
+installModDist {
+	def parentDir = destinationDir.parentFile.toPath()
+	destinationDir = parentDir.resolve(rootProject.name).toFile()
+}
+[ 'modDistTar', 'modDistZip' ].forEach({
+	def task = tasks.named(it).get() as AbstractArchiveTask
+	task.archiveBaseName.set(rootProject.name)
+	task.mustRunAfter('stageModDistribution')
+})
+assembleModDist.dependsOn('processMediaResources', 'mediaClasses', 'stageModDistribution')

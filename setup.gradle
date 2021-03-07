@@ -3,6 +3,18 @@ import org.gradle.util.GFileUtils
 import java.nio.file.Paths
 import java.nio.file.Path
 
+// write operating system platform name to project property
+switch (org.gradle.internal.os.OperatingSystem.current()) {
+    case org.gradle.internal.os.OperatingSystem.LINUX:
+        project.ext.osName = "Linux"
+        break
+    case org.gradle.internal.os.OperatingSystem.MAC_OS:
+        project.ext.osName = "macOS"
+        break
+    case org.gradle.internal.os.OperatingSystem.WINDOWS:
+        project.ext.osName = "Windows"
+        break
+}
 // This is where local project properties are stored
 def propertiesFile = rootDir.toPath().resolve('local.properties').toFile()
 project.ext.localProperties = new Properties()
@@ -99,6 +111,9 @@ if (propertiesFile.exists())
 
     // path to Project Zomboid installation directory
     registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', false)
+
+    // Github repository token used to generate changelog
+    registerLocalProjectProperty('cg.token', String.class, 'CHANGELOG_GITHUB_TOKEN', false)
 }
 else logger.warn('WARN: Unable to find local.properties file')
 
@@ -112,20 +127,20 @@ else logger.warn('WARN: Unable to find local.properties file')
 void createRunConfig(String name, boolean debug, boolean steam) {
 
     def runConfigFormat = [
-            "<component name=\"ProjectRunConfigurationManager\">",
+            '<component name="ProjectRunConfigurationManager">',
             "  <configuration default=\"false\" name=\"${name}\" type=\"Application\" factoryName=\"Application\">",
-            "    <option name=\"MAIN_CLASS_NAME\" value=\"zombie.gameStates.MainScreenState\" />",
+            '    <option name="MAIN_CLASS_NAME" value="zombie.gameStates.MainScreenState" />',
             "    <module name=\"${rootProject.name}.main\" />",
             "    <option name=\"VM_PARAMETERS\" value=\"-Ddebug=${debug ? 1 : 0} -Dzomboid.steam=${steam ? 1 : 0} " +
-                    "-Dzomboid.znetlog=1 -XX:+UseConcMarkSweepGC -XX:-CreateMinidumpOnCrash " +
-                    "-XX:-OmitStackTraceInFastThrow -Xms1800m -Xmx2048m\" />",
+                    '-Dzomboid.znetlog=1 -XX:+UseConcMarkSweepGC -XX:-CreateMinidumpOnCrash ' +
+                    '-XX:-OmitStackTraceInFastThrow -Xms1800m -Xmx2048m" />',
             "    <option name=\"WORKING_DIRECTORY\" value=\"${gameDir}\" />",
-            "    <method v=\"2\">",
-            "      <option name=\"Gradle.BeforeRunTask\" enabled=\"true\" tasks=\"zomboidClasses\" " +
-                    "externalProjectPath=\"\$PROJECT_DIR\$\" vmOptions=\"\" scriptParameters=\"\" />",
-            "    </method>",
-            "  </configuration>",
-            "</component>",
+            '    <method v="2">',
+            '      <option name="Gradle.BeforeRunTask" enabled="true" tasks="zomboidClasses" ' +
+                    'externalProjectPath="\$PROJECT_DIR\$" vmOptions="" scriptParameters="" />',
+            '    </method>',
+            '  </configuration>',
+            '</component>',
     ]
     // translate config name to filename (similar to what IDEA is doing)
     def filename = name.replaceAll('\\s', '_').replaceAll('[^\\w_]', '').replaceAll("__", '_')
@@ -176,6 +191,31 @@ tasks.register('createModSearchScopes') {
         }
         file('./.idea/scopes/mod_media.xml').withWriter {
             modMediaScope.each { l -> it.writeLine(l) }
+        }
+    }
+}
+
+tasks.register('createDiscordIntegration') {
+
+    it.description 'Show IDEA project in Discord via rich presence.'
+    it.group 'build setup'
+
+    it.doLast {
+        def projectName = project.findProperty('mod.name') ?: 'PZ Mod'
+        def projectDescription = project.findProperty('mod.description') ?: 'Project Zomboid mod.'
+        def discordXmlFormat = [
+                '<?xml version="1.0" encoding="UTF-8"?>',
+                '<project version="4">',
+                '  <component name="DiscordProjectSettings">',
+                '    <option name="show" value="PROJECT" />',
+                '    <option name="nameOverrideEnabled" value="true" />',
+                "    <option name=\"nameOverrideText\" value=\"${projectName}\" />",
+                "    <option name=\"description\" value=\"${projectDescription}\" />",
+                '  </component>',
+                '</project>',
+        ]
+        file('./.idea/discord.xml').withWriter {
+            discordXmlFormat.each { l -> it.writeLine(l) }
         }
     }
 }

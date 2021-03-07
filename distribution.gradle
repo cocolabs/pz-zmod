@@ -1,5 +1,7 @@
 import org.gradle.util.GFileUtils
 
+apply from: 'dist/distribution.gradle'
+
 def stagePath = file("stage").toPath()
 task cleanDistributionStage(type: Delete) {
 
@@ -58,11 +60,12 @@ tasks.register('pruneDistributionStage', Delete.class) {
 	it.description 'Selectively delete files from distribution stage.'
 	it.group 'distribution'
 
+	// duplicate documentation directory
+	it.delete './stage/images'
+
 	def gitIgnored = file('.gitignored')
-	it.onlyIf {
-		file(stagePath).exists() && gitIgnored.exists()
-	}
-	it.doLast {
+	if (file(stagePath).exists() && gitIgnored.exists())
+	{
 		def ignoredFiles = GFileUtils.readFile(gitIgnored).split('\r|\n|\r\n')
 		ignoredFiles.each { s ->
 			File ignoredFile = file(s)
