@@ -134,6 +134,15 @@ You can rerun the task at any time if you accidentally delete the configuration 
 - `createModSearchScopes` - Create IDEA search scopes for mod files.
 - `initLocalProperties` - Initialize local project properties.
 
+### Documentation tasks
+
+- `generateChangelog` - Generate a project changelog.
+
+### Distribution tasks
+
+- `assembleModDist` - Assembles the mod distributions.
+- `modDistZip` - Bundles the project as a distribution.
+
 ### Mod tasks
 
 - `applyModTemplate` - Apply Project Zomboid mod template.
