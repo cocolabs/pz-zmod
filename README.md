@@ -51,7 +51,7 @@ Instead, obtain the latest release and follow the [installation](#installation) 
 
 - Download the [latest release](https://github.com/cocolabs/pz-zmod/releases/latest) from the repository.
 
-- Extract the release archive in your mod root directory (overwrite if updating).
+- Extract the release archive in your local mod root directory (overwrite if updating).
 
 - Make sure the root directory follows project naming standards:
   
