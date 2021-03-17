@@ -9,7 +9,7 @@ repositories {
 }
 // Github Packages repository credentials
 project.ext.cocoLabsRepo = 'pz-zdoc'
-apply from: 'https://git.io/JtydE'
+apply from: 'https://git.io/JmWv6'
 
 configurations {
     zomboidDoc.extendsFrom zomboidRuntimeOnly
