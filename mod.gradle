@@ -109,7 +109,7 @@ tasks.register('initModInfo') {
         ant.input(message: 'Enter mod description: \n', addproperty: 'mod.description')
         modInfoProperties.setProperty('description', ant.properties.get('mod.description') as String)
 
-        ant.input(message: 'Enter mod repo/workshop URL: \n', addproperty: 'mod.url')
+        ant.input(message: 'Enter github repository URL: \n', addproperty: 'mod.url')
         modInfoProperties.setProperty('url', ant.properties.get('mod.url') as String)
 
         // starting mod version is 0.1.0 (sem-ver)
