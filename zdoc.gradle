@@ -7,9 +7,6 @@ repositories {
     // try to find dependencies locally first
     mavenLocal()
 }
-// Github Packages repository credentials
-project.ext.cocoLabsRepo = 'pz-zdoc'
-apply from: 'https://git.io/JmWv6'
 
 configurations {
     zomboidDoc.extendsFrom zomboidRuntimeOnly
