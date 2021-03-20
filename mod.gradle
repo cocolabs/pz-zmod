@@ -36,7 +36,9 @@ void validateModInfo() {
         else if (key == 'url')
         {
             try {
-                new URL(property)
+                if (new URL(property).host != 'github.com') {
+                    throw new InvalidUserDataException("Mod URL \'${property}\' is not a valid Github repo URL")
+                }
             }
             catch (MalformedURLException e) {
                 throw new InvalidUserDataException("Mod URL \'${property}\' is not a valid URL", e)
@@ -134,6 +136,18 @@ task loadModInfo {
             logger.info("Loading property ${it.key}:${it.value}")
             project.ext.set("mod.${(it.key as String)}", it.value as String)
         })
+        def sUrl = modInfoProperties.getProperty('url')
+        if (sUrl && !sUrl.isBlank())
+        {
+            def url = new URL(sUrl)
+            def urlPath = url.path.startsWith('/') ? url.path.substring(1) : url.path
+            def pathElements = urlPath.split('/')
+            if (pathElements.length != 2) {
+                throw new InvalidUserDataException("Unexpected mod url format '${urlPath}'")
+            }
+            project.ext.set('repo.owner', pathElements[0])
+            project.ext.set('repo.name', pathElements[1])
+        }
     }
     else logger.warn('WARN: Unable to find mod.info file')
 }
