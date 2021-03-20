@@ -62,10 +62,10 @@ tasks.register('zomboidVersion', JavaExec.class) {
     it.finalizedBy(tasks.getByName('saveModInfo'))
 }
 
-tasks.register('annotateZomboidLua', JavaExec.class) {
+def annotateZomboidLua = tasks.register('annotateZomboidLua', JavaExec.class) {
 
     it.description 'Annotate vanilla Lua with EmmyLua.'
-    it.setGroup 'zomboid'
+    it.group 'zomboid'
 
     it.main = 'io.cocolabs.pz.zdoc.Main'
     it.classpath = configurations.zomboidDoc
@@ -73,10 +73,10 @@ tasks.register('annotateZomboidLua', JavaExec.class) {
     it.dependsOn(tasks.getByName('zomboidClasses'))
 }
 
-tasks.register('compileZomboidLua', JavaExec.class) {
+def compileZomboidLua = tasks.register('compileZomboidLua', JavaExec.class) {
 
     it.description 'Compile Lua library from modding API.'
-    it.setGroup 'zomboid'
+    it.group 'zomboid'
 
     //noinspection GroovyAssignabilityCheck,GroovyAccessibility
     it.javaLauncher = javaToolchains.launcherFor {
@@ -86,4 +86,5 @@ tasks.register('compileZomboidLua', JavaExec.class) {
     it.classpath = configurations.zomboidDoc
     it.args('compile', '-i', "$gameDir", '-o', "$zDocLuaDir/media/lua/shared/Library")
     it.dependsOn(tasks.getByName('zomboidClasses'))
+    it.shouldRunAfter(annotateZomboidLua)
 }
