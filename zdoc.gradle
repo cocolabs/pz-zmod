@@ -15,8 +15,8 @@ configurations {
     zomboidDoc.extendsFrom zomboidRuntimeOnly
 }
 dependencies {
-    // https://github.com/orgs/cocolabs/packages?repo_name=pz-zdoc
-    zomboidDoc 'io.cocolabs:pz-zdoc:3.+'
+    // https://search.maven.org/artifact/io.github.cocolabs/pz-zdoc
+    zomboidDoc 'io.github.cocolabs:pz-zdoc:3.+'
 
     // ZomboidDoc compiled Lua library
     if (project.ext.has('mod.pzversion')) {
