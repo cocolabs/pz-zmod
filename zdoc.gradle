@@ -62,33 +62,6 @@ tasks.register('zomboidVersion', JavaExec.class) {
     it.finalizedBy(tasks.getByName('saveModInfo'))
 }
 
-def annotateZomboidLua = tasks.register('annotateZomboidLua', JavaExec.class) {
-
-    it.description 'Annotate vanilla Lua with EmmyLua.'
-    it.group 'zomboid'
-
-    it.main = 'io.cocolabs.pz.zdoc.Main'
-    it.classpath = configurations.zomboidDoc
-    it.args('annotate', '-i', "${project.ext.gameDir}/media/lua", '-o', "$zDocLuaDir/media/lua")
-    it.dependsOn(tasks.getByName('zomboidClasses'))
-}
-
-def compileZomboidLua = tasks.register('compileZomboidLua', JavaExec.class) {
-
-    it.description 'Compile Lua library from modding API.'
-    it.group 'zomboid'
-
-    //noinspection GroovyAssignabilityCheck,GroovyAccessibility
-    it.javaLauncher = javaToolchains.launcherFor {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
-    it.main = 'io.cocolabs.pz.zdoc.Main'
-    it.classpath = configurations.zomboidDoc
-    it.args('compile', '-i', "$gameDir", '-o', "$zDocLuaDir/media/lua/shared/Library")
-    it.dependsOn(tasks.getByName('zomboidClasses'))
-    it.shouldRunAfter(annotateZomboidLua)
-}
-
 /**
  * Compare the given versions and return a comparator resulting value.
  *
@@ -173,6 +146,33 @@ Integer[] getZDocLastVersion(versionFile, currentVersion) {
     }
     versionFile.text = currentVersion.join('.')
     return null
+}
+
+def annotateZomboidLua = tasks.register('annotateZomboidLua', JavaExec.class) {
+
+    it.description 'Annotate vanilla Lua with EmmyLua.'
+    it.group 'zomboid'
+
+    it.main = 'io.cocolabs.pz.zdoc.Main'
+    it.classpath = configurations.zomboidDoc
+    it.args('annotate', '-i', "${project.ext.gameDir}/media/lua", '-o', "$zDocLuaDir/media/lua")
+    it.dependsOn(tasks.getByName('zomboidClasses'))
+}
+
+def compileZomboidLua = tasks.register('compileZomboidLua', JavaExec.class) {
+
+    it.description 'Compile Lua library from modding API.'
+    it.group 'zomboid'
+
+    //noinspection GroovyAssignabilityCheck,GroovyAccessibility
+    it.javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+    it.main = 'io.cocolabs.pz.zdoc.Main'
+    it.classpath = configurations.zomboidDoc
+    it.args('compile', '-i', "$gameDir", '-o', "$zDocLuaDir/media/lua/shared/Library")
+    it.dependsOn(tasks.getByName('zomboidClasses'))
+    it.shouldRunAfter(annotateZomboidLua)
 }
 
 def updateZomboidLua = tasks.register('updateZomboidLua') {
