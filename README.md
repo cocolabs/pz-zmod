@@ -128,6 +128,8 @@ You can rerun the task at any time if you accidentally delete the configuration 
 
 ## How to use
 
+## List of tasks
+
 ### Setup tasks
 
 - `createLaunchRunConfigs` - Create game launch run configurations.
