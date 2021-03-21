@@ -157,6 +157,14 @@ Before generating a changelog you need to do the following:
 
 That simply run `generateChangelog` task to generate project changelog.
 
+### Distribution
+
+Before others can download your mod you need to assemble and upload the mod distribution. 
+
+Assembling distributions is a process of packaging everything your mod needs to run in production environment in compressed archives. Anything not needed in production environment (such as gradle files) needs to be excluded from distributions. 
+
+ZomboidMod handles this for you. Just run `assembleModDist` and a distribution archive matching the current project version will be created in `build/distributions` directory.
+
 ## List of tasks
 
 ### Setup tasks
