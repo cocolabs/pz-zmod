@@ -4,6 +4,7 @@ zdoc.version
 
 # Temporary
 .gitignored
+serialize.lua
 
 # Libraries
 /lib/

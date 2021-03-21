@@ -2,6 +2,9 @@
 local.properties
 zdoc.version
 
+# Temporary
+serialize.lua
+
 # Libraries
 /lib/
 
