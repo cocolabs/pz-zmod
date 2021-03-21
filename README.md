@@ -22,6 +22,8 @@ ZomboidMod serves as an umbrella for these tools, connecting everything you need
 - Decompiles and packages game classes to expose game engine code.
 - Uses [ZomboidDoc](https://github.com/yooksi/pz-zdoc/) to compile a readable and always up-to-date modding Lua library.
 - Compact workspace that can be used straight out of the box.
+- Fully automated project changelog generation.
+- Create mod distributions with a click of a button.
 - Easy installation steps for enabling advanced features.
 - Comes pre-configured for use with Git. 
 - Fully integrates with IntelliJ IDEA.
@@ -128,6 +130,45 @@ You can rerun the task at any time if you accidentally delete the configuration 
 
 ## How to use
 
+### Search scopes
+
+IDEA [scopes](https://www.jetbrains.com/help/idea/settings-scopes.html) are sets of files you can search in various contexts. ZomboidMod generates custom search scopes to help you find code usages or references helpful in modding the game:
+
+- `mod-lua` - All Lua files in `media` directory.
+- `mod-media` - All files in `media` directory.
+- `pz-java` - Project Zomboid Java classes.
+- `pz-lua` - Project Zomboid Lua classes.
+
+Learn more about [searching everywhere](https://www.jetbrains.com/help/idea/searching-everywhere.html) in IntelliJ IDEA.
+
+### Changelog
+
+> If you are not familiar with what a changelog is I recommend reading [keep a changelog](https://keepachangelog.com/en/1.0.0/).
+
+ZomboidMod uses [github-changelog-generator](https://github.com/github-changelog-generator/github-changelog-generator) to generate standardized changelogs. Your should generate a changelog after each release, when all issues on project Github repository have been closed with a merge commit.
+
+Before generating a changelog you need to do the following:
+
+- Make sure you have designated repository `url` in `mod.info` file.
+
+- Generate a [Github token](https://github.com/github-changelog-generator/github-changelog-generator#github-token) and store it in `local.properties`:
+
+	```properties
+	cg.token=<your-40-digit-token>
+	```
+
+That simply run `generateChangelog` task to generate project changelog.
+
+### Distribution
+
+Before others can download your mod you need to assemble and upload the mod distribution. 
+
+Assembling distributions is a process of packaging everything your mod needs to run in production environment in compressed archives. Anything not needed in production environment (such as gradle files) needs to be excluded from distributions. 
+
+ZomboidMod handles this for you. Just run `assembleModDist` and a distribution archive matching the current project version will be created in `build/distributions` directory.
+
+## List of tasks
+
 ### Setup tasks
 
 - `createLaunchRunConfigs` - Create game launch run configurations.
@@ -156,6 +197,7 @@ You can rerun the task at any time if you accidentally delete the configuration 
 
 - `annotateZomboidLua` - Annotate vanilla Lua with EmmyLua.
 - `compileZomboidLua` - Compile Lua library from modding API.
+- `updateZomboidLua` - Run ZomboidDoc to update compiled Lua library.
 - `decompileZomboid` - Decompile Project Zomboid classes.
 - `zomboidClasses` - Assembles Project Zomboid classes.
 - `zomboidJar` - Assembles a jar archive containing game classes.

@@ -1,8 +1,10 @@
 # User data
 local.properties
+zdoc.version
 
 # Temporary
 .gitignored
+serialize.lua
 
 # Libraries
 /lib/
