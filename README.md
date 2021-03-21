@@ -22,6 +22,8 @@ ZomboidMod serves as an umbrella for these tools, connecting everything you need
 - Decompiles and packages game classes to expose game engine code.
 - Uses [ZomboidDoc](https://github.com/yooksi/pz-zdoc/) to compile a readable and always up-to-date modding Lua library.
 - Compact workspace that can be used straight out of the box.
+- Fully automated project changelog generation.
+- Create mod distributions with a click of a button.
 - Easy installation steps for enabling advanced features.
 - Comes pre-configured for use with Git. 
 - Fully integrates with IntelliJ IDEA.
