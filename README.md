@@ -157,7 +157,7 @@ Before generating a changelog you need to do the following:
 	cg.token=<your-40-digit-token>
 	```
 
-That simply run `generateChangelog` task to generate project changelog.
+Then simply run `generateChangelog` task to generate project changelog.
 
 ### Distribution
 
