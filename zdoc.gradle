@@ -63,6 +63,19 @@ tasks.register('zomboidVersion', JavaExec.class) {
 }
 
 /**
+ * <p>Returns {@code File} instance of {@code zdoc.version} file.</p>
+ * If the file does not exist it will be created.
+ */
+File getZDocVersionFile() {
+
+    def file = file('zdoc.version')
+    if (!file.exists() && !file.createNewFile()) {
+        throw new IOException("Unable to create zdoc.version file")
+    }
+    return file
+}
+
+/**
  * Compare the given versions and return a comparator resulting value.
  *
  * @param versionA semantic version to compare against.
@@ -124,25 +137,19 @@ Integer[] getZDocDependencyVersion() {
  */
 Integer[] getZDocLastVersion(versionFile, currentVersion) {
 
-    if (versionFile.exists())
+    def content = versionFile.readLines()
+    if (!content.empty)
     {
-        def content = versionFile.readLines()
-        if (!content.empty)
+        String[] elements = content.get(0).split('\\.')
+        if (elements.length == 3)
         {
-            String[] elements = content.get(0).split('\\.')
-            if (elements.length == 3)
-            {
-                Integer[] result = new Integer[elements.length]
-                for (int i = 0; i < elements.length; i++) {
-                    result[i] = Integer.valueOf(elements[i])
-                }
-                return result
+            Integer[] result = new Integer[elements.length]
+            for (int i = 0; i < elements.length; i++) {
+                result[i] = Integer.valueOf(elements[i])
             }
-            else logger.warn("WARN: Malformed semantic version found '${elements}'")
+            return result
         }
-    }
-    else if (!versionFile.createNewFile()) {
-        throw new IOException("Unable to create zdoc.version file")
+        else logger.warn("WARN: Malformed semantic version found '${elements}'")
     }
     versionFile.text = currentVersion.join('.')
     return null
@@ -157,6 +164,10 @@ def annotateZomboidLua = tasks.register('annotateZomboidLua', JavaExec.class) {
     it.classpath = configurations.zomboidDoc
     it.args('annotate', '-i', "${project.ext.gameDir}/media/lua", '-o', "$zDocLuaDir/media/lua")
     it.dependsOn(tasks.getByName('zomboidClasses'))
+    it.doLast {
+        def versionFile = getZDocVersionFile()
+        versionFile.text = getZDocDependencyVersion().join('.')
+    }
 }
 
 def compileZomboidLua = tasks.register('compileZomboidLua', JavaExec.class) {
@@ -173,6 +184,10 @@ def compileZomboidLua = tasks.register('compileZomboidLua', JavaExec.class) {
     it.args('compile', '-i', "$gameDir", '-o', "$zDocLuaDir/media/lua/shared/Library")
     it.dependsOn(tasks.getByName('zomboidClasses'))
     it.shouldRunAfter(annotateZomboidLua)
+    it.doLast {
+        def versionFile = getZDocVersionFile()
+        versionFile.text = getZDocDependencyVersion().join('.')
+    }
 }
 
 def updateZomboidLua = tasks.register('updateZomboidLua') {
@@ -180,7 +195,7 @@ def updateZomboidLua = tasks.register('updateZomboidLua') {
     it.description 'Run ZomboidDoc to update compiled Lua library.'
     it.group 'zomboid'
 
-    def versionFile = file('zdoc.version')
+    def versionFile = getZDocVersionFile()
     def currentVersion = getZDocDependencyVersion()
     def lastVersion = getZDocLastVersion(versionFile, currentVersion)
     def compareResult = lastVersion != null ? compareSemanticVersions(lastVersion, currentVersion) : -1
