@@ -1,5 +1,18 @@
 # Changelog
 
+## [v2.3.0](https://github.com/cocolabs/pz-zmod/tree/v2.3.0) (2021-03-21)
+
+[Full Changelog](https://github.com/cocolabs/pz-zmod/compare/v2.2.0...v2.3.0)
+
+**Implemented enhancements:**
+
+- Changelog repo user configuration [\#31](https://github.com/cocolabs/pz-zmod/issues/31)
+- Run ZomboidDoc on new versions [\#22](https://github.com/cocolabs/pz-zmod/issues/22)
+
+**Fixed bugs:**
+
+- Invalid link to zdoc packages credentials [\#30](https://github.com/cocolabs/pz-zmod/issues/30)
+
 ## [v2.2.0](https://github.com/cocolabs/pz-zmod/tree/v2.2.0) (2021-03-07)
 
 [Full Changelog](https://github.com/cocolabs/pz-zmod/compare/v2.1.0...v2.2.0)
