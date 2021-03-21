@@ -88,3 +88,112 @@ def compileZomboidLua = tasks.register('compileZomboidLua', JavaExec.class) {
     it.dependsOn(tasks.getByName('zomboidClasses'))
     it.shouldRunAfter(annotateZomboidLua)
 }
+
+/**
+ * Compare the given versions and return a comparator resulting value.
+ *
+ * @param versionA semantic version to compare against.
+ * @param versionB semantic version to compare with.
+ * @return {@code -1} if {@code versionA} is lower then {@code versionB}, {@code 0} if
+ * versions are equal and {@code 1} if {@code versionA} is higher then {@code versionB}
+ */
+static int compareSemanticVersions(Integer[] versionA, Integer[] versionB) {
+
+    if (versionA.length != 3 || versionB.length != 3) {
+        throw new GradleException("Not valid semantic versions [${versionA}, ${versionB}]")
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        // first version is higher then second
+        if (versionA[i] > versionB[i]) {
+            return 1
+        }
+        // second version is higher then first
+        else if (versionA[i] < versionB[i]) {
+            return -1
+        }
+    }
+    // semantic versions are equal
+    return 0
+}
+
+/**
+ * Returns a series of integers representing {@code ZomboidDoc} dependency version.
+ */
+@SuppressWarnings('UnnecessaryQualifiedReference')
+Integer[] getZDocDependencyVersion() {
+
+    def pattern = java.util.regex.Pattern.compile('[\\w\\-]+(\\d+)\\.(\\d+)\\.(\\d+)')
+    def dependency = configurations.zomboidDoc.files.stream()
+            .filter({it.name.startsWith('pz-zdoc')}).findFirst()
+    if (!dependency.present) {
+        throw new RuntimeException('Unable to find ZomboidDoc dependency in configuration')
+    }
+    def filename = dependency.get().name
+    java.util.regex.Matcher matcher = pattern.matcher(filename)
+    if (matcher.find())
+    {
+        def result = new Integer[3]
+        for (int i = 0; i < 3; i++) {
+            result[i] = Integer.valueOf(matcher.group(i + 1))
+        }
+        return result
+    }
+    else throw new RuntimeException("Malformed zdoc dependency name ${filename}")
+}
+
+/**
+ * Returns a series of integers representing last {@code ZomboidDoc} dependency version.
+ *
+ * @param versionFile {@code file} to read the version information from.
+ * @param currentVersion series of integers representing current {@code ZomboidDoc} version.
+ */
+Integer[] getZDocLastVersion(versionFile, currentVersion) {
+
+    if (versionFile.exists())
+    {
+        def content = versionFile.readLines()
+        if (!content.empty)
+        {
+            String[] elements = content.get(0).split('\\.')
+            if (elements.length == 3)
+            {
+                Integer[] result = new Integer[elements.length]
+                for (int i = 0; i < elements.length; i++) {
+                    result[i] = Integer.valueOf(elements[i])
+                }
+                return result
+            }
+            else logger.warn("WARN: Malformed semantic version found '${elements}'")
+        }
+    }
+    else if (!versionFile.createNewFile()) {
+        throw new IOException("Unable to create zdoc.version file")
+    }
+    versionFile.text = currentVersion.join('.')
+    return currentVersion
+}
+
+def updateZomboidLua = tasks.register('updateZomboidLua') {
+
+    it.description 'Run ZomboidDoc to update compiled Lua library.'
+    it.group 'zomboid'
+
+    def versionFile = file('zdoc.version')
+    def currentVersion = getZDocDependencyVersion()
+    def lastVersion = getZDocLastVersion(versionFile, currentVersion)
+    def compareResult = compareSemanticVersions(lastVersion, currentVersion)
+    it.onlyIf {
+        compareResult == -1
+    }
+    // current version is higher then last version
+    if (compareResult == -1) {
+        it.dependsOn(annotateZomboidLua, compileZomboidLua)
+    }
+    it.doLast {
+        // update zdoc.version data
+        versionFile.text = currentVersion.join('.')
+    }
+}
+classes.dependsOn(updateZomboidLua)
+
