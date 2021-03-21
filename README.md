@@ -128,6 +128,17 @@ You can rerun the task at any time if you accidentally delete the configuration 
 
 ## How to use
 
+### Search scopes
+
+IDEA [scopes](https://www.jetbrains.com/help/idea/settings-scopes.html) are sets of files you can search in various contexts. ZomboidMod generates custom search scopes to help you find code usages or references helpful in modding the game:
+
+- `mod-lua` - All Lua files in `media` directory.
+- `mod-media` - All files in `media` directory.
+- `pz-java` - Project Zomboid Java classes.
+- `pz-lua` - Project Zomboid Lua classes.
+
+Learn more about [searching everywhere](https://www.jetbrains.com/help/idea/searching-everywhere.html) in IntelliJ IDEA.
+
 ## List of tasks
 
 ### Setup tasks
