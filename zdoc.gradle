@@ -147,6 +147,7 @@ Integer[] getZDocDependencyVersion() {
  *
  * @param versionFile {@code file} to read the version information from.
  * @param currentVersion series of integers representing current {@code ZomboidDoc} version.
+ * @return last {@code ZomboidDoc} dependency version or {@code null} if no version found.
  */
 Integer[] getZDocLastVersion(versionFile, currentVersion) {
 
@@ -171,7 +172,7 @@ Integer[] getZDocLastVersion(versionFile, currentVersion) {
         throw new IOException("Unable to create zdoc.version file")
     }
     versionFile.text = currentVersion.join('.')
-    return currentVersion
+    return null
 }
 
 def updateZomboidLua = tasks.register('updateZomboidLua') {
@@ -182,7 +183,7 @@ def updateZomboidLua = tasks.register('updateZomboidLua') {
     def versionFile = file('zdoc.version')
     def currentVersion = getZDocDependencyVersion()
     def lastVersion = getZDocLastVersion(versionFile, currentVersion)
-    def compareResult = compareSemanticVersions(lastVersion, currentVersion)
+    def compareResult = lastVersion != null ? compareSemanticVersions(lastVersion, currentVersion) : -1
     it.onlyIf {
         compareResult == -1
     }
