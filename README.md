@@ -156,6 +156,7 @@ You can rerun the task at any time if you accidentally delete the configuration 
 
 - `annotateZomboidLua` - Annotate vanilla Lua with EmmyLua.
 - `compileZomboidLua` - Compile Lua library from modding API.
+- `updateZomboidLua` - Run ZomboidDoc to update compiled Lua library.
 - `decompileZomboid` - Decompile Project Zomboid classes.
 - `zomboidClasses` - Assembles Project Zomboid classes.
 - `zomboidJar` - Assembles a jar archive containing game classes.
