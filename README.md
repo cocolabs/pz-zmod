@@ -139,6 +139,24 @@ IDEA [scopes](https://www.jetbrains.com/help/idea/settings-scopes.html) are sets
 
 Learn more about [searching everywhere](https://www.jetbrains.com/help/idea/searching-everywhere.html) in IntelliJ IDEA.
 
+### Changelog
+
+> If you are not familiar with what a changelog is I recommend reading [keep a changelog](https://keepachangelog.com/en/1.0.0/).
+
+ZomboidMod uses [github-changelog-generator](https://github.com/github-changelog-generator/github-changelog-generator) to generate standardized changelogs. Your should generate a changelog after each release, when all issues on project Github repository have been closed with a merge commit.
+
+Before generating a changelog you need to do the following:
+
+- Make sure you have designated repository `url` in `mod.info` file.
+
+- Generate a [Github token](https://github.com/github-changelog-generator/github-changelog-generator#github-token) and store it in `local.properties`:
+
+	```properties
+	cg.token=<your-40-digit-token>
+	```
+
+That simply run `generateChangelog` task to generate project changelog.
+
 ## List of tasks
 
 ### Setup tasks
