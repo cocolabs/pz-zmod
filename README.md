@@ -171,6 +171,7 @@ ZomboidMod handles this for you. Just run `assembleModDist` and a distribution a
 
 ### Setup tasks
 
+- `createDiscordIntegration` - Show IDEA project in Discord via rich presence.
 - `createLaunchRunConfigs` - Create game launch run configurations.
 - `createModSearchScopes` - Create IDEA search scopes for mod files.
 - `initLocalProperties` - Initialize local project properties.
