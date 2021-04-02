@@ -109,7 +109,7 @@ if (propertiesFile.exists())
     // path to Project Zomboid installation directory
     registerLocalProjectProperty('gameDir', Path.class, 'PZ_DIR_PATH', true)
 
-    // path to Project Zomboid installation directory
+    // path to IntelliJ IDEA installation directory
     registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', false)
 
     // Github repository token used to generate changelog
@@ -182,7 +182,7 @@ tasks.register('createModSearchScopes') {
     ]
     def modMediaScope = [
             '<component name="DependencyValidationManager">',
-            "<scope name=\"mod-lua\" pattern=\"file[${rootProject.name}.media]:*.*\" />",
+            "<scope name=\"mod-media\" pattern=\"file[${rootProject.name}.media]:*.*\" />",
             '</component>'
     ]
     it.doLast {
