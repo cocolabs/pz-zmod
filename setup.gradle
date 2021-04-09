@@ -1,19 +1,19 @@
 import org.gradle.util.GFileUtils
 
-import java.nio.file.Paths
 import java.nio.file.Path
+import java.nio.file.Paths
 
 // write operating system platform name to project property
 switch (org.gradle.internal.os.OperatingSystem.current()) {
-    case org.gradle.internal.os.OperatingSystem.LINUX:
-        project.ext.osName = "Linux"
-        break
-    case org.gradle.internal.os.OperatingSystem.MAC_OS:
-        project.ext.osName = "macOS"
-        break
-    case org.gradle.internal.os.OperatingSystem.WINDOWS:
-        project.ext.osName = "Windows"
-        break
+	case org.gradle.internal.os.OperatingSystem.LINUX:
+		project.ext.osName = "Linux"
+		break
+	case org.gradle.internal.os.OperatingSystem.MAC_OS:
+		project.ext.osName = "macOS"
+		break
+	case org.gradle.internal.os.OperatingSystem.WINDOWS:
+		project.ext.osName = "Windows"
+		break
 }
 // This is where local project properties are stored
 def propertiesFile = rootDir.toPath().resolve('local.properties').toFile()
@@ -31,29 +31,27 @@ project.ext.localProperties = new Properties()
  */
 def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolean required, T defaultValue) {
 
-    Properties localProperties = project.ext.localProperties
-    String property = localProperties.getProperty(name, '')
-    if (property.isEmpty())
-    {
-        if (!System.hasProperty(name))
-        {
-            // when env parameter is not defined search for env variable with property name
-            def sEnv = env != null && !env.isEmpty() ? env : name
-            def envVariable = providers.environmentVariable(sEnv).forUseAtConfigurationTime()
-            if (envVariable.present) {
-                property = envVariable.get()
-            }
-            else if (required && defaultValue == null) {
-                throw new InvalidUserDataException("Unable to find local project property ${name}")
-            }
-            else return defaultValue
-        }
-        else property = System.getProperty(name)
-    }
-    if (type == Path) {
-        return Paths.get(property) as T
-    }
-    else return property as T
+	Properties localProperties = project.ext.localProperties
+	String property = localProperties.getProperty(name, '')
+	if (property.isEmpty()) {
+		if (!System.hasProperty(name)) {
+			// when env parameter is not defined search for env variable with property name
+			def sEnv = env != null && !env.isEmpty() ? env : name
+			def envVariable = providers.environmentVariable(sEnv).forUseAtConfigurationTime()
+			if (envVariable.present) {
+				property = envVariable.get()
+			}
+			else if (required && defaultValue == null) {
+				throw new InvalidUserDataException("Unable to find local project property ${name}")
+			}
+			else return defaultValue
+		}
+		else property = System.getProperty(name)
+	}
+	if (type == Path) {
+		return Paths.get(property) as T
+	}
+	else return property as T
 }
 /**
  * Initialize and register project property from {@code local.properties} file.
@@ -65,55 +63,54 @@ def <T> T getLocalProjectProperty(String name, Class<T> type, String env, boolea
  * @return found project property or {@code null} if no property found.
  */
 def registerLocalProjectProperty(String name, Class<Object> type, String env, boolean required) {
-    project.ext.set(name, getLocalProjectProperty(name, type, env, required, null))
+	project.ext.set(name, getLocalProjectProperty(name, type, env, required, null))
 }
 
 tasks.register('initLocalProperties') {
 
-    it.description 'Initialize local project properties.'
-    it.group 'build setup'
+	it.description 'Initialize local project properties.'
+	it.group 'build setup'
 
-    it.onlyIf {
-        !propertiesFile.exists()
-    }
-    it.doLast {
-        ArrayList<String> content = new ArrayList<String>()
-        content.add('# This file contains local properties used to configure project build.')
-        content.add('# Note: paths need to be Unix-style where segments need to be separated with forward-slashes (/)')
-        content.add('# this is for compatibility and stability purposes as backslashes don\'t play well.\n')
+	it.onlyIf {
+		!propertiesFile.exists()
+	}
+	it.doLast {
+		ArrayList<String> content = new ArrayList<String>()
+		content.add('# This file contains local properties used to configure project build.')
+		content.add('# Note: paths need to be Unix-style where segments need to be separated with forward-slashes (/)')
+		content.add('# this is for compatibility and stability purposes as backslashes don\'t play well.\n')
 
-        content.add('# Path to game installation directory')
-        ant.input(message: 'Enter path to game installation directory: ', addproperty: 'gameDir')
-        content.add("gameDir=${ant.properties.gameDir.toString().replace('\\', '/')}")
+		content.add('# Path to game installation directory')
+		ant.input(message: 'Enter path to game installation directory: ', addproperty: 'gameDir')
+		content.add("gameDir=${ant.properties.gameDir.toString().replace('\\', '/')}")
 
-        content.add('\n# Path to IntelliJ IDEA installation directory')
-        ant.input(message: '\nEnter path to IntelliJ IDEA installation directory: ', addproperty: 'ideaHome')
-        content.add("ideaHome=${ant.properties.ideaHome.toString().replace('\\', '/')}")
+		content.add('\n# Path to IntelliJ IDEA installation directory')
+		ant.input(message: '\nEnter path to IntelliJ IDEA installation directory: ', addproperty: 'ideaHome')
+		content.add("ideaHome=${ant.properties.ideaHome.toString().replace('\\', '/')}")
 
-        logger.info('Creating local.properties file...')
-        if (!propertiesFile.createNewFile()) {
-            throw new IOException('Unable to create local.properties file')
-        }
-        // noinspection GroovyAssignabilityCheck
-        GFileUtils.writeFile(content.join(System.lineSeparator()), propertiesFile)
-    }
+		logger.info('Creating local.properties file...')
+		if (!propertiesFile.createNewFile()) {
+			throw new IOException('Unable to create local.properties file')
+		}
+		// noinspection GroovyAssignabilityCheck
+		GFileUtils.writeFile(content.join(System.lineSeparator()), propertiesFile)
+	}
 }
 // load and register all local properties
-if (propertiesFile.exists())
-{
-    // load properties from properties file
-    logger.info('Loading local properties...')
-    propertiesFile.withInputStream {
-        localProperties.load(it)
-    }
-    // path to Project Zomboid installation directory
-    registerLocalProjectProperty('gameDir', Path.class, 'PZ_DIR_PATH', true)
+if (propertiesFile.exists()) {
+	// load properties from properties file
+	logger.info('Loading local properties...')
+	propertiesFile.withInputStream {
+		localProperties.load(it)
+	}
+	// path to Project Zomboid installation directory
+	registerLocalProjectProperty('gameDir', Path.class, 'PZ_DIR_PATH', true)
 
-    // path to IntelliJ IDEA installation directory
-    registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', false)
+	// path to IntelliJ IDEA installation directory
+	registerLocalProjectProperty('ideaHome', Path.class, 'IDEA_HOME', false)
 
-    // Github repository token used to generate changelog
-    registerLocalProjectProperty('cg.token', String.class, 'CHANGELOG_GITHUB_TOKEN', false)
+	// Github repository token used to generate changelog
+	registerLocalProjectProperty('cg.token', String.class, 'CHANGELOG_GITHUB_TOKEN', false)
 }
 else logger.warn('WARN: Unable to find local.properties file')
 
@@ -126,96 +123,96 @@ else logger.warn('WARN: Unable to find local.properties file')
  */
 void createRunConfig(String name, boolean debug, boolean steam) {
 
-    def runConfigFormat = [
-            '<component name="ProjectRunConfigurationManager">',
-            "  <configuration default=\"false\" name=\"${name}\" type=\"Application\" factoryName=\"Application\">",
-            '    <option name="MAIN_CLASS_NAME" value="zombie.gameStates.MainScreenState" />',
-            "    <module name=\"${rootProject.name}.main\" />",
-            "    <option name=\"VM_PARAMETERS\" value=\"-Ddebug=${debug ? 1 : 0} -Dzomboid.steam=${steam ? 1 : 0} " +
-                    '-Dzomboid.znetlog=1 -XX:+UseConcMarkSweepGC -XX:-CreateMinidumpOnCrash ' +
-                    '-XX:-OmitStackTraceInFastThrow -Xms1800m -Xmx2048m" />',
-            "    <option name=\"WORKING_DIRECTORY\" value=\"${gameDir}\" />",
-            '    <method v="2">',
-            '      <option name="Gradle.BeforeRunTask" enabled="true" tasks="zomboidClasses" ' +
-                    'externalProjectPath="\$PROJECT_DIR\$" vmOptions="" scriptParameters="" />',
-            '    </method>',
-            '  </configuration>',
-            '</component>',
-    ]
-    // translate config name to filename (similar to what IDEA is doing)
-    def filename = name.replaceAll('\\s', '_').replaceAll('[^\\w_]', '').replaceAll("__", '_')
+	def runConfigFormat = [
+			'<component name="ProjectRunConfigurationManager">',
+			"  <configuration default=\"false\" name=\"${name}\" type=\"Application\" factoryName=\"Application\">",
+			'    <option name="MAIN_CLASS_NAME" value="zombie.gameStates.MainScreenState" />',
+			"    <module name=\"${rootProject.name}.main\" />",
+			"    <option name=\"VM_PARAMETERS\" value=\"-Ddebug=${debug ? 1 : 0} -Dzomboid.steam=${steam ? 1 : 0} " +
+					'-Dzomboid.znetlog=1 -XX:+UseConcMarkSweepGC -XX:-CreateMinidumpOnCrash ' +
+					'-XX:-OmitStackTraceInFastThrow -Xms1800m -Xmx2048m" />',
+			"    <option name=\"WORKING_DIRECTORY\" value=\"${gameDir}\" />",
+			'    <method v="2">',
+			'      <option name="Gradle.BeforeRunTask" enabled="true" tasks="zomboidClasses" ' +
+					'externalProjectPath="\$PROJECT_DIR\$" vmOptions="" scriptParameters="" />',
+			'    </method>',
+			'  </configuration>',
+			'</component>',
+	]
+	// translate config name to filename (similar to what IDEA is doing)
+	def filename = name.replaceAll('\\s', '_').replaceAll('[^\\w_]', '').replaceAll("__", '_')
 
-    // write xml configuration to file
-    file("./.idea/runConfigurations/${filename}.xml").withWriter {
-        runConfigFormat.each { l -> it.writeLine(l) }
-    }
+	// write xml configuration to file
+	file("./.idea/runConfigurations/${filename}.xml").withWriter {
+		runConfigFormat.each { l -> it.writeLine(l) }
+	}
 }
 
 tasks.register('createLaunchRunConfigs') {
 
-    it.description 'Create game launch run configurations.'
-    it.group 'build setup'
+	it.description 'Create game launch run configurations.'
+	it.group 'build setup'
 
-    it.onlyIf {
-        project.ext.has('gameDir')
-    }
-    it.doLast {
-        // debug configurations
-        createRunConfig('Debug Zomboid', true, true)
-        createRunConfig('Debug Zomboid (local)', true, false)
+	it.onlyIf {
+		project.ext.has('gameDir')
+	}
+	it.doLast {
+		// debug configurations
+		createRunConfig('Debug Zomboid', true, true)
+		createRunConfig('Debug Zomboid (local)', true, false)
 
-        // run configurations
-        createRunConfig('Run Zomboid', false, true)
-        createRunConfig('Run Zomboid (local)', false, false)
-    }
+		// run configurations
+		createRunConfig('Run Zomboid', false, true)
+		createRunConfig('Run Zomboid (local)', false, false)
+	}
 }
 
 tasks.register('createModSearchScopes') {
 
-    it.description 'Create IDEA search scopes for mod files.'
-    it.group 'build setup'
+	it.description 'Create IDEA search scopes for mod files.'
+	it.group 'build setup'
 
-    def modLuaScope = [
-            '<component name="DependencyValidationManager">',
-            "<scope name=\"mod-lua\" pattern=\"file[${rootProject.name}.media]:*.lua\" />",
-            '</component>'
-    ]
-    def modMediaScope = [
-            '<component name="DependencyValidationManager">',
-            "<scope name=\"mod-media\" pattern=\"file[${rootProject.name}.media]:*.*\" />",
-            '</component>'
-    ]
-    it.doLast {
-        file('./.idea/scopes/mod_lua.xml').withWriter {
-            modLuaScope.each { l -> it.writeLine(l) }
-        }
-        file('./.idea/scopes/mod_media.xml').withWriter {
-            modMediaScope.each { l -> it.writeLine(l) }
-        }
-    }
+	def modLuaScope = [
+			'<component name="DependencyValidationManager">',
+			"<scope name=\"mod-lua\" pattern=\"file[${rootProject.name}.media]:*.lua\" />",
+			'</component>'
+	]
+	def modMediaScope = [
+			'<component name="DependencyValidationManager">',
+			"<scope name=\"mod-media\" pattern=\"file[${rootProject.name}.media]:*.*\" />",
+			'</component>'
+	]
+	it.doLast {
+		file('./.idea/scopes/mod_lua.xml').withWriter {
+			modLuaScope.each { l -> it.writeLine(l) }
+		}
+		file('./.idea/scopes/mod_media.xml').withWriter {
+			modMediaScope.each { l -> it.writeLine(l) }
+		}
+	}
 }
 
 tasks.register('createDiscordIntegration') {
 
-    it.description 'Show IDEA project in Discord via rich presence.'
-    it.group 'build setup'
+	it.description 'Show IDEA project in Discord via rich presence.'
+	it.group 'build setup'
 
-    it.doLast {
-        def projectName = project.findProperty('mod.name') ?: 'PZ Mod'
-        def projectDescription = project.findProperty('mod.description') ?: 'Project Zomboid mod.'
-        def discordXmlFormat = [
-                '<?xml version="1.0" encoding="UTF-8"?>',
-                '<project version="4">',
-                '  <component name="DiscordProjectSettings">',
-                '    <option name="show" value="PROJECT" />',
-                '    <option name="nameOverrideEnabled" value="true" />',
-                "    <option name=\"nameOverrideText\" value=\"${projectName}\" />",
-                "    <option name=\"description\" value=\"${projectDescription}\" />",
-                '  </component>',
-                '</project>',
-        ]
-        file('./.idea/discord.xml').withWriter {
-            discordXmlFormat.each { l -> it.writeLine(l) }
-        }
-    }
+	it.doLast {
+		def projectName = project.findProperty('mod.name') ?: 'PZ Mod'
+		def projectDescription = project.findProperty('mod.description') ?: 'Project Zomboid mod.'
+		def discordXmlFormat = [
+				'<?xml version="1.0" encoding="UTF-8"?>',
+				'<project version="4">',
+				'  <component name="DiscordProjectSettings">',
+				'    <option name="show" value="PROJECT" />',
+				'    <option name="nameOverrideEnabled" value="true" />',
+				"    <option name=\"nameOverrideText\" value=\"${projectName}\" />",
+				"    <option name=\"description\" value=\"${projectDescription}\" />",
+				'  </component>',
+				'</project>',
+		]
+		file('./.idea/discord.xml').withWriter {
+			discordXmlFormat.each { l -> it.writeLine(l) }
+		}
+	}
 }

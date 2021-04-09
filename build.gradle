@@ -1,31 +1,31 @@
 plugins {
-    // Apply the java plugin to add support for Java
-    id 'java'
+	// Apply the java plugin to add support for Java
+	id 'java'
 
-    // Facilitates building archives that serve as project distributions
-    id 'distribution'
+	// Facilitates building archives that serve as project distributions
+	id 'distribution'
 }
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 java {
-    // ZomboidDoc can only be executed with Java 8
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
+	// ZomboidDoc can only be executed with Java 8
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(8)
+	}
 }
 apply from: 'setup.gradle'
 if (project.ext.has('gameDir'))
 {
-    Set<String> sourcesList = new HashSet<>(['media/lua'])
-    Set<String> resourcesList = new HashSet<>()
-    Set<String> excludeResources = new HashSet<>([
-            'media/lua', 'media/luaexamples',
-            'media/newuitests', 'media/launcher',
-    ])
-    def gameDirPath = gameDir as java.nio.file.Path
-    //@formatter:off
+	Set<String> sourcesList = new HashSet<>(['media/lua'])
+	Set<String> resourcesList = new HashSet<>()
+	Set<String> excludeResources = new HashSet<>([
+			'media/lua', 'media/luaexamples',
+			'media/newuitests', 'media/launcher',
+	])
+	def gameDirPath = gameDir as java.nio.file.Path
+	//@formatter:off
     gameDirPath.resolve('media').toFile().listFiles().each
     {
         if (it.directory)
@@ -36,21 +36,20 @@ if (project.ext.has('gameDir'))
             }
         }
     }//@formatter:on
-    sourceSets {
-        media {
-            java.srcDirs = sourcesList
-            resources.srcDirs = resourcesList
-        }
-    }
-    apply from: 'mod.gradle'
-    apply from: 'zomboid.gradle'
-    apply from: 'zdoc.gradle'
+	sourceSets {
+		media {
+			java.srcDirs = sourcesList
+			resources.srcDirs = resourcesList
+		}
+	}
+	apply from: 'mod.gradle'
+	apply from: 'zomboid.gradle'
+	apply from: 'zdoc.gradle'
 
-    jar {
-        from sourceSets.media.output
-    }
-    version modInfoProperties.getProperty('modversion')
-    apply from: 'distribution.gradle'
+	jar.from sourceSets.media.output
 
-    defaultTasks 'showModInfo'
+	version modInfoProperties.getProperty('modversion')
+	apply from: 'distribution.gradle'
+
+	defaultTasks 'showModInfo'
 }

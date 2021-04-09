@@ -24,8 +24,8 @@ def zomboidClasses = tasks.register('zomboidClasses', Sync.class) {
 classes.dependsOn(zomboidClasses)
 
 configurations {
-    runtimeOnly.extendsFrom zomboidRuntimeOnly
-    implementation.extendsFrom zomboidImplementation
+	runtimeOnly.extendsFrom zomboidRuntimeOnly
+	implementation.extendsFrom zomboidImplementation
 }
 dependencies {
 	// Project Zomboid libraries
@@ -54,9 +54,9 @@ tasks.register('decompileZomboid', JavaExec.class) {
 	it.description 'Decompile Project Zomboid classes.'
 	it.group 'zomboid'
 
-    if (project.ext.ideaHome == null) {
-        throw new InvalidUserDataException('Local property \"ideaHome\" is not defined')
-    }
+	if (project.ext.ideaHome == null) {
+		throw new InvalidUserDataException('Local property \"ideaHome\" is not defined')
+	}
 	it.onlyIf {
 		def files = zomboidClassesDir.exists() ? zomboidClassesDir.listFiles() : null
 		return files != null && files.size() > 0
@@ -65,38 +65,37 @@ tasks.register('decompileZomboid', JavaExec.class) {
 	it.javaLauncher = javaToolchains.launcherFor {
 		languageVersion = JavaLanguageVersion.of(11)
 	}
-    it.classpath files("$ideaHome/plugins/java-decompiler/lib/java-decompiler.jar")
-    it.main 'org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler'
+	it.classpath files("$ideaHome/plugins/java-decompiler/lib/java-decompiler.jar")
+	it.main 'org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler'
 
-    // default parameters used by IDEA compiler
-    def params = ['-hdc=0', '-dgs=1', '-rsy=1', '-rbr=1', '-lit=1', '-nls=1', '-mpm=60']
+	// default parameters used by IDEA compiler
+	def params = ['-hdc=0', '-dgs=1', '-rsy=1', '-rbr=1', '-lit=1', '-nls=1', '-mpm=60']
 
-    // decompiler will throw error if destination dir doesn't exist
-    zomboidSourcesDir.mkdirs()
+	// decompiler will throw error if destination dir doesn't exist
+	zomboidSourcesDir.mkdirs()
 
 	String zomboidClassesDirPath = zomboidClassesDir.path;
 	List<String> decompileTargets = new ArrayList<>()
 
 	// handle compiling specified individual classes
-	if (project.ext.has('decompileFiles'))
-	{
+	if (project.ext.has('decompileFiles')) {
 		(project.ext.get('decompileFiles') as String).split(',').each {
 			decompileTargets.add(Paths.get(zomboidClassesDirPath, it).toString())
 		}
 	}
 	else decompileTargets.add(zomboidClassesDirPath)
-    it.args params + decompileTargets + zomboidSourcesDir.path
-    it.dependsOn(zomboidClasses)
+	it.args params + decompileTargets + zomboidSourcesDir.path
+	it.dependsOn(zomboidClasses)
 }
 
 tasks.register('zomboidJar', ZDocJar.class) {
 
-    it.description 'Assembles a jar archive containing game classes.'
-    it.includeEmptyDirs = false
+	it.description 'Assembles a jar archive containing game classes.'
+	it.includeEmptyDirs = false
 
-    it.archiveBaseName.set('zomboid')
-    it.from zomboidClassesDir
-    it.destinationDir file('lib')
+	it.archiveBaseName.set('zomboid')
+	it.from zomboidClassesDir
+	it.destinationDir file('lib')
 	it.onlyIf {
 		def files = zomboidClassesDir.exists() ? zomboidClassesDir.listFiles() : null
 		return files != null && files.size() > 0
@@ -106,12 +105,12 @@ tasks.register('zomboidJar', ZDocJar.class) {
 
 tasks.register("zomboidSourcesJar", ZDocJar.class) {
 
-    it.description 'Assembles a jar containing decompiled game sources.'
-    it.archiveBaseName.set('zomboid')
-    it.classifier 'sources'
+	it.description 'Assembles a jar containing decompiled game sources.'
+	it.archiveBaseName.set('zomboid')
+	it.classifier 'sources'
 
-    it.from zomboidSourcesDir
-    it.destinationDir file('lib')
+	it.from zomboidSourcesDir
+	it.destinationDir file('lib')
 	it.onlyIf {
 		def files = zomboidSourcesDir.exists() ? zomboidSourcesDir.listFiles() : null
 		return files != null && files.size() > 0
