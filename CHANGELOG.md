@@ -1,5 +1,17 @@
 # Changelog
 
+## [v2.4.0](https://github.com/cocolabs/pz-zmod/tree/v2.4.0) (2021-04-11)
+
+[Full Changelog](https://github.com/cocolabs/pz-zmod/compare/v2.3.0...v2.4.0)
+
+**Implemented enhancements:**
+
+- Option to decompile single classes [\#33](https://github.com/cocolabs/pz-zmod/issues/33)
+
+**Fixed bugs:**
+
+- Incorrect search scope name [\#32](https://github.com/cocolabs/pz-zmod/issues/32)
+
 ## [v2.3.0](https://github.com/cocolabs/pz-zmod/tree/v2.3.0) (2021-03-21)
 
 [Full Changelog](https://github.com/cocolabs/pz-zmod/compare/v2.2.0...v2.3.0)
