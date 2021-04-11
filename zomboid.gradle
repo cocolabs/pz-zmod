@@ -1,3 +1,5 @@
+import java.nio.file.Paths
+
 // directory containing Project Zomboid classes
 project.ext.zomboidClassesDir = file("$buildDir/classes/zomboid").absoluteFile
 
@@ -22,8 +24,8 @@ def zomboidClasses = tasks.register('zomboidClasses', Sync.class) {
 classes.dependsOn(zomboidClasses)
 
 configurations {
-    runtimeOnly.extendsFrom zomboidRuntimeOnly
-    implementation.extendsFrom zomboidImplementation
+	runtimeOnly.extendsFrom zomboidRuntimeOnly
+	implementation.extendsFrom zomboidImplementation
 }
 dependencies {
 	// Project Zomboid libraries
@@ -42,17 +44,19 @@ dependencies {
  * Decompile game classes with FernFlower using default IDEA settings.
  * Default task behaviour is to decompile all class files found in game root directory.
  *
- * This can be changed by defining specific file to decompile with project property 'src'.
- * example: gradle decompileZomboid -Psrc="<path>"
+ * This can be changed by defining specific files to decompile with project property 'decompileFiles'.
+ * Each specified file path has to be a package path relative to destination root directory.
+ * When specifying multiple file paths remember to separate them with comma delimiter.
+ * example: gradle decompileZomboid -PdecompileFiles=zombie/FileGuidPair.class,zombie/GameTime.class
  */
 tasks.register('decompileZomboid', JavaExec.class) {
 
 	it.description 'Decompile Project Zomboid classes.'
 	it.group 'zomboid'
 
-    if (project.ext.ideaHome == null) {
-        throw new InvalidUserDataException('Local property \"ideaHome\" is not defined')
-    }
+	if (project.ext.ideaHome == null) {
+		throw new InvalidUserDataException('Local property \"ideaHome\" is not defined')
+	}
 	it.onlyIf {
 		def files = zomboidClassesDir.exists() ? zomboidClassesDir.listFiles() : null
 		return files != null && files.size() > 0
@@ -61,27 +65,37 @@ tasks.register('decompileZomboid', JavaExec.class) {
 	it.javaLauncher = javaToolchains.launcherFor {
 		languageVersion = JavaLanguageVersion.of(11)
 	}
-    it.classpath files("$ideaHome/plugins/java-decompiler/lib/java-decompiler.jar")
-    it.main 'org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler'
+	it.classpath files("$ideaHome/plugins/java-decompiler/lib/java-decompiler.jar")
+	it.main 'org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler'
 
-    // default parameters used by IDEA compiler
-    def params = ['-hdc=0', '-dgs=1', '-rsy=1', '-rbr=1', '-lit=1', '-nls=1', '-mpm=60']
+	// default parameters used by IDEA compiler
+	def params = ['-hdc=0', '-dgs=1', '-rsy=1', '-rbr=1', '-lit=1', '-nls=1', '-mpm=60']
 
-    // decompiler will throw error if destination dir doesn't exist
-    zomboidSourcesDir.mkdirs()
+	// decompiler will throw error if destination dir doesn't exist
+	zomboidSourcesDir.mkdirs()
 
-    it.args params + zomboidClassesDir.path + zomboidSourcesDir.path
-    it.dependsOn(zomboidClasses)
+	String zomboidClassesDirPath = zomboidClassesDir.path;
+	List<String> decompileTargets = new ArrayList<>()
+
+	// handle compiling specified individual classes
+	if (project.ext.has('decompileFiles')) {
+		(project.ext.get('decompileFiles') as String).split(',').each {
+			decompileTargets.add(Paths.get(zomboidClassesDirPath, it).toString())
+		}
+	}
+	else decompileTargets.add(zomboidClassesDirPath)
+	it.args params + decompileTargets + zomboidSourcesDir.path
+	it.dependsOn(zomboidClasses)
 }
 
 tasks.register('zomboidJar', ZDocJar.class) {
 
-    it.description 'Assembles a jar archive containing game classes.'
-    it.includeEmptyDirs = false
+	it.description 'Assembles a jar archive containing game classes.'
+	it.includeEmptyDirs = false
 
-    it.archiveBaseName.set('zomboid')
-    it.from zomboidClassesDir
-    it.destinationDir file('lib')
+	it.archiveBaseName.set('zomboid')
+	it.from zomboidClassesDir
+	it.destinationDir file('lib')
 	it.onlyIf {
 		def files = zomboidClassesDir.exists() ? zomboidClassesDir.listFiles() : null
 		return files != null && files.size() > 0
@@ -91,12 +105,12 @@ tasks.register('zomboidJar', ZDocJar.class) {
 
 tasks.register("zomboidSourcesJar", ZDocJar.class) {
 
-    it.description 'Assembles a jar containing decompiled game sources.'
-    it.archiveBaseName.set('zomboid')
-    it.classifier 'sources'
+	it.description 'Assembles a jar containing decompiled game sources.'
+	it.archiveBaseName.set('zomboid')
+	it.classifier 'sources'
 
-    it.from zomboidSourcesDir
-    it.destinationDir file('lib')
+	it.from zomboidSourcesDir
+	it.destinationDir file('lib')
 	it.onlyIf {
 		def files = zomboidSourcesDir.exists() ? zomboidSourcesDir.listFiles() : null
 		return files != null && files.size() > 0

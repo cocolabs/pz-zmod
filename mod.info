@@ -3,5 +3,5 @@ poster=poster.png
 description=Compact mod development environment.
 id=pz-zmod
 url=https://github.com/cocolabs/pz-zmod
-modversion=2.3.0
+modversion=2.4.0
 pzversion=41.50-IWBUMS

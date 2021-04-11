@@ -12,20 +12,19 @@ def getPathsRelativeToModule(moduleName, srcDirSet) {
 	def srcDirs = srcDirSet.srcDirs.stream().withCloseable {
 		it.filter({ f -> f.exists() }).collect()
 	}
-	for (File srcDir : (srcDirs as List<File>))
-	{
+	//@formatter:off
+	for (File srcDir : (srcDirs as List<File>)) {
 		Files.walk(srcDir.toPath()).withCloseable
 		{
 			def paths = it.filter({ Files.isRegularFile(it as java.nio.file.Path) }).collect()
-			for (java.nio.file.Path path : (paths as List<java.nio.file.Path>))
-			{
+			for (java.nio.file.Path path : (paths as List<java.nio.file.Path>)) {
 				def srcDirPath = srcDir.toPath()
 				def relativePath = srcDirPath.relativize(path)
 				def srcDirName = module.relativize(srcDirPath)
 				map.put(relativePath.toString(), srcDirName.toString())
 			}
 		}
-	}
+	}//@formatter:on
 	return map
 }
 
@@ -95,7 +94,7 @@ installModDist {
 	def parentDir = destinationDir.parentFile.toPath()
 	destinationDir = parentDir.resolve(rootProject.name).toFile()
 }
-[ 'modDistTar', 'modDistZip' ].forEach({
+['modDistTar', 'modDistZip'].forEach({
 	def task = tasks.named(it).get() as AbstractArchiveTask
 	task.archiveBaseName.set(rootProject.name)
 	task.mustRunAfter('stageModDistribution')

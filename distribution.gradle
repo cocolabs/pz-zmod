@@ -13,7 +13,7 @@ task cleanDistributionStage(type: Delete) {
 	}
 	delete(stagePath)
 }
-def docsList = [ 'README.md', 'LICENSE.txt', 'CHANGELOG.md' ]
+def docsList = ['README.md', 'LICENSE.txt', 'CHANGELOG.md']
 tasks.register('stageDistribution', Copy.class) {
 
 	it.description 'Copy distribution files to stage directory.'
@@ -64,8 +64,7 @@ tasks.register('pruneDistributionStage', Delete.class) {
 	it.delete './stage/images'
 
 	def gitIgnored = file('.gitignored')
-	if (file(stagePath).exists() && gitIgnored.exists())
-	{
+	if (file(stagePath).exists() && gitIgnored.exists()) {
 		def ignoredFiles = GFileUtils.readFile(gitIgnored).split('\r|\n|\r\n')
 		ignoredFiles.each { s ->
 			File ignoredFile = file(s)
